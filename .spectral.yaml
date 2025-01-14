@@ -1,0 +1,3 @@
+extends:
+  - ./ukhsa-rocks.yml
+  - [spectral:oas, recommended]
