@@ -44,3 +44,23 @@ Review the sections on API design, naming conventions, versioning and error hand
 Determine your security requirements and apply the recommended authorisation, authentication and security patterns, such as OAuth 2.0, JWTs, and Role-Based Access Control (RBAC).
 Ensure your API is well-documented including error scenarios and example responses within the OpenAPI specification.
 Use the recommended tools for linting, validating and testing your OpenAPI specification and other aspects of your API.
+
+- [API Specification \& Documentation](docs/api-specifications-and-documentation.md#api-specification--documentation)
+  - [Generating code from OpenAPI specifications](docs/api-specifications-and-documentation.md#generating-code-from-openapi-specifications)
+  - [Validating API requests against OpenAPI specifications](docs/api-specifications-and-documentation.md#validating-api-requests-against-openapi-specifications)
+  - [Example responses \& mock responses](docs/api-specifications-and-documentation.md#example-responses--mock-responses)
+- [API Design](docs/api-design.md#api-design)
+  - [RESTful API Style](docs/api-design.md#restful-api-style)
+  - [REST Maturity Levels](docs/api-design.md#rest-maturity-levels)
+  - [HTTP Methods \& Semantics](docs/api-design.md#http-methods--semantics)
+  - [Response Format](docs/api-design.md#response-format)
+  - [Content Negotiation](docs/api-design.md#content-negotiation)
+  - [REST HTTP Response Codes](docs/api-design.md#rest-http-response-codes)
+- [Naming Conventions](docs/naming-conventions.md#naming-conventions)
+  - [URI Structure](docs/naming-conventions.md#uri-structure)
+    - [Namespaces](docs/naming-conventions.md#namespaces)
+  - [Resource Names](docs/naming-conventions.md#resource-names)
+  - [Path Segments](docs/naming-conventions.md#path-segments)
+  - [Parameter Names](docs/naming-conventions.md#parameter-names)
+  - [Field Names](docs/naming-conventions.md#field-names)
+  

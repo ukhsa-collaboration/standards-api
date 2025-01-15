@@ -1,4 +1,5 @@
 # API Specification & Documentation
+
 The [OpenAPI specification](https://swagger.io/specification/) (OAS; formerly known as Swagger) is a widely adopted standard for describing REST APIs. It provides a machine-readable format for defining API endpoints, request/response schemas, and security configurations.
 
 Creating an OpenAPI specification (aka "definition") is an essential design output when developing your API. The specification can be created in a simple text editor, integrated development environment (IDE), or using a dedicated tool such as [Swagger Editor](https://editor.swagger.io/).
