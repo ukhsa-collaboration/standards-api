@@ -1,5 +1,6 @@
 name: Publish to Confluence
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
