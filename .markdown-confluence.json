@@ -1,0 +1,7 @@
+{
+  "confluenceBaseUrl": "https://confluence.collab.test-and-trace.nhs.uk/",
+  "confluenceParentId": "386633073",
+  "atlassianUserName": "jake.aitchison@ukhsa.gov.uk",
+  "folderToPublish": "docs",
+  "contentRoot": "/docs"
+}
