@@ -26,7 +26,8 @@ APIs **MUST** use lowercase for the entire URI.
 
 APIs **SHOULD** limit the level of nesting to avoid overly complex URIs. Typically, two to three levels are sufficient.
 
-> [!NOTE] Environments
+> [!NOTE]
+> **Environments**  
 > Domain Names for various environments can be found in the [API Management Low Level Design.](https://confluence.collab.test-and-trace.nhs.uk/display/BRP/API+Management+Low+level+Design+-+MVP)
 
 ### Namespaces
@@ -43,14 +44,14 @@ https://azgw.api.ukhsa.gov.uk/prevent/vaccine-management/v1/..
 
 APIs **MUST** use **lowercase plural nouns **to represent collections (e.g., /orders, /customers, /products) not verbs.
 
-> [!TIP]Use
->
+> [!TIP]
+> 
 > ```text
 > /product/v1/orders
 > /product/v1/orders/{orderId}/cancel
 > ```
 
-> [!CAUTION]Avoid
+> [!CAUTION]
 >
 > ```text
 > /product/v1/order
@@ -61,13 +62,13 @@ APIs **MUST** use **lowercase plural nouns **to represent collections (e.g., /or
 
 APIs **MUST** use **kebab-cas**e for path segments:
 
-> [!TIP]Use
+> [!TIP]
 >
 > ```text
 > /product/v1/user-accounts
 > ```
 
-> [!CAUTION]Avoid
+> [!CAUTION]
 >
 > ```text
 > /product/v1/userAccounts
@@ -78,7 +79,7 @@ APIs **MUST** use **kebab-cas**e for path segments:
 
 APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST** not mix the two styles:
 
-> [!TIP]Use
+> [!TIP]
 > **snake_case**:
 > 
 > ```text
@@ -91,7 +92,7 @@ APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST
 > /product/v1/users?maxResults=10&startIndex=20
 > ```
 
-> [!CAUTION]Avoid
+> [!CAUTION]
 > **mixed case**:
 >
 > ```text
