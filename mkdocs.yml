@@ -4,32 +4,41 @@ site_author: 'UKSHA'
 docs_dir: docs/
 repo_name: 'UKHSA-Internal/api-guidelines'
 repo_url: 'https://github.com/UKHSA-Internal/api-guidelines'
+edit_uri: edit/main/docs/
 nav:
-  - index.md
+  - Introduction: index.md
   - api-specifications-and-documentation.md
-    # - 'Generating code from OpenAPI specifications': api-specifications-and-documentation.md#generating-code-from-openapi-specifications
-    # - 'Validating API requests against OpenAPI specifications': api-specifications-and-documentation.md#validating-api-requests-against-openapi-specifications
-    # - 'Example responses & mock responses': api-specifications-and-documentation.md#example-responses--mock-responses
   - api-design.md
-#   - [RESTful API Style](api-design.md#restful-api-style)
-#   - [REST Maturity Levels](api-design.md#rest-maturity-levels)
-#   - [HTTP Methods \& Semantics](api-design.md#http-methods--semantics)
-#   - [Response Format](api-design.md#response-format)
-#   - [Content Negotiation](api-design.md#content-negotiation)
-#   - [REST HTTP Response Codes](api-design.md#rest-http-response-codes)
   - naming-conventions.md
-#   - [URI Structure](naming-conventions.md#uri-structure)
-#     - [Namespaces](naming-conventions.md#namespaces)
-#   - [Resource Names](naming-conventions.md#resource-names)
-#   - [Path Segments](naming-conventions.md#path-segments)
-#   - [Parameter Names](naming-conventions.md#parameter-names)
-#   - [Field Names](naming-conventions.md#field-names)
-  
+  - ...
+
 theme:
-  name: readthedocs
-  highlightjs: true
-  hljs_languages:
-    - yaml
+  name: material
+  logo: assets/ukhsa-logo-white.png
+  palette:
+    primary: black
+  features:
+    - navigation.instant
+    - navigation.top
+    - navigation.footer
+    - navigation.tracking
+    - navigation.expand
+    - content.code.copy
+    - content.code.select
+    - content.action.edit
+    - content.action.view
 
 markdown_extensions:
   - github-callouts
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+  - awesome-pages

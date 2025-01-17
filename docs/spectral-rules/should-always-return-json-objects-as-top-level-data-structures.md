@@ -1,10 +1,10 @@
-# MUST always return json objects as top level data structures
+# **SHOULD** always return json objects as top level data structures
 
-The top-level data structure for a `request body` or `response body` must be an object.
+The top-level data structure for a `request body` or `response body` **SHOULD** be an object.
 
 ## Invalid Example
 
-```yaml lineNumbers
+``` yaml
 
 requestBody:
     content:
@@ -17,7 +17,7 @@ requestBody:
 
 ## Valid Example
 
-```yaml lineNumbers
+``` yaml
 
 requestBody:
     content:

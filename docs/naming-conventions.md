@@ -36,7 +36,7 @@ Namespaces and product names **MUST** be based on the [Business Capability Model
 
 For example:
 
-```text
+``` text
 https://azgw.api.ukhsa.gov.uk/prevent/vaccine-management/v1/..
 ```
 
@@ -46,14 +46,14 @@ APIs **MUST** use **lowercase plural nouns **to represent collections (e.g., /or
 
 > [!TIP]
 > 
-> ```text
+> ``` text
 > /product/v1/orders
 > /product/v1/orders/{orderId}/cancel
 > ```
 
 > [!CAUTION]
 >
-> ```text
+> ``` text
 > /product/v1/order
 > /product/v1/cancelOrder
 > ```
@@ -64,13 +64,13 @@ APIs **MUST** use **kebab-cas**e for path segments:
 
 > [!TIP]
 >
-> ```text
+> ``` text
 > /product/v1/user-accounts
 > ```
 
 > [!CAUTION]
 >
-> ```text
+> ``` text
 > /product/v1/userAccounts
 > /product/v1/user_accounts
 > ```
@@ -82,20 +82,20 @@ APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST
 > [!TIP]
 > **snake_case**:
 > 
-> ```text
+> ``` text
 > /product/v1/users?max_results=10&start_index=20
 > ```
 >
 > **OR camelCase**:
 >
-> ```text
+> ``` text
 > /product/v1/users?maxResults=10&startIndex=20
 > ```
 
 > [!CAUTION]
 > **mixed case**:
 >
-> ```text
+> ``` text
 > /product/v1/users?max_results=10&startIndex=20
 > ```
 
@@ -103,7 +103,7 @@ APIs **MUST** use consistent names for query parameters having the same function
 
 Example:
 
-```text
+``` text
 /product/v1/orders?limit=10&offset=20
 /product/v1/users?max_results=10&start_index=20
 ```
@@ -112,27 +112,27 @@ Use consistent terminology across the API and in documentation. For instance, if
 
 Example:
 
-```text
+``` text
 /product/v1/orders?customer_id=123
 /product/v1/users?client_id=123
 ```
 
-## Field Names
+## Property Names
 
 APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST NOT** mix the two styles:
 
 **snake_case**:
 
-```json
+``` json
 {
     "customer_id": "12345",
     "user_id" : "54321"
 }
 ```
 
-OR camelCase:
+**OR camelCase**:
 
-```json
+``` json
 {
     "customerId": "12345",
     "userId" : "54321"
