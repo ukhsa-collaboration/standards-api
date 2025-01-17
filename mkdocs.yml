@@ -30,3 +30,6 @@ theme:
   highlightjs: true
   hljs_languages:
     - yaml
+
+markdown_extensions:
+  - github-callouts
