@@ -4,7 +4,7 @@ The [OpenAPI specification](https://swagger.io/specification/) (OAS; formerly kn
 
 Creating an OpenAPI specification (aka "definition") is an essential design output when developing your API. The specification can be created in a simple text editor, integrated development environment (IDE), or using a dedicated tool such as [Swagger Editor](https://editor.swagger.io/).
 
-A sample OpenAPI Specification based on these guidelines can be viewed [here](/example/example.1.0.0.yml): TODO
+A sample OpenAPI Specification based on these guidelines can be viewed [here](https://github.com/UKHSA-Internal/api-guidelines/blob/main/example/example.1.0.0.yml): TODO
 
 ## Generating code from OpenAPI specifications
 

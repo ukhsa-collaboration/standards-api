@@ -42,7 +42,7 @@ jobs:
         pip install mkdocs-material
         pip install markdown-callouts
         pip install mkdocs-git-revision-date-localized-plugin
-        pip install mkdocs-git-authors-plugin
+        pip install mkdocs-git-committers-plugin-2
         pip install mkdocs-exporter
         pip install mkdocs-redirects
         pip install mkdocs-awesome-pages-plugin
@@ -54,6 +54,7 @@ jobs:
     - name: Publish docs
       run: mkdocs build
       env:
+        MKDOCS_GIT_COMMITTER_ENABLED: true
         MKDOCS_EXPORTER_PDF_ENABLED: true
 
     - name: Upload build

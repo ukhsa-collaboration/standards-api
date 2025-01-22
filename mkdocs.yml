@@ -73,7 +73,10 @@ plugins:
   - git-revision-date-localized:
       type: timeago
       enable_creation_date: true
-  - git-authors
+  - git-committers:
+      enabled: !ENV [MKDOCS_GIT_COMMITTER_ENABLED, false]
+      repository: UKHSA-Internal/api-guidelines
+      branch: main
   - exporter:
       buttons:
         - title: View as PDF
