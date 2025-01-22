@@ -67,6 +67,9 @@ markdown_extensions:
 plugins:
   - search
   - awesome-pages
+  - redirects:
+      redirect_maps:
+        'index.md': 'api-design-guidelines/index.md'
   - git-revision-date-localized:
       type: timeago
       enable_creation_date: true
