@@ -9,18 +9,23 @@ Property names **MUST** use [camel-case](https://en.wikipedia.org/wiki/Camel_cas
 
 ## Invalid Examples
 
-`CustomerNumber`
-
-`Customer_Number`
-
-`customer-number`
+``` text
+CustomerNumber
+Customer_Number
+customer-number
+```
 
 ## Valid Examples
 
-`customerNumber` or `customer_number`
+``` text
+customerNumber
+customer_number
 
-`salesOrderNumber` or `sales_order_number`
+salesOrderNumber
+sales_order_number
 
-`billingAddress` or `billing_address`
+billingAddress
+billing_address
+```
 
-[UKHSA Guideline Property Names](../naming-conventions.md/#property-names)
+[UKHSA Guideline Property Names](../../api-design-guidelines/naming-conventions.md/#property-names)

@@ -14,6 +14,8 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Configure Git Credentials
       run: |
@@ -39,10 +41,20 @@ jobs:
     - run: |
         pip install mkdocs-material
         pip install markdown-callouts
+        pip install mkdocs-git-revision-date-localized-plugin
+        pip install mkdocs-git-authors-plugin
+        pip install mkdocs-exporter
+        pip install mkdocs-redirects
         pip install mkdocs-awesome-pages-plugin
+
+    - run: |
+        playwright install --with-deps
+        playwright install chrome --with-deps
 
     - name: Publish docs
       run: mkdocs build
+      env:
+        MKDOCS_EXPORTER_PDF_ENABLED: true
 
     - name: Upload build
       uses: actions/upload-pages-artifact@v3

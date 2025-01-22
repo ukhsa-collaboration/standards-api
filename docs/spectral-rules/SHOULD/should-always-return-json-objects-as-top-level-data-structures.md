@@ -31,4 +31,6 @@ requestBody:
             type: string
 ```
 
+[UKHSA API Design](../../api-design-guidelines/api-design.md#response-format)
+
 [Zalando Guideline 210](https://opensource.zalando.com/restful-api-guidelines/#210)

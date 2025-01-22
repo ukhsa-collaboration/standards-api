@@ -6,7 +6,7 @@ APIs **MUST** follow the defined hierarchical structure:
 
 ```text
 https://azgw.api.ukhsa.gov.uk/namespace/product/v1/users/12345?sort=startDate
-\____/  \___________________/ \______________________________/ \________/
+\____/  \___________________/ \______________________________/ \____________/
   |            |                            |                      |
 scheme     authority                       path                parameters
 ```
@@ -42,10 +42,10 @@ https://azgw.api.ukhsa.gov.uk/prevent/vaccine-management/v1/..
 
 ## Resource Names
 
-APIs **MUST** use **lowercase plural nouns **to represent collections (e.g., /orders, /customers, /products) not verbs.
+APIs **MUST** use **lowercase plural nouns** to represent collections (e.g., /orders, /customers, /products) not verbs.
 
 > [!TIP]
-> 
+>
 > ``` text
 > /product/v1/orders
 > /product/v1/orders/{orderId}/cancel
@@ -81,7 +81,7 @@ APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST
 
 > [!TIP]
 > **snake_case**:
-> 
+>
 > ``` text
 > /product/v1/users?max_results=10&start_index=20
 > ```
@@ -108,7 +108,7 @@ Example:
 /product/v1/users?max_results=10&start_index=20
 ```
 
-Use consistent terminology across the API and in documentation. For instance, if you use "customer" in one part of your API, don’t switch to "client" in another API if they represent the same concept:
+Use consistent terminology across the API and in documentation. For instance, if you use "customer" in one part of your API, don't switch to "client" in another API if they represent the same concept:
 
 Example:
 

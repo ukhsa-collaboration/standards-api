@@ -1,4 +1,4 @@
-# **MUST** not use uri versioning
+# **MUST NOT** use uri versioning
 
 Path **MUST** not contain versions. 
 

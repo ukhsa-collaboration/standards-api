@@ -1,4 +1,4 @@
-site_name: UKSA API Guidelines
+site_name: API Guidelines
 site_description: 'Home of UKHSA API Guidelines'
 site_author: 'UKSHA'
 docs_dir: docs/
@@ -6,27 +6,52 @@ repo_name: 'UKHSA-Internal/api-guidelines'
 repo_url: 'https://github.com/UKHSA-Internal/api-guidelines'
 edit_uri: edit/main/docs/
 nav:
-  - Introduction: index.md
-  - api-specifications-and-documentation.md
-  - api-design.md
-  - naming-conventions.md
-  - ...
+  #- index.md
+  - API Guidelines:
+    - api-design-guidelines/index.md
+    - api-design-guidelines/api-specifications-and-documentation.md
+    - api-design-guidelines/api-design.md
+    - api-design-guidelines/naming-conventions.md
+    - api-design-guidelines/security.md
+    - api-design-guidelines/error-handling.md
+    - api-design-guidelines/versioning-and-deprecation.md
+    - api-design-guidelines/pagination-filtering-sorting.md
+    - api-design-guidelines/testing.md
+    - api-design-guidelines/performance-reliability-monitoring.md
+    - api-design-guidelines/governance.md
+    - api-design-guidelines/data-standards.md
+    - api-design-guidelines/integration-patterns.md
+  - API Guidance Summary:
+    - guidance-summary/index.md
+  - Spectral Rules:
+    - ... | flat | spectral-rules/**/*.md
 
 theme:
   name: material
-  logo: assets/ukhsa-logo-white.png
+  logo: assets/images/logo-ukhsa-landscape.png
+  favicon: assets/images/favicon-32x32.png
   palette:
-    primary: black
+    - primary: white
+      accent: teal
+      scheme: default
+
   features:
     - navigation.instant
     - navigation.top
     - navigation.footer
     - navigation.tracking
-    - navigation.expand
+    - navigation.tabs
+    - navigation.tabs.sticky
+    #- navigation.expand
+    #- navigation.indexes
+    #- navigation.sections
     - content.code.copy
     - content.code.select
     - content.action.edit
     - content.action.view
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - github-callouts
@@ -42,3 +67,30 @@ markdown_extensions:
 plugins:
   - search
   - awesome-pages
+  - git-revision-date-localized:
+      type: timeago
+      enable_creation_date: true
+  - git-authors
+  - exporter:
+      buttons:
+        - title: View as PDF
+          icon: material-file-move-outline
+          enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
+          attributes:
+            target: _blank
+            href: ../ukhsa-api-guidelines.pdf
+        - title: Download as PDF
+          icon: material-file-download-outline
+          enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
+          attributes: 
+            download: ukhsa-api-guidelines.pdf
+            href: ../ukhsa-api-guidelines.pdf
+      formats:
+        pdf:
+          enabled: !ENV [MKDOCS_EXPORTER_PDF_ENABLED, false]
+          stylesheets:
+            - docs/stylesheets/pdf.scss
+          aggregator:
+            enabled: true
+            output: ukhsa-api-guidelines.pdf
+            covers: none

@@ -38,7 +38,7 @@ Refer to [RFC2119](https://datatracker.ietf.org/doc/html/rfc2119) for details.
 
 Each section addresses key aspects of building APIs, including naming conventions, versioning, security, error handling, and documentation.
 
-Here’s how to navigate and use these guidelines effectively:
+Here's how to navigate and use these guidelines effectively:
 
 Review the sections on API design, naming conventions, versioning and error handling and create an OpenAPI specification that adheres to these patterns.
 Determine your security requirements and apply the recommended authorisation, authentication and security patterns, such as OAuth 2.0, JWTs, and Role-Based Access Control (RBAC).
