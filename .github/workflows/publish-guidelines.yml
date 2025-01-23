@@ -23,6 +23,10 @@ jobs:
     # needs: lint-example-openapi
     name: Build Documentation
 
+    # Grant GITHUB_TOKEN the permissions required to make get git provenance when building docs
+    permissions:
+      contents: read    # to read git committers
+
     runs-on: ubuntu-latest
     steps:
 
@@ -68,6 +72,7 @@ jobs:
     - name: Publish docs
       run: mkdocs build
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         MKDOCS_GIT_PROVENANCE_ENABLED: true
         MKDOCS_EXPORTER_PDF_ENABLED: true
 

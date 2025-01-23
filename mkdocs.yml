@@ -77,6 +77,7 @@ plugins:
   - git-committers:
       enabled: !ENV [MKDOCS_GIT_PROVENANCE_ENABLED, false]
       repository: UKHSA-Internal/api-guidelines
+      token: !ENV [GITHUB_TOKEN]
       branch: main
   - exporter:
       buttons:
