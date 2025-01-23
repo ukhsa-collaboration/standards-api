@@ -1,6 +1,6 @@
 # API Guidance Summary
 
-This is summary high-level guidance for API producers (application teams) on adopting the API principles, patterns and practices developed as part of the Big Rocks API strategy. Refer to the full API Strategy and other references linked at the end of this document for more information. 
+This is summary high-level guidance for API producers (application teams) on adopting the API principles, patterns and practices developed as part of the Big Rocks API strategy. Refer to the full API Strategy and other references linked at the end of this document for more information.
 
 ## Definitions
 
@@ -46,7 +46,7 @@ These are the core high level principles to follow when designing, building, tes
 
 - **Follow secure by design process** in the [Secure by Design Guidelines](https://www.security.gov.uk/policy-and-guidance/secure-by-design/) and industry best practices, including the [OWASP API Security Project](https://owasp.org/www-project-api-security/). Ensure your API has extensive tests that validate inputs.
 - Ensure APIs have robust authorisation and authentication based on industry standards, such as OAuth 2.0 and OpenID Connect. The APIM Platform will act as a “transparent proxy” in authorisation scenarios, which includes passing through of auth tokens to backend APIs.
-- Ensure that APIs are protected against overuse using rate limits by leveraging the features of the APIM Platform. 
+- Ensure that APIs are protected against overuse using rate limits by leveraging the features of the APIM Platform.
 
 ### Manage API Lifecycles
 

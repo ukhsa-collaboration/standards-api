@@ -1,6 +1,6 @@
 # **SHOULD** use `x-extensible-enum`
 
-`enum` values **SHOULD** use the marker `x-extensible-enum` rather than `enum`. 
+`enum` values **SHOULD** use the marker `x-extensible-enum` rather than `enum`.
 
 ## Invalid Example
 

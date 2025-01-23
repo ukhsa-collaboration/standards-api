@@ -6,7 +6,21 @@ on:
       - main
 
 jobs:
+  # lint-example-openapi:
+  #   name: Lint Example OpenAPI
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+
+  #   # Run Spectral
+  #   - uses: stoplightio/spectral-action@latest
+  #     with:
+  #       file_glob: '${{ GITHUB.WORKSPACE }}/example/*.{json,yml,yaml}'
+  #       spectral_ruleset: https://raw.githubusercontent.com/UKHSA-Internal/api-guidelines/refs/heads/main/.spectral.yaml
+
   build-documentation:
+    # needs: lint-example-openapi
     name: Build Documentation
 
     runs-on: ubuntu-latest
@@ -54,7 +68,7 @@ jobs:
     - name: Publish docs
       run: mkdocs build
       env:
-        MKDOCS_GIT_COMMITTER_ENABLED: true
+        MKDOCS_GIT_PROVENANCE_ENABLED: true
         MKDOCS_EXPORTER_PDF_ENABLED: true
 
     - name: Upload build
@@ -82,4 +96,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-

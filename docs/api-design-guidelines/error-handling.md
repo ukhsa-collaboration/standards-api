@@ -74,7 +74,6 @@ Content-Type: application/problem+json
 }
 ```
 
-
 ### 400 Bad Request - Multiple Errors
 
 ``` text

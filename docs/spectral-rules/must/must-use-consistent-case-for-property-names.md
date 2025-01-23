@@ -1,6 +1,6 @@
-# **MUST** use consistent property naming
+# **MUST** use consistent case for property names
 
-Property names **MUST** use [camel-case](https://en.wikipedia.org/wiki/Camel_case) strings that match this pattern: `^[a-z][a-z0-9]+(?:[A-Z][a-z0-9]+)*$`. or [snake_case](https://en.wikipedia.org/wiki/Snake_case) strings that match this pattern: `^[a-z_][a-z_0-9]*$`
+Property names **MUST** use [camel-case](https://en.wikipedia.org/wiki/Camel_case) strings that match this pattern: `^[a-z][a-z0-9]+(?:[A-Z][a-z0-9]+)*$`. or [snake_case](https://en.wikipedia.org/wiki/Snake_case) strings that match this pattern: `^[a-z_][a-z_0-9]*$` and **MUST NOT** mix the two styles.
 
 | Name | Description |
 |---------|-------------|

@@ -71,10 +71,11 @@ plugins:
       redirect_maps:
         'index.md': 'api-design-guidelines/index.md'
   - git-revision-date-localized:
+      enabled: !ENV [MKDOCS_GIT_PROVENANCE_ENABLED, false]
       type: timeago
       enable_creation_date: true
   - git-committers:
-      enabled: !ENV [MKDOCS_GIT_COMMITTER_ENABLED, false]
+      enabled: !ENV [MKDOCS_GIT_PROVENANCE_ENABLED, false]
       repository: UKHSA-Internal/api-guidelines
       branch: main
   - exporter:

@@ -34,6 +34,9 @@ APIs **SHOULD** limit the level of nesting to avoid overly complex URIs. Typical
 
 Namespaces and product names **MUST** be based on the [Business Capability Model](https://confluence.collab.test-and-trace.nhs.uk/display/AT/Business+Capability+Model).
 
+> [!NOTE]
+> Where applications supports multiple business capabilities then namespaces and product names should be based on the `Leading` one in [LeanIX](https://phe.leanix.net/phelive).
+
 For example:
 
 ``` text
@@ -44,6 +47,7 @@ https://azgw.api.ukhsa.gov.uk/prevent/vaccine-management/v1/..
 
 APIs **MUST** use **lowercase plural nouns** to represent collections (e.g., /orders, /customers, /products) not verbs.
 
+Use:
 > [!TIP]
 >
 > ``` text
@@ -51,6 +55,7 @@ APIs **MUST** use **lowercase plural nouns** to represent collections (e.g., /or
 > /product/v1/orders/{orderId}/cancel
 > ```
 
+Avoid:
 > [!CAUTION]
 >
 > ``` text
@@ -60,14 +65,16 @@ APIs **MUST** use **lowercase plural nouns** to represent collections (e.g., /or
 
 ## Path Segments
 
-APIs **MUST** use **kebab-cas**e for path segments:
+APIs **MUST** use **kebab-case** for path segments.
 
+Use:
 > [!TIP]
 >
 > ``` text
 > /product/v1/user-accounts
 > ```
 
+Avoid:
 > [!CAUTION]
 >
 > ``` text
@@ -77,8 +84,9 @@ APIs **MUST** use **kebab-cas**e for path segments:
 
 ## Parameter Names
 
-APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST** not mix the two styles:
+APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST NOT** mix the two styles.
 
+Use:
 > [!TIP]
 > **snake_case**:
 >
@@ -92,6 +100,7 @@ APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST
 > /product/v1/users?maxResults=10&startIndex=20
 > ```
 
+Avoid:
 > [!CAUTION]
 > **mixed case**:
 >
@@ -103,23 +112,29 @@ APIs **MUST** use consistent names for query parameters having the same function
 
 Example:
 
-``` text
-/product/v1/orders?limit=10&offset=20
-/product/v1/users?max_results=10&start_index=20
-```
+> [!CAUTION]
+>
+> ``` text
+> /product/v1/orders?limit=10&offset=20
+> /product/v1/users?max_results=10&start_index=20
+> ```
 
-Use consistent terminology across the API and in documentation. For instance, if you use "customer" in one part of your API, don't switch to "client" in another API if they represent the same concept:
+Use consistent terminology across the API and in documentation. For instance, if you use `customer` in one part of your API, don't switch to `client` in another API if they represent the same concept.
 
 Example:
 
-``` text
-/product/v1/orders?customer_id=123
-/product/v1/users?client_id=123
-```
+> [!CAUTION]
+>
+> ``` text
+> /product/v1/orders?customer_id=123
+> /product/v1/users?client_id=123
+> ```
 
 ## Property Names
 
-APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST NOT** mix the two styles:
+APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST NOT** mix the two styles.
+
+For example:
 
 **snake_case**:
 
