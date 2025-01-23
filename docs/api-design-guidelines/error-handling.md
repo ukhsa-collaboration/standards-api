@@ -8,7 +8,7 @@ APIs **MUST** use the appropriate content type `application/problem+json` or `ap
 
 Problem Details responses **MUST** be described in the APIs open api specification.
 
-Where possible you **SHOULD** include all the base Problem Details members: `status`, `title`, `detail`, `type` and `instance`.
+You **MUST** include all the base Problem Details members: `status`, `title`, `detail`, `type` and `instance`.
 
 ### Extended Details
 
