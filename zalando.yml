@@ -23,7 +23,7 @@ rules:
     then:
       function: is-object-schema
     description: 'The top-level data structure for a `request body` or `response body` must be an object.'
-    documentationUrl: /docs/spectral-rules/should/should-always-return-json-objects-as-top-level-data-structures.md
+    #documentationUrl: /docs/spectral-rules/should/should-always-return-json-objects-as-top-level-data-structures.md
     message: Top-level data structure must be an object
 
   should-use-x-extensible-enum:
@@ -32,7 +32,7 @@ rules:
     then:
       function: undefined
     description: '`enum` values should use the marker `x-extensible-enum` rather than `enum`.'
-    documentationUrl: /docs/spectral-rules/should/should-use-x-extensible-enum.md
+    #documentationUrl: /docs/spectral-rules/should/should-use-x-extensible-enum.md
     message: Should use `x-extensible-enum` instead of `enum`
 
   must-not-use-uri-versioning:
@@ -43,7 +43,7 @@ rules:
       functionOptions:
         notMatch: /v[0-9]+/
     description: Path must not contain versions.
-    documentationUrl: /docs/spectral-rules/must/must-not-use-uri-versioning.md
+    #documentationUrl: /docs/spectral-rules/must/must-not-use-uri-versioning.md
     message: Path must not contain versioning
 
   must-use-snake-case-for-property-names:
@@ -54,7 +54,7 @@ rules:
       functionOptions:
         match: ^[a-z_][a-z_0-9]*$
     description: 'Property names must use snake-case strings that match this pattern: `^[a-z_][a-z_0-9]*$`.'
-    documentationUrl: /docs/spectral-rules/must/must-use-snake-case-for-property-names.md
+    #documentationUrl: /docs/spectral-rules/must/must-use-snake-case-for-property-names.md
     message: Property name has to be ASCII snake_case
 
   must-use-lowercase-with-hyphens-for-path-segments:
@@ -65,7 +65,7 @@ rules:
       functionOptions:
         match: ^(([\/a-z][a-z0-9\-\/]*)?({[^}]*})?)+$
     description: Path segments must use lowercase letters and hyphens to separate words.
-    documentationUrl: /docs/spectral-rules/must/must-use-lowercase-with-hyphens-for-path-segments.md
+    #documentationUrl: /docs/spectral-rules/must/must-use-lowercase-with-hyphens-for-path-segments.md
     message: Path segments have to be lowercase separate words with hyphens.
 
   must-use-snake-case-for-query-parameters:
@@ -116,7 +116,7 @@ rules:
       functionOptions:
         match: ^([A-Z][a-z]*)(-[A-Z0-9][a-z0-9]*)*$
     description: Header parameters should use hyphenated Pascal case.
-    documentationUrl: /docs/spectral-rules/should/should-use-hyphenated-pascal-case-for-header-parameters.md
+    #documentationUrl: /docs/spectral-rules/should/should-use-hyphenated-pascal-case-for-header-parameters.md
     message: Header parameters should be Hyphenated-Pascal-Case
 
   should-not-use-api-as-base-path:
@@ -160,7 +160,7 @@ rules:
       functionOptions:
         notMatch: //
     description: Path segments must not contain duplicate slashes.
-    documentationUrl: /docs/spectral-rules/must/must-use-normalized-paths-without-empty-path-segments.md
+    #documentationUrl: /docs/spectral-rules/must/must-use-normalized-paths-without-empty-path-segments.md
     message: Empty path segments are not allowed
 
   must-use-normalized-paths-without-trailing-slash:
@@ -171,7 +171,7 @@ rules:
       functionOptions:
         notMatch: /$
     description: Path segments must not contain duplicate slashes.
-    documentationUrl: /docs/spectral-rules/must/must-use-normalized-paths-without-trailing-slash.md
+    #documentationUrl: /docs/spectral-rules/must/must-use-normalized-paths-without-trailing-slash.md
     message: Path with trailing slash is not allowed
 
   should-limit-number-of-resource-types:
@@ -182,7 +182,7 @@ rules:
       functionOptions:
         max: 8
     description: Resource types (root URL paths) should be limited to no more than eight.
-    documentationUrl: /docs/spectral-rules/should/should-limit-number-of-resource-types.md
+    #documentationUrl: /docs/spectral-rules/should/should-limit-number-of-resource-types.md
     message: '{{error}}'
 
   should-limit-number-of-sub-resource-levels:
