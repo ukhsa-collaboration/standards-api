@@ -5,30 +5,28 @@ The top-level data structure for a `request body` or `response body` **SHOULD** 
 ## Invalid Example
 
 ``` yaml
-
 requestBody:
-    content:
+  content:
     application/json:
-        schema:
-        type: array
-        items:
-            type: string
+      schema:
+      type: array
+      items:
+        type: string
 ```
 
 ## Valid Example
 
 ``` yaml
-
 requestBody:
-    content:
+  content:
     application/json:
-        schema:
-        type: object
-        properties:
-            first_name:
-            type: string
-            last_name:
-            type: string
+      schema:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
 ```
 
 [UKHSA API Design](../../api-design-guidelines/api-design.md#response-format)

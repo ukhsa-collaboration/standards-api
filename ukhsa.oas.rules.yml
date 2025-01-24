@@ -4,23 +4,30 @@ rules:
   must-have-info-x-api-id: off
   must-provide-api-audience: off
   must-always-return-json-objects-as-top-level-data-structures: warn
+  should-not-use-api-as-base-path: off
+
+  # MUST Properties must use either snake_case or camelCase consistently.
+  # => /docs/spectral-rules/must/must-use-consistent-case-for-property-names.md
 
   must-use-snake-case-for-property-names: off
   must-use-consistent-case-for-property-names:
-    description: "Properties must use either snake_case or camelCase consistently."
+    description: Properties must use either snake_case or camelCase consistently.
     severity: error
-    message: "Property names must be in snake_case or camelCase consistently."
+    message: Property names must be in snake_case or camelCase consistently.
     given: $.paths.*.*[responses,requestBody]..content..schema..properties.*~
     then:
       function: pattern
       functionOptions:
         match: ^[a-z][a-z0-9]+(?:(?:_|[A-Z])[a-z0-9]+)*$
 
+  # MUST Query parameters must use either snake_case or camelCase consistently.
+  # => /docs/spectral-rules/must/must-use-consistent-case-for-query-parameters.md
+
   must-use-snake-case-for-query-parameters: off
   must-use-consistent-case-for-query-parameters:
-    description: "Properties must use either snake_case or camelCase consistently."
+    description: Query parameters must use either snake_case or camelCase consistently.
     severity: error
-    message: "Property names must be in snake_case or camelCase consistently."
+    message: Query parameters must be in snake_case or camelCase consistently.
     given: $.paths.*.*.parameters[?(@ && @.in=='query')].name
     then:
       function: pattern

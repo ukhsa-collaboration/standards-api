@@ -1,3 +1,7 @@
 extends:
   - [spectral:oas, recommended]
   - ./ukhsa.oas.rules.yml
+
+#documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
+rules:
+  oas3-api-servers: info

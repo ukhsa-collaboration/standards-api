@@ -17,14 +17,20 @@ formats:
   - oas3.1
 
 rules:
+
+  # MUST 'The top-level data structure for a `request body` or `response body` must be an object.'
+  # => /docs/spectral-rules/should/should-always-return-json-objects-as-top-level-data-structures.md
+
   must-always-return-json-objects-as-top-level-data-structures:
     given: $.paths.*.*[responses,requestBody]..content..schema
     severity: error
     then:
       function: is-object-schema
     description: 'The top-level data structure for a `request body` or `response body` must be an object.'
-    #documentationUrl: /docs/spectral-rules/should/should-always-return-json-objects-as-top-level-data-structures.md
     message: Top-level data structure must be an object
+
+  # SHOULD '`enum` values should use the marker `x-extensible-enum` rather than `enum`.'
+  # => /docs/spectral-rules/should/should-use-x-extensible-enum.md
 
   should-use-x-extensible-enum:
     given: $.paths..[?(@ && @.type=='string')].enum
@@ -32,8 +38,10 @@ rules:
     then:
       function: undefined
     description: '`enum` values should use the marker `x-extensible-enum` rather than `enum`.'
-    #documentationUrl: /docs/spectral-rules/should/should-use-x-extensible-enum.md
     message: Should use `x-extensible-enum` instead of `enum`
+
+  # MUST Path must not contain versions.
+  # => /docs/spectral-rules/must/must-not-use-uri-versioning.md
 
   must-not-use-uri-versioning:
     given: $.paths.*~
@@ -43,8 +51,10 @@ rules:
       functionOptions:
         notMatch: /v[0-9]+/
     description: Path must not contain versions.
-    #documentationUrl: /docs/spectral-rules/must/must-not-use-uri-versioning.md
     message: Path must not contain versioning
+
+  # MUST 'Property names must use snake-case strings that match this pattern: `^[a-z_][a-z_0-9]*$`.'
+  # => /docs/spectral-rules/must/must-use-snake-case-for-property-names.md
 
   must-use-snake-case-for-property-names:
     given: $.paths.*.*[responses,requestBody]..content..schema..properties.*~
@@ -54,8 +64,10 @@ rules:
       functionOptions:
         match: ^[a-z_][a-z_0-9]*$
     description: 'Property names must use snake-case strings that match this pattern: `^[a-z_][a-z_0-9]*$`.'
-    #documentationUrl: /docs/spectral-rules/must/must-use-snake-case-for-property-names.md
     message: Property name has to be ASCII snake_case
+
+  # MUST Path segments must use lowercase letters and hyphens to separate words.
+  # => /docs/spectral-rules/must/must-use-lowercase-with-hyphens-for-path-segments.md
 
   must-use-lowercase-with-hyphens-for-path-segments:
     given: $.paths.*~
@@ -65,8 +77,10 @@ rules:
       functionOptions:
         match: ^(([\/a-z][a-z0-9\-\/]*)?({[^}]*})?)+$
     description: Path segments must use lowercase letters and hyphens to separate words.
-    #documentationUrl: /docs/spectral-rules/must/must-use-lowercase-with-hyphens-for-path-segments.md
     message: Path segments have to be lowercase separate words with hyphens.
+
+  # MUST Query parameter must use snake-case and match this pattern: `^[a-z][_a-z0-9]*$`.
+  # => 
 
   must-use-snake-case-for-query-parameters:
     given: $.paths.*.*.parameters[?(@ && @.in=='query')].name
@@ -108,6 +122,9 @@ rules:
       [Zalando Guideline 130](https://opensource.zalando.com/restful-api-guidelines/#130)
     message: Query parameters must be snake_case
 
+  # SHOULD Header parameters should use hyphenated Pascal case.
+  # => /docs/spectral-rules/should/should-use-hyphenated-pascal-case-for-header-parameters.md
+
   should-use-hyphenated-pascal-case-for-header-parameters:
     given: $.paths.*.*.parameters[?(@ &&  @.in=='header')].name
     severity: warn
@@ -115,8 +132,7 @@ rules:
       function: pattern
       functionOptions:
         match: ^([A-Z][a-z]*)(-[A-Z0-9][a-z0-9]*)*$
-    description: Header parameters should use hyphenated Pascal case.
-    #documentationUrl: /docs/spectral-rules/should/should-use-hyphenated-pascal-case-for-header-parameters.md
+    description: Header parameters should use hyphenated Pascal case. 
     message: Header parameters should be Hyphenated-Pascal-Case
 
   should-not-use-api-as-base-path:
@@ -152,6 +168,9 @@ rules:
       [Zalando Guideline 135](https://opensource.zalando.com/restful-api-guidelines/#135)
     message: Path should not start with /api
 
+  # MUST Path segments must not contain duplicate slashes.
+  # => /docs/spectral-rules/must/must-use-normalized-paths-without-empty-path-segments.md
+
   must-use-normalized-paths-without-empty-path-segments:
     given: $.paths.*~
     severity: error
@@ -160,8 +179,10 @@ rules:
       functionOptions:
         notMatch: //
     description: Path segments must not contain duplicate slashes.
-    #documentationUrl: /docs/spectral-rules/must/must-use-normalized-paths-without-empty-path-segments.md
     message: Empty path segments are not allowed
+
+  # MUST Path with trailing slash is not allowed.
+  # => /docs/spectral-rules/must/must-use-normalized-paths-without-trailing-slash.md
 
   must-use-normalized-paths-without-trailing-slash:
     given: $.paths.*~
@@ -170,9 +191,11 @@ rules:
       function: pattern
       functionOptions:
         notMatch: /$
-    description: Path segments must not contain duplicate slashes.
-    #documentationUrl: /docs/spectral-rules/must/must-use-normalized-paths-without-trailing-slash.md
+    description: Path with trailing slash is not allowed.
     message: Path with trailing slash is not allowed
+
+  # SHOULD Resource types (root URL paths) should be limited to no more than eight.
+  # => /docs/spectral-rules/should/should-limit-number-of-resource-types.md
 
   should-limit-number-of-resource-types:
     given: $.paths
@@ -182,8 +205,10 @@ rules:
       functionOptions:
         max: 8
     description: Resource types (root URL paths) should be limited to no more than eight.
-    #documentationUrl: /docs/spectral-rules/should/should-limit-number-of-resource-types.md
     message: '{{error}}'
+
+  # SHOULD Path should contain no more than 3 sub-resources (nested resources with non-root URL paths).
+  # => /docs/spectral-rules/should/should-limit-number-of-sub-resource-levels.md
 
   should-limit-number-of-sub-resource-levels:
     given: $.paths.*~
@@ -192,28 +217,12 @@ rules:
       function: pattern
       functionOptions:
         match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
-    description: >-
-      Path should contain no more than 3 sub-resources (nested resources with non-root URL paths).
-
-
-      **Invalid Example**
-
-
-      ```yaml
-        /users/location/name/address/email:
-      ```
-
-
-      **Valid Example**
-
-
-      ```yaml
-        /users/{userId}/{name}:
-      ```
-
-
-      [Zalando Guideline 147](https://opensource.zalando.com/restful-api-guidelines/#147)
+    description: Path should contain no more than 3 sub-resources (nested resources with non-root URL paths).
     message: Sub-resource levels should by <= 3
+
+  # SHOULD Path should contain no more than 3 sub-resources (nested resources with non-root URL paths).
+  # => /docs/spectral-rules/should/should-use-standard-http-status-codes.md
+
   should-use-standard-http-status-codes:
     given: $.paths.*.*.responses.*~
     severity: warn
@@ -269,157 +278,36 @@ rules:
           - '505'
           - '511'
           - default
-    description: >-
-      `response` should use standard HTTP status codes.
-
-
-      **Invalid Example**
-
-
-      `Error-500` is not a valid HTTP status code.
-
-
-      ```yaml lineNumbers
-        /weather:
-          get:
-            responses:
-              'Error-500':
-                description: Internal Server Error
-      ```
-
-      **Valid Example**
-
-
-      `500` is a valid HTTP status code.
-
-
-      ```yaml lineNumbers
-        /weather:
-          get:
-            responses:
-              '500':
-                description: Internal Server Error
-      ```
-
-
-      [Zalando Guideline 150](https://opensource.zalando.com/restful-api-guidelines/#150)
+    description: '`response` should use standard HTTP status codes.'
     message: '{{property}} is not a standardized response code'
+
+  # MUST Each `operation` must include a default error response that combines multiple errors.
+  # => /docs/spectral-rules/must/must-specify-default-response.md
+
   must-specify-default-response:
     given: $.paths.*.*.responses
     severity: error
     then:
       function: truthy
       field: default
-    description: >-
-      Each `operation` must include a default error response that combines multiple errors. 
-
-
-      **Invalid Example**
-
-
-      The example below contains only a `200` response.
-
-
-      ```yaml lineNumbers
-
-      responses:
-         ...
-      get:
-        summary: Get User Info by User ID
-         tags: []
-         responses:
-           '200':
-             description: OK
-      ```
-
-
-      **Valid Example**
-
-
-      The example below contains a `200` response and a `default` response that references the `Problem` errors file.
-
-
-      ```yaml lineNumbers
-
-      responses:
-         ...
-      get:
-        summary: Get User Info by User ID
-         tags: []
-         responses:
-           '200':
-             description: OK
-           default:
-             description: User Not Found
-             content:
-               application/problem+json:
-                 schema:
-                   $ref: ../models/Problem.yaml
-      ```
-
-
-      [Zalando Guideline 151](https://opensource.zalando.com/restful-api-guidelines/#151)
+    description: Each `operation` must include a default error response that combines multiple errors.
     message: Operation does not contain a default response
+
+  # MUST The content type for the default response must be `application/problem+json`.
+  # => /docs/spectral-rules/must/must-use-problem-json-as-default-response.md
+
   must-use-problem-json-as-default-response:
     given: $.paths.*.*.responses.default
     severity: error
     then:
       function: truthy
       field: content.application/problem+json
-    description: >-
-      The content type for the default response must be `application/problem+json`.
-
-
-      **Invalid Example**
-
-
-      The default response in this example incorrectly uses `application/json` as the content type.
-
-
-      ```yaml lineNumbers
-
-      responses:
-         ...
-      get:
-        summary: Get User Info by User ID
-         tags: []
-         responses:
-           ...
-           default:
-             description: ...
-             content:
-               application/json:
-                 schema:
-                   $ref: ../models/Problem.yaml
-      ```
-
-
-      **Valid Example**
-
-
-      The default response in this example correctly uses `application/problem+json` as the content type.
-
-
-      ```yaml lineNumbers
-
-      responses:
-         ...
-      get:
-        summary: Get User Info by User ID
-         tags: []
-         responses:
-           ...
-           default:
-             description: ...
-             content:
-               application/problem+json:
-                 schema:
-                   $ref: ../models/Problem.yaml
-      ```
-
-
-      [Zalando Guideline 151](https://opensource.zalando.com/restful-api-guidelines/#151)
+    description: The content type for the default response must be `application/problem+json`.
     message: Operation must use problem json as default response
+
+  # MUST `number` properties must have a format defined (`float`, `double`, or `decimal`).
+  # => /docs/spectral-rules/must/must-define-a-format-for-number-types.md
+
   must-define-a-format-for-number-types:
     given: $.paths.*.*..schema..properties..[?(@ && @.type=='number')]
     severity: error
@@ -430,45 +318,12 @@ rules:
         functionOptions:
           match: ^(float|double|decimal)$
         field: format
-    description: >+
-      `number` properties must have a format defined (`float`, `double`, or `decimal`).
-
-
-      **Invalid Example**
-
-
-      ``` yaml lineNumbers
-
-      requestBody:
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  range:
-                    type: number
-      ```
-
-
-      **Valid Example**
-
-
-      ``` yaml lineNumbers
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                range:
-                  type: number
-                  format: float
-      ```
-
-
-      [Zalando Guideline 171](https://opensource.zalando.com/restful-api-guidelines/#171)
+    description: `number` properties must have a format defined (`float`, `double`, or `decimal`).
     message: Numeric properties must have valid format specified
+
+  # MUST `integer` properties must have a format defined (`int32`, `int64`, or `bigint`).
+  # => /docs/spectral-rules/must/must-define-a-format-for-integer-types.md
+
   must-define-a-format-for-integer-types:
     given: $.paths.*.*..schema..properties..[?(@ && @.type=='integer')]
     severity: error
@@ -479,45 +334,9 @@ rules:
         functionOptions:
           match: ^(int32|int64|bigint)$
         field: format
-    description: >+
-      `integer` properties must have a format defined (`int32`, `int64`, or `bigint`).
-
-
-      **Invalid Example**
-
-
-      ``` yaml lineNumbers
-
-      requestBody:
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  range:
-                    type: integer
-      ```
-
-
-      **Valid Example**
-
-
-      ``` yaml lineNumbers
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                range:
-                  type: integer
-                  format: int32
-      ```
-
-
-      [Zalando Guideline 171](https://opensource.zalando.com/restful-api-guidelines/#171)
+    description: '`integer` properties must have a format defined (`int32`, `int64`, or `bigint`).'
     message: Numeric properties must have valid format specified
+
   should-prefer-standard-media-type-names:
     given: $.paths.*.*.responses.*.content.*~
     severity: warn
