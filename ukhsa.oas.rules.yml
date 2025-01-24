@@ -1,6 +1,10 @@
-extends: [./zalando.oas.rules.yml]
+extends: 
+  - ./zalando.oas.rules.yml
+  - [spectral:oas, recommended]
 
+documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
 rules:
+  oas3-api-servers: info
   must-have-info-x-api-id: off
   must-provide-api-audience: off
   must-always-return-json-objects-as-top-level-data-structures: warn

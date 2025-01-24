@@ -318,7 +318,7 @@ rules:
         functionOptions:
           match: ^(float|double|decimal)$
         field: format
-    description: `number` properties must have a format defined (`float`, `double`, or `decimal`).
+    description: '`number` properties must have a format defined (`float`, `double`, or `decimal`).'
     message: Numeric properties must have valid format specified
 
   # MUST `integer` properties must have a format defined (`int32`, `int64`, or `bigint`).
@@ -337,6 +337,9 @@ rules:
     description: '`integer` properties must have a format defined (`int32`, `int64`, or `bigint`).'
     message: Numeric properties must have valid format specified
 
+  # SHOULD Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
+  # => /docs/spectral-rules/should/should-prefer-standard-media-type-names.md
+
   should-prefer-standard-media-type-names:
     given: $.paths.*.*.responses.*.content.*~
     severity: warn
@@ -344,261 +347,84 @@ rules:
       function: pattern
       functionOptions:
         match: ^application\/(problem\+)?json$|^[a-zA-Z0-9_]+\/[-+.a-zA-Z0-9_]+;(v|version)=[0-9]+$
-    description: >-
-      Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
-
-
-      **Invalid Example**
-
-
-      ```yaml lineNumbers
-
-      '204':
-            description: No Content
-            content:
-              application/xml:
-                schema:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    url:
-                      type: string
-                      format: uri-reference
-      ```
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      '204':
-            description: No Conten
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    url:
-                      type: string
-                      format: uri-reference
-      ```
-
-
-      [Zalando Guideline 172](https://opensource.zalando.com/restful-api-guidelines/#172)
+    description: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
     message: Custom media types should only be used for versioning
+
+  # MUST Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
+  # => /docs/spectral-rules/must/must-use-problem-json-for-errors.md
+
   must-use-problem-json-for-errors:
     given: $.paths.*.*.responses[?(@property.match(/^(4|5)/))]
     severity: error
     then:
       function: truthy
       field: content.application/problem+json
-    description: >-
-      The content type for 4xx and 5xx status codes must be `application/problem+json`.
-
-
-      **Invalid Example**
-
-
-      The content type for the `503` response in this example incorrectly uses the `application/json` content type.
-
-
-      ```yaml lineNumbers
-
-      responses:
-         '503':
-           description: ...
-           content:
-             application/json:
-               schema:
-                 $ref: ../models/Problem.yaml
-      ```
-
-
-      **Valid Example**
-
-
-      The content type for the `503` response in this example correctly uses the `application/problem+json` content type.
-
-
-      ```yaml lineNumbers
-
-      responses:
-         '503':
-           description: ...
-           content:
-             application/problem+json:
-               schema:
-                 $ref: ../models/Problem.yaml
-      ```
-
-
-      [Zalando Guideline 176](https://opensource.zalando.com/restful-api-guidelines/#176)
+    description: The content type for 4xx and 5xx status codes must be `application/problem+json`.
     message: Error response must be application/problem+json
+
+  # MUST `Problem` schema must include this set of minimal required properties and validations
+  # => /docs/spectral-rules/must/must-use-valid-problem-json-schema.md
+
   must-use-valid-problem-json-schema:
     given: $.paths.*.*.responses.*.content.application/problem+json
     severity: error
     then:
       function: is-problem-json-schema
       field: schema
-    description: >-
-      `Problem` schema must include this set of minimal required properties and validations:
-
-
-      ```
-
-      type: object
-
-      properties:
-        type:
-          type: string
-          format: uri-reference
-        title:
-          type: string
-        status:
-          type: integer
-          format: int32
-        detail:
-          type: string
-        instance:
-          type: string
-      */
-
-      ```
-
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      title: Problem
-
-      type: object
-
-      properties:
-        type:
-          type: string
-          format: uri-reference
-          example: /my-example/user-error
-        title:
-          type: string
-          example: a title for the error situation
-        status:
-          type: integer
-          format: int32
-        detail:
-          type: string
-          example: description for the error situation
-        instance:
-          type: string
-          format: uri-reference
-          example:  /some/uri-reference#specific-occurrence-context
-      ```
-
-
-      [Zalando Guideline 176](https://opensource.zalando.com/restful-api-guidelines/#176)
+    description: '`Problem` schema must include this set of minimal required properties and validations.'
     message: '{{error}}'
+
+  # MUST The `info` object must have a `description` property defined.
+  # => /docs/spectral-rules/must/must-have-info-description.md
+
   must-have-info-description:
     given: $.info
     severity: error
     then:
       function: truthy
       field: description
-    description: >+
-      The `info` object must have a `description` property defined.
-
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      info:
-        description: This describes my API.
-        ...
-      ```
-
-
-      [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
-
+    description: The `info` object must have a `description` property defined.
     message: Must have API description defined in `info.description`
+
+  # MUST The `info` object must have a `contact:name` property that contains a valid name for the team or person responsible for the API.
+  # => /docs/spectral-rules/must/must-have-info-contact-name.md
+
   must-have-info-contact-name:
     given: $.info
     severity: error
     then:
       function: truthy
       field: contact.name
-    description: >
-      The `info` object must have a `contact:name` property that contains a valid name for the team or person responsible for the API.
-
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      info:
-        ...
-        ...
-        contact:
-          name: 'Tequila Mockingbirds'
-      ```
-
-      [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
+    description: The `info` object must have a `contact:name` property that contains a valid name for the team or person responsible for the API.
     message: Must have name defined in `info.contact.name`
+
+  # MUST The `info` object must have a `contact:url` property that contains a valid URL to contact the team or person responsible for the API.
+  # => /docs/spectral-rules/must/must-have-info-contact-url.md
+
   must-have-info-contact-url:
     given: $.info
     severity: error
     then:
       function: truthy
       field: contact.url
-    description: >
-      The `info` object must have a `contact:url` property that contains a valid URL to contact the team or person responsible for the API.
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      info:
-        ...
-        ...
-        contact:
-          ...
-          url: https://acme.com
-          ...
-      ```
-
-      [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
+    description: The `info` object must have a `contact:url` property that contains a valid URL to contact the team or person responsible for the API.
     message: Must have email defined in `info.contact.url`
+
+  # MUST The `info` object must have a `contact email` property that contains a valid email address for the responsible team.
+  # => /docs/spectral-rules/must/must-have-info-contact-email.md
+
   must-have-info-contact-email:
     given: $.info
     severity: error
     then:
       function: truthy
       field: contact.email
-    description: >-
-      The `info` object must have a `contact email` property that contains a valid email address for the responsible team.
-
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      info:
-        ...
-        ...
-        contact:
-          email: 'support.contact@acme.com'
-      ```
-
-
-      [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
+    description: The `info` object must have a `contact email` property that contains a valid email address for the responsible team.
     message: Must have email defined in `info.contact.email`
+
+  # MUST The `info` object must have an `x-api-id` property that conforms to this  pattern: `^[a-z0-9][a-z0-9-:.]{6,62}[a-z0-9]$`
+  # => turned off
+
   must-have-info-x-api-id:
     given: $.info
     severity: error
@@ -638,6 +464,10 @@ rules:
 
       [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218) and [Zalando Guideline 215](https://opensource.zalando.com/restful-api-guidelines/#215)
     message: Missing `info.x-api-id`.
+
+  # MUST The `info` object must have an `x-audience` that matches at least one of these values:
+  # => turned off
+
   must-provide-api-audience:
     given: $.info
     severity: error
@@ -677,6 +507,10 @@ rules:
 
       [Zalando Guideline 219](https://opensource.zalando.com/restful-api-guidelines/#219)
     message: Missing or wrong `info.x-audience`.
+
+  # SHOULD `enum` and `x-extensible-enum` values should be in UPPER_SNAKE_CASE format.
+  # => /docs/spectral-rules/should/should-declare-enum-values-using-upper-snake-case-format.md
+
   should-declare-enum-values-using-upper-snake-case-format:
     given: $.paths..[?(@ && @.type=='string')].[enum,x-extensible-enum].*
     severity: warn
@@ -684,67 +518,24 @@ rules:
       function: pattern
       functionOptions:
         match: ^[A-Z][A-Z_0-9]*$
-    description: >-
-      `enum` and `x-extensible-enum` values should be in UPPER_SNAKE_CASE format.
-
-
-      **Invalid Example**
-
-
-      ```yaml lineNumbers
-
-      schema:
-        measurement:
-         type: string
-           x-extensible-enum:
-             - Standard
-             - Metric
-             - Imperial
-             - Non-standard
-      ```
-
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      schema:
-        mesurement:
-         type: string
-           x-extensible-enum:
-             - STANDARD
-             - METRIC
-             - IMPERIAL
-             - NON_STANDARD
-      ```
-
-
-      [Zalando Guideline 240](https://opensource.zalando.com/restful-api-guidelines/#240)
+    description: '`enum` and `x-extensible-enum` values should be in UPPER_SNAKE_CASE format.'
     message: Enum values should be in UPPER_SNAKE_CASE format
+
+  # MUST The `info` object must have a `title` property defined.
+  # => /docs/spectral-rules/must/must-have-info-title.md
+
   must-have-info-title:
     given: $.info
     severity: error
     then:
       function: truthy
       field: title
-    description: >
-      The `info` object must have a `title` property defined.
-
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      info:
-        title: Payments API
-        ...
-      ```
-
-
-      [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
+    description: The `info` object must have a `title` property defined.
     message: Must have API title defined in `info.title`
+
+  # MUST The `info` object must have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html) to distinguish API versions.
+  # => /docs/spectral-rules/must/must-have-info-version.md
+
   must-have-info-version:
     given: $.info
     severity: error
@@ -757,34 +548,5 @@ rules:
             type: string
             pattern: ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
         field: version
-    description: >
-      The `info` object must have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html) to distinguish API versions.
-
-
-      **Invalid Example**
-
-
-      ```yaml lineNumbers
-
-      info:
-        title: ...
-        description: ...
-        version: 1
-        <...>
-      ```
-
-      **Valid Example**
-
-
-      ```yaml lineNumbers
-
-      info:
-        title: ...
-        description: ...
-        version: 1.1.0
-        ...
-      ```
-
-
-      [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218) and [Zalando Guideline 116](https://opensource.zalando.com/restful-api-guidelines/#116)
+    description: The `info` object must have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html) to distinguish API versions.
     message: Must have API version defined in `info.version`

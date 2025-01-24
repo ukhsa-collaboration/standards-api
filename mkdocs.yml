@@ -24,7 +24,10 @@ nav:
   - API Guidance Summary:
     - guidance-summary/index.md
   - Spectral Rules:
-    - ... | flat | spectral-rules/**/*.md
+    - MUST:
+      - ... | flat | spectral-rules/must/*.md
+    - SHOULD:
+      - ... | flat | spectral-rules/should/*.md
 
 theme:
   name: material
