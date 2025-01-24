@@ -1,0 +1,30 @@
+name: Lint Example OpenAPI
+on:
+  pull_request:
+    paths:
+      - 'functions/*'
+      - 'example/*'
+      - '.spectral.yaml'
+      - '*.oas.rules.*'
+  push:
+    paths:
+      - 'functions/*'
+      - 'example/*'
+      - '.spectral.yaml'
+      - '*.oas.rules.*'
+    branches:
+      - main
+
+jobs:
+  lint-example-openapi:
+    name: Lint Example OpenAPI
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Run Spectral
+      - uses: stoplightio/spectral-action@latest
+        with:
+          file_glob: "./example/*.{json,yml,yaml}"

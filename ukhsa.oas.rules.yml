@@ -1,4 +1,4 @@
-extends: [./zalando.yml]
+extends: [./zalando.oas.rules.yml]
 
 rules:
   must-have-info-x-api-id: off
