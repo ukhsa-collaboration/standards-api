@@ -4,9 +4,9 @@ extends:
 
 documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
 rules:
-  oas3-api-servers: info
+  oas3-api-servers: off
   must-have-info-x-api-id: off
-  must-provide-api-audience: off
+  must-provide-api-audience: warn
   must-always-return-json-objects-as-top-level-data-structures: warn
   should-not-use-api-as-base-path: off
 
