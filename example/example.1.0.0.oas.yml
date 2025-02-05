@@ -3,6 +3,8 @@ info:
   title: Test Results Api
   version: '1.0.0'
   description: This API is for obtaining or submitting test results.
+  x-audience: public-external
+  x-value-chain: detect
   contact:
     name: Result API contact
     url: https://url-to-api-team-confluence-support-page
@@ -30,6 +32,7 @@ paths:
             $ref: '#/components/schemas/ListPageQuery'
         - in: query
           name: type
+          required: false
           schema:
             type: string
             description: The type of test to filter by.
@@ -37,9 +40,10 @@ paths:
             - Lateral Flow Test
         - in: query
           name: result
+          required: false
           schema:
             type: string
-            description: The type of test to filter by.
+            description: The result type of test to filter by.
             x-extensible-enum:
               - POSITIVE
               - NEGATIVE
@@ -55,16 +59,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResultsResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
         default:
-          description: Unexpected error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
+          $ref: '#/components/responses/UnexpectedError'
     post:
       summary: Submit a new test result
       description: Submit a new test result.
@@ -84,16 +80,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResultResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         default:
-          description: Unexpected error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
+          $ref: '#/components/responses/UnexpectedError'
   /results/{resultId}:
     get:
       summary: Get a specific test result
@@ -118,16 +108,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResultResponse'
           description: A JSON array containing results objects.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
-          description: Unexpected error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
+          $ref: '#/components/responses/UnexpectedError'
 
 components:
   securitySchemes:
@@ -351,8 +335,10 @@ components:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
           examples:
-            validationError:
+            validation-error:
               $ref: '#/components/examples/validation-error'
+            validation-errors:
+              $ref: '#/components/examples/validation-errors'
     Unauthorized:
       description: Access token is not set or invalid.
       content:
@@ -378,17 +364,8 @@ components:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
           examples:
-            notFound:
+            not-found:
               $ref: '#/components/examples/not-found'
-    ValidationError:
-      description: Your client issued a request that failed validation.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetails'
-          examples:
-            validationError:
-              $ref: '#/components/examples/validation-error'
     ServerError:
       description: The server encountered an unexpected error
       content:
@@ -396,7 +373,22 @@ components:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
           examples:
-            serverError:
+            server-error:
+              $ref: '#/components/examples/server-error'
+    UnexpectedError:
+      description: An unexpected error occurred.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/unauthorized'
+            forbidden:
+              $ref: '#/components/examples/forbidden'
+            not-found:
+              $ref: '#/components/examples/not-found'
+            server-error:
               $ref: '#/components/examples/server-error'
   examples:
     unauthorized:
@@ -421,6 +413,15 @@ components:
         detail: The requested resource was not found
         instance: GET /some/path
     validation-error:
+      description: Representation of a 400 Bad Request response where a required property was omitted.
+      value:
+        type: https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1
+        status: 400
+        title: Validation Error
+        detail: Your request does not contain the required property 'name'
+        instance: GET /some/path
+        code: 400-02
+    validation-errors:
       description: >
         This problem occurs when the request is deemed unprocessable.
 

@@ -10,6 +10,7 @@ nav:
   - API Guidelines:
     - api-design-guidelines/index.md
     - api-design-guidelines/api-specifications-and-documentation.md
+    - api-design-guidelines/organisational-data-models.md
     - api-design-guidelines/api-design.md
     - api-design-guidelines/naming-conventions.md
     - api-design-guidelines/security.md

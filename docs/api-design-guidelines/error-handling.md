@@ -8,6 +8,8 @@ APIs **MUST** use the appropriate content type `application/problem+json` or `ap
 
 Problem Details responses **MUST** be described in the APIs open api specification.
 
+A Problem Detail response **MUST NOT** contain a program stack trace or server log for debugging purposes, instead consider an extended member such as `traceId` as described bellow.
+
 You **MUST** include all the base Problem Details members: `status`, `title`, `detail`, `type` and `instance`.
 
 ### Extended Details

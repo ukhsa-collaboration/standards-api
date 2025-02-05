@@ -1,5 +1,9 @@
 # API Design
 
+## API-First
+
+**SHOULD** follow the API-first approach to designing the API, as it prioritises the API contract from the very beginning, leading to the development of APIs which are more consistent, standardised and reusable.
+
 ## RESTful API Style
 
 **SHOULD** use the HTTP REST API style.
@@ -52,7 +56,7 @@ APIs **SHOULD** accept and return valid [JSON](https://www.rfc-editor.org/rfc/rf
 
 APIs **MAY** use the [json.api](https://jsonapi.org/) specification.
 
-APIs **MAY** use standard representations defined in specifications such as [FHIR](https://hl7.org/fhir/json.html) where required but **SHOULD** use the JSON formats where they are defined.
+APIs **MAY** use standard representations defined in specifications such as [FHIR UK Core](https://digital.nhs.uk/services/fhir-uk-core) where required but **SHOULD** use the JSON formats where they are defined.
 
 APIs **SHOULD** return JSON objects as top-level data structures and not return JSON arrays at the top level.
 

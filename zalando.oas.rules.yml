@@ -478,34 +478,7 @@ rules:
         field: x-audience
       - function: defined
         field: x-audience
-    description: >
-      The `info` object must have an `x-audience` that matches at least one of these values:
-
-
-      * component-internal
-
-      * business-unit-internal
-
-      * company-internal
-
-      * external-partner
-
-      * external-public
-
-
-      **Valid Example**
-
-
-      ```yaml
-
-      info:
-        title: Payments API
-        x-audience: 
-          - company-internal
-          - business-unit-internal
-      ```
-
-      [Zalando Guideline 219](https://opensource.zalando.com/restful-api-guidelines/#219)
+    description: Missing or wrong `info.x-audience`.
     message: Missing or wrong `info.x-audience`.
 
   # SHOULD `enum` and `x-extensible-enum` values should be in UPPER_SNAKE_CASE format.

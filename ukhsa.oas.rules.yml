@@ -6,7 +6,6 @@ documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
 rules:
   oas3-api-servers: off
   must-have-info-x-api-id: off
-  must-provide-api-audience: warn
   must-always-return-json-objects-as-top-level-data-structures: warn
   should-not-use-api-as-base-path: off
 
@@ -37,3 +36,34 @@ rules:
       function: pattern
       functionOptions:
         match: ^[a-z][a-z0-9]+(?:(?:_|[A-Z])[a-z0-9]+)*$
+
+  # MUST The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.
+  # => /docs/spectral-rules/must/must-provide-api-audience.md
+
+  must-provide-api-audience: off
+  must-provide-api-audience:
+    given: $.info
+    severity: error
+    then:
+      - function: pattern
+        functionOptions:
+          match: ^(company-internal|partner-external|premium-external|public-external)$
+        field: x-audience
+      - function: defined
+        field: x-audience
+    description: 'The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.'
+    message: Missing or wrong `info.x-audience`, should be one of company-internal, partner-external, premium-external or public-external.
+
+  must-provide-value-chain:
+    given: $.info
+    severity: error
+    then:
+      - function: pattern
+        functionOptions:
+          match: ^(prevent|detect|analyse|respond|cross-cutting|enabling)$
+        field: x-value-chain
+      - function: defined
+        field: x-value-chain
+    description: 'The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.'
+    message: Missing or wrong `info.x-value-chain`, should be one of prevent, detect, analyse, respond, cross-cutting or enabling.
+

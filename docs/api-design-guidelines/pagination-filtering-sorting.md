@@ -52,7 +52,102 @@ The body of responses containing lists of results **SHOULD** contain pagination 
 
 ## Filtering
 
-TODO
+**SHOULD** use the `GET` `HTTP` method and ensure the filter is safe, idempotent and cacheable.
+
+**SHOULD** use query parameters.
+
+If there is a particularly common query parameter you **SHOULD** consider providing a new operation where the search parameter is embedded in the path as a path variable.
+
+### Example
+
+``` yaml
+paths:
+  /results:
+    get:
+      summary: List all test results
+      description: List all test results.
+      operationId: getResults
+      tags:
+        - results
+      parameters:
+        - in: query
+          name: type
+          required: false
+          schema:
+            type: string
+            description: The type of test to filter by.
+            examples:
+            - Lateral Flow Test
+        - in: query
+          name: result
+          required: false
+          schema:
+            type: string
+            description: The type of test to filter by.
+            x-extensible-enum:
+              - POSITIVE
+              - NEGATIVE
+              - UNREADABLE
+            examples:
+              - POSITIVE
+              - NEGATIVE
+              - UNREADABLE
+```
+
+``` text
+GET /product/v1/results?type=Lateral%20Flow%20Test&result=POSITIVE
+```
+
+### Alternative Example
+
+``` yaml
+paths:
+  /patients/{nhsNumber}/results:
+    get:
+      summary: List all test results for given nhs number.
+      description: List all test results for given nhs number.
+      operationId: getResultsForNhs
+      tags:
+        - results
+      parameters:
+        - in: path
+          name: nhsNumber
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{3}(?:-| )?\d{3}(?:-| )?\d{4}$'
+            description: The nhs number of patient
+            examples:
+              - '4857773456'
+              - '485 777 3456'
+              - '485-777-3456'
+        - in: query
+          name: type
+          required: false
+          schema:
+            type: string
+            description: The type of test to filter by.
+            examples:
+            - Lateral Flow Test
+        - in: query
+          name: result
+          required: false
+          schema:
+            type: string
+            description: The result type of test to filter by.
+            x-extensible-enum:
+              - POSITIVE
+              - NEGATIVE
+              - UNREADABLE
+            examples:
+              - POSITIVE
+              - NEGATIVE
+              - UNREADABLE
+```
+
+``` text
+GET /product/v1/patients/4857773456/results?type=Lateral%20Flow%20Test
+```
 
 ## Sorting
 

@@ -25,7 +25,7 @@ These are the core high level principles to follow when designing, building, tes
 > [!TIP]
 > Apply the [API Design Guidelines](../api-design-guidelines/index.md) and use the features of Developer Portal.
 
-- **Design the API first**. Follow [GDS guidance](https://www.gov.uk/guidance/gds-api-technical-and-data-standards) and UKHSA API Design Guidelines.
+- **Design the API first**. Follow [GDS guidance](https://www.gov.uk/guidance/gds-api-technical-and-data-standards#design-your-api-first) and [UKHSA API Design Guidelines](../api-design-guidelines/index.md).
 - Produce an [OpenAPI specification](https://swagger.io/specification/) as the first output of your design process, and then develop it iteratively along with the service.
 - Share this specification early in development using the Developer Portal to get early feedback on your design.
 
