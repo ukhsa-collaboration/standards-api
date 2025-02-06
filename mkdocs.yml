@@ -33,7 +33,7 @@ nav:
 theme:
   name: material
   logo: assets/images/logo-ukhsa-landscape.svg
-  favicon: assets/images/favicon-32x32.png
+  favicon: assets/images/favicon.svg
   palette:
     - primary: white
       accent: teal
