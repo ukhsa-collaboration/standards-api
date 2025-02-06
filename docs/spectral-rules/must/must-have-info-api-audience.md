@@ -13,6 +13,6 @@ The `info` object **MUST** have an `x-audience` that matches at least one of the
 
 ``` yaml
 info:
-  title: Payments API
+  title: Test Results Api
   x-audience: public-external
 ```

@@ -13,6 +13,6 @@ The `info` object **MUST** have an `x-value-chain` that matches at least one of 
 
 ``` yaml
 info:
-  title: Payments API
+  title: Test Results Api
   x-value-chain: detect
 ```
