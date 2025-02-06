@@ -1,11 +1,6 @@
 name: Publish Spectral Rules
 on:
-  push:
-    paths:
-      - '.spectral.yaml'
-      - '*.oas.rules.*'
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   publish-spectral-rules:

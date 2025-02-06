@@ -1,6 +1,5 @@
 name: Publish Guidelines
 on:
-  workflow_dispatch:
   push:
     paths:
       - 'docs/**'
