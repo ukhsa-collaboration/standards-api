@@ -1,4 +1,4 @@
-# **MUST** provide api audience
+# **MUST** have info api audience
 
 The `info` object **MUST** have an `x-audience` that matches at least one of these values:
 

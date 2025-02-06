@@ -38,10 +38,10 @@ rules:
         match: ^[a-z][a-z0-9]+(?:(?:_|[A-Z])[a-z0-9]+)*$
 
   # MUST The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.
-  # => /docs/spectral-rules/must/must-provide-api-audience.md
+  # => /docs/spectral-rules/must/must-have-info-api-audience.md
 
   must-provide-api-audience: off
-  must-provide-api-audience:
+  must-have-info-api-audience:
     given: $.info
     severity: error
     then:
@@ -54,7 +54,10 @@ rules:
     description: 'The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.'
     message: Missing or wrong `info.x-audience`, should be one of company-internal, partner-external, premium-external or public-external.
 
-  must-provide-value-chain:
+  # MUST The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.
+  # => /docs/spectral-rules/must/must-have-info-value-chain.md
+
+  must-have-info-value-chain:
     given: $.info
     severity: error
     then:

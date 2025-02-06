@@ -1,4 +1,4 @@
-# **MUST** provide value chain
+# **MUST** have info value chain
 
 The `info` object **MUST** have an `x-value-chain` that matches at least one of these values.
 

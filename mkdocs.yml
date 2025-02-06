@@ -90,13 +90,13 @@ plugins:
           enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
           attributes:
             target: _blank
-            href: ../ukhsa-api-guidelines.pdf
+            href: /ukhsa-api-guidelines.pdf
         - title: Download as PDF
           icon: material-file-download-outline
           enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
           attributes: 
             download: ukhsa-api-guidelines.pdf
-            href: ../ukhsa-api-guidelines.pdf
+            href: /ukhsa-api-guidelines.pdf
       formats:
         pdf:
           enabled: !ENV [MKDOCS_EXPORTER_PDF_ENABLED, false]
