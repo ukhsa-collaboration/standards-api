@@ -27,23 +27,24 @@ paths:
       parameters:
         - in: query
           name: page_query
+          description: Page query used for results pagination.
           style: form
           schema:
             $ref: '#/components/schemas/ListPageQuery'
         - in: query
           name: type
           required: false
+          description: The type of test to filter by.
           schema:
             type: string
-            description: The type of test to filter by.
             examples:
             - Lateral Flow Test
         - in: query
           name: result
           required: false
+          description: The result type of test to filter by.
           schema:
             type: string
-            description: The result type of test to filter by.
             x-extensible-enum:
               - POSITIVE
               - NEGATIVE
@@ -54,7 +55,7 @@ paths:
               - UNREADABLE
       responses:
         '200':
-          description: List of Results.
+          description: This response returns a list of all test results that match the request.
           content:
             application/json:
               schema:
@@ -75,7 +76,7 @@ paths:
         description: The test result to be submitted.
       responses:
         '200':
-          description: Test Result.
+          description: This response returns a JSON object containing the test result data.
           content:
             application/json:
               schema:
@@ -195,6 +196,7 @@ components:
         - result
     ResultsResponse:
       type: object
+      description: Schema for returning test results with pagination.
       properties:
         results:
           type: array
@@ -204,6 +206,7 @@ components:
           $ref: '#/components/schemas/ListPagedMetadata'
     ListPagedMetadata:
       type: object
+      description: This object provides paging metadata collection resources.
       properties:
         totalResults:
           type: integer
@@ -328,8 +331,7 @@ components:
 
   responses:
     BadRequest:
-      description: >
-        The request was malformed or could not be processed.
+      description: The request was malformed or could not be processed.
       content:
         application/problem+json:
           schema:
@@ -339,24 +341,6 @@ components:
               $ref: '#/components/examples/validation-error'
             validation-errors:
               $ref: '#/components/examples/validation-errors'
-    Unauthorized:
-      description: Access token is not set or invalid.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetails'
-          examples:
-            unauthorized:
-              $ref: '#/components/examples/unauthorized'
-    Forbidden:
-      description: The requestor is not authorized to perform this operation on the resource.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetails'
-          examples:
-            forbidden:
-              $ref: '#/components/examples/forbidden'
     NotFound:
       description: The requested resource was not found.
       content:
@@ -366,15 +350,6 @@ components:
           examples:
             not-found:
               $ref: '#/components/examples/not-found'
-    ServerError:
-      description: The server encountered an unexpected error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetails'
-          examples:
-            server-error:
-              $ref: '#/components/examples/server-error'
     UnexpectedError:
       description: An unexpected error occurred.
       content:

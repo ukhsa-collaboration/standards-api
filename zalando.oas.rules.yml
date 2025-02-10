@@ -348,17 +348,19 @@ rules:
       functionOptions:
         match: ^application\/(problem\+)?json$|^[a-zA-Z0-9_]+\/[-+.a-zA-Z0-9_]+;(v|version)=[0-9]+$
     description: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
-    message: Custom media types should only be used for versioning
+    message: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
 
   # MUST Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
   # => /docs/spectral-rules/must/must-use-problem-json-for-errors.md
 
   must-use-problem-json-for-errors:
-    given: $.paths.*.*.responses[?(@property.match(/^(4|5)/))]
+    given: $.paths[*]..responses[?(@property.match(/^(4|5)/))].content.*~"
     severity: error
     then:
-      function: truthy
-      field: content.application/problem+json
+      function: enumeration
+      functionOptions:
+        values:
+          - application/problem+json
     description: The content type for 4xx and 5xx status codes must be `application/problem+json`.
     message: Error response must be application/problem+json
 
@@ -448,7 +450,7 @@ rules:
 
       info:
         api-id:
-        title: Payments API    
+        title: Payments API
       ``` 
 
 

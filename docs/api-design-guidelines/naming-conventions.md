@@ -7,8 +7,8 @@ APIs **MUST** follow the defined hierarchical structure:
 ```text
 https://azgw.api.ukhsa.gov.uk/namespace/product/v1/users/12345?sort=startDate
 \____/  \___________________/ \______________________________/ \____________/
-  |            |                            |                      |
-scheme     authority                       path                parameters
+  |            |                            |                        |
+scheme     authority                       path                  parameters
 ```
 
 - **Scheme**: **MUST** always be `https://`

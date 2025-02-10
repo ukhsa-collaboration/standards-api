@@ -15,8 +15,6 @@ Cursor-based pagination uses a “cursor” that points to a specific item in th
 `cursor`: The pointer to the position in the dataset to start the next page.
 limit: The maximum number of items to return.
 
-Example:
-
 ``` text
 GET /product/v1/orders?cursor=eyJvcmRlcklkIjoxMjN9&limit=10
 ```
@@ -58,6 +56,10 @@ The body of responses containing lists of results **SHOULD** contain pagination 
 
 ### Example
 
+``` text
+GET /product/v1/results?type=Lateral%20Flow%20Test&result=POSITIVE
+```
+
 ``` yaml
 paths:
   /results:
@@ -71,17 +73,17 @@ paths:
         - in: query
           name: type
           required: false
+          description: The type of test to filter by.
           schema:
             type: string
-            description: The type of test to filter by.
             examples:
             - Lateral Flow Test
         - in: query
           name: result
           required: false
+          description: The result type of test to filter by.
           schema:
             type: string
-            description: The type of test to filter by.
             x-extensible-enum:
               - POSITIVE
               - NEGATIVE
@@ -92,13 +94,13 @@ paths:
               - UNREADABLE
 ```
 
-``` text
-GET /product/v1/results?type=Lateral%20Flow%20Test&result=POSITIVE
-```
-
 ### Alternative Example
 
-If there is a particularly common query parameter you **SHOULD** consider providing a new operation where the search parameter is embedded in the path as a path variable.
+If there is a particularly common query parameter you **SHOULD** consider providing a new operation where the search parameter is embedded in the path as a path variable, but only where it makes sense from an API design perspective and aligns with RESTful resource / nested resources.
+
+``` text
+GET /product/v1/patients/4857773456/results?type=Lateral%20Flow%20Test
+```
 
 ``` yaml
 paths:
@@ -124,17 +126,17 @@ paths:
         - in: query
           name: type
           required: false
+          description: The type of test to filter by.
           schema:
             type: string
-            description: The type of test to filter by.
             examples:
             - Lateral Flow Test
         - in: query
           name: result
           required: false
+          description: The result type of test to filter by.
           schema:
             type: string
-            description: The result type of test to filter by.
             x-extensible-enum:
               - POSITIVE
               - NEGATIVE
@@ -143,10 +145,6 @@ paths:
               - POSITIVE
               - NEGATIVE
               - UNREADABLE
-```
-
-``` text
-GET /product/v1/patients/4857773456/results?type=Lateral%20Flow%20Test
 ```
 
 ## Sorting
