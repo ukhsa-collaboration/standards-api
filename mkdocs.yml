@@ -25,6 +25,7 @@ nav:
   - API Guidance Summary:
     - guidance-summary/index.md
   - Spectral Rules:
+    - spectral-rules/index.md
     - MUST:
       - ... | flat | spectral-rules/must/*.md
     - SHOULD:
