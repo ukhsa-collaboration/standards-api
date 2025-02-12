@@ -12,7 +12,7 @@ These guidelines will ensure that all APIs follow accepted design, security and 
 
 You will find the documentation in markdown form in the `docs/` directory, you can also view the [documentation site](https://refactored-chainsaw-8qmo7ge.pages.github.io/) for a friendly searchable format.
 
-As part of the above this repository provides the spectral rules to help developers align their OpenAPI specification with the standards laid out in these guidelines.
+As part of the above this repository provides the spectral rules to help developers align their OpenAPI definition with the standards laid out in these guidelines.
 
 ### When to use these guidelines
 

@@ -64,7 +64,7 @@ Avoid:
 
 `MINOR` and `PATCH` versions **MUST NOT** be added to the URI as they do not affect compatibility.
 
-There **SHOULD** be an endpoint to return version metadata that is also documented in the OpenAPI specification.
+There **SHOULD** be an endpoint to return version metadata that is also documented in the OpenAPI definition.
 
 ``` text
 GET /namespace/product/v1
@@ -88,4 +88,4 @@ Non-breaking changes, such as adding optional fields, new endpoints, or improvin
 
 **MUST** deprecate old API versions and document API deprecation status
 
-**MUST** document when older API versions will be deprecated and eventually retired in the OpenAPI specification.
+**MUST** document when older API versions will be deprecated and eventually retired in the OpenAPI definition.

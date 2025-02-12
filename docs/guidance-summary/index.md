@@ -26,7 +26,7 @@ These are the core high level principles to follow when designing, building, tes
 > Apply the [API Design Guidelines](../api-design-guidelines/index.md) and use the features of Developer Portal.
 
 - **Design the API first**. Follow [GDS guidance](https://www.gov.uk/guidance/gds-api-technical-and-data-standards#design-your-api-first) and [UKHSA API Design Guidelines](../api-design-guidelines/index.md).
-- Produce an [OpenAPI specification](https://swagger.io/specification/) as the first output of your design process, and then develop it iteratively along with the service.
+- Produce an OpenAPI definition utilising the [OpenAPI specification](https://swagger.io/specification/) as the first output of your design process, and then develop it iteratively along with the service.
 - Share this specification early in development using the Developer Portal to get early feedback on your design.
 
 > [!NOTE]
@@ -58,9 +58,9 @@ These are the core high level principles to follow when designing, building, tes
 ### Generate API Documentation
 
 > [!TIP]
-> Create an [OpenAPI specification](../api-design-guidelines/api-specifications-and-documentation.md) and use the features of Developer Portal to publish it.
+> Create an [OpenAPI definition](../api-design-guidelines/api-specifications-and-documentation.md) and use the features of Developer Portal to publish it.
 
-- **Ensure the API is well documented** using an OpenAPI specification. Documentation should be concise and easy for developers use. The specification is machine-readable and will support the generation of consistent accessible documentation. It can also be used to accelerate development and testing through code generation.
+- **Ensure the API is well documented** using an OpenAPI definition. Documentation should be concise and easy for developers use. The specification is machine-readable and will support the generation of consistent accessible documentation. It can also be used to accelerate development and testing through code generation.
 - Use the Developer Portal to make the API discoverable and ensure it is always accurate, consistent, usable, and discoverable. This documentation supplements the solution documentation on Confluence and [LeanIX Basic Concepts and Modelling Guidance](https://confluence.collab.test-and-trace.nhs.uk/display/AT/LeanIX+Basic+Concepts+and+Modelling+Guidance).
 
 ### Support Testing with API Specifications
@@ -68,7 +68,7 @@ These are the core high level principles to follow when designing, building, tes
 > [!TIP]
 > Adopt the recommended [testing patterns](../api-design-guidelines/testing.md) and use the features of Developer Portal in the SIT environment to support testing.
 
-- Use the OpenAPI specification to help **define testing requirements early in development** and to prepare the test scripts and data that will be needed. Use tools that automatically generate test stubs and client code from your OpenAPI specification to build functional tests.
+- Use the OpenAPI definition to help **define testing requirements early in development** and to prepare the test scripts and data that will be needed. Use tools that automatically generate test stubs and client code from your OpenAPI definition to build functional tests.
 
 ### Test API Performance
 

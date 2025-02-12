@@ -38,7 +38,7 @@ Each section addresses key aspects of building APIs, including naming convention
 
 Here's how to navigate and use these guidelines effectively:
 
-Review the sections on API design, naming conventions, versioning and error handling and create an OpenAPI specification that adheres to these patterns.
+Review the sections on API design, naming conventions, versioning and error handling and create an OpenAPI definition that adheres to these patterns.
 Determine your security requirements and apply the recommended authorisation, authentication and security patterns, such as OAuth 2.0, JWTs, and Role-Based Access Control (RBAC).
-Ensure your API is well-documented including error scenarios and example responses within the OpenAPI specification.
-Use the recommended tools for linting, validating and testing your OpenAPI specification and other aspects of your API.
+Ensure your API is well-documented including error scenarios and example responses within the OpenAPI definition.
+Use the recommended tools for linting, validating and testing your OpenAPI definition and other aspects of your API.

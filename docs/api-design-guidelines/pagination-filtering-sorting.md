@@ -153,16 +153,8 @@ Default sort order **SHOULD** be considered as undefined and non-deterministic.
 
 If a explicit sort order is desired, the query parameter `sort` **SHOULD** be used with the following general syntax: `{field_name}|{asc|desc},{field_name}|{asc|desc}`.
 
-or `{+|-}{field_name},{+|-}{field_name}`
-
 ### Example
 
 ``` text
 GET /product/v1/results?sort=nhs_number|asc,type|desc
-```
-
-### Alternative Example
-
-``` text
-GET /product/v1/results?sort=+nhs_number,-type
 ```
