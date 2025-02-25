@@ -23,9 +23,9 @@ requestBody:
       schema:
       type: object
       properties:
-        first_name:
+        firstName:
           type: string
-        last_name:
+        lastName:
           type: string
 ```
 

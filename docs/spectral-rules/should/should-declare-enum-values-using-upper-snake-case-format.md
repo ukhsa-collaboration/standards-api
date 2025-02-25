@@ -19,7 +19,7 @@ schema:
 
 ``` yaml
 schema:
-  mesurement:
+  measurement:
    type: string
      x-extensible-enum:
        - STANDARD

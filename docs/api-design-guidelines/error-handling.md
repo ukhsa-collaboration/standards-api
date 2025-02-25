@@ -24,6 +24,10 @@ There are some common extension members such as `traceId`, `errors` and `code` w
 | `errors` | **MAY**     | When you want to respresent multiple validation errors from a single request.                                               |
 | `code` | **MAY**     | An API specific error code aiding the provider team understand the error based on their own potential taxonomy or registry. |
 
+If an API extends their Problem Details object to include API specific error codes i.e. adding `code` as an extension, then the API specific error codes **MUST** be documented in the OpenAPI definition.
+
+The [MOT history API](https://documentation.history.mot.api.gov.uk/mot-history-api/error-codes/) and [NHS Spine Core API Framework](https://digital.nhs.uk/services/gp-connect/develop-gp-connect-services/development/error-handling#top) provides a useful example for standardising API specific error codes. While UKHSA's context may differ, a similar approach can be adopted while still adhering to [RFC-9457](https://www.rfc-editor.org/rfc/rfc9457.html).
+
 ## Common Problems Registry
 
 [RFC-9457](https://www.rfc-editor.org/rfc/rfc9457.html) has the concept of a [registry](https://www.rfc-editor.org/rfc/rfc9457.html#registry) for common problems, given that the intended use for these API Design Guidelines is for an APIM Platform, a **single** shared registry of Problem Details **MAY** be created or an existing registry adopted (as long as there aren't multiple registries) for common responses.
@@ -48,17 +52,40 @@ paths:
                   $ref: '#/components/schemas/Result'
                 title: GetResultsListOk
           description: A JSON array containing results objects.
-        '401':
-          $ref: 'https://developer.ukhsa.gov.uk/openApi/common#/components/responses/Unauthorized'
-        '403':
-          $ref: 'https://developer.ukhsa.gov.uk/openApi/common#/components/responses/Forbidden'
+        '404':
+          $ref: 'https://developer.ukhsa.gov.uk/openApi/common#/components/responses/NotFound'
+        default:
+          $ref: 'https://developer.ukhsa.gov.uk/openApi/common#/#/components/responses/UnexpectedError'
+```
+
+``` yaml
+# https://developer.ukhsa.gov.uk/openApi/common contents
+...
+components:
+  responses:
+    UnexpectedError:
+      description: An unexpected error occurred.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/unauthorized'
+            forbidden:
+              $ref: '#/components/examples/forbidden'
+            not-found:
+              $ref: '#/components/examples/not-found'
+            server-error:
+              $ref: '#/components/examples/server-error'
+...
 ```
 
 > [!NOTE]
 >
-> Refer to [RFC-9547](https://www.rfc-editor.org/rfc/rfc9457.html#name-extension-members) standard for additional information.
+> Refer to [RFC-9547](https://www.rfc-editor.org/rfc/rfc9457.html) standard for additional information.
 
-## Example Reponses
+## Example Responses
 
 ### 400 Bad Request - Single Error
 

@@ -5,10 +5,9 @@
 ## Invalid Example
 
 ``` yaml
-
-delivery_methods:
-type: string
-enum:
+deliveryMethods:
+  type: string
+  enum:
     - PARCEL
     - LETTER
     - EMAIL
@@ -17,10 +16,9 @@ enum:
 ## Valid Example
 
 ``` yaml
-
-delivery_methods:
-type: string
-x-extensible-enum:
+deliveryMethods:
+  type: string
+  x-extensible-enum:
     - PARCEL
     - LETTER
     - EMAIL

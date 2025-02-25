@@ -72,9 +72,9 @@ GET /namespace/product/v1
 {
   "name": "product",
   "version": "1.0.1"
-  "release_date": "2024-09-17"
+  "releaseDate": "2024-09-17"
   "documentation": "https://developer.ukhsa.gov.uk/namespace/product/v1/docs"
-  "status": "deprecated"
+  "releaseNotes": "https://developer.ukhsa.gov.uk/namespace/product/v1/releaseNotes"
 }
 ```
 
@@ -84,8 +84,14 @@ GET /namespace/product/v1
 
 Non-breaking changes, such as adding optional fields, new endpoints, or improving performance **MUST NOT** increment the version number.
 
+**SHOULD** maintain backwards compatibility where possible.
+
 ## Deprecation
 
 **MUST** deprecate old API versions and document API deprecation status
 
 **MUST** document when older API versions will be deprecated and eventually retired in the OpenAPI definition.
+
+## Communication
+
+**SHOULD** notify API consumers of upcoming changes.

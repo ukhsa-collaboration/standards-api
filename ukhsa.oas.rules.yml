@@ -10,35 +10,35 @@ rules:
   must-always-return-json-objects-as-top-level-data-structures: warn
   should-not-use-api-as-base-path: off
 
-  # MUST Properties must use either snake_case or camelCase consistently.
-  # => /docs/spectral-rules/must/must-use-consistent-case-for-property-names.md
+  # MUST Properties must use lower camel case.
+  # => /docs/spectral-rules/must/must-use-camel-case-for-property-names.md
 
   must-use-snake-case-for-property-names: off
-  must-use-consistent-case-for-property-names:
+  must-use-camel-case-for-property-names:
     given: $.paths.*.*[responses,requestBody]..content..schema..properties.*~
     severity: error
     then:
-      function: pattern
+      function: casing
       functionOptions:
-        match: ^[a-z][a-z0-9]+(?:(?:_|[A-Z])[a-z0-9]+)*$
+        type: camel
     recommended: true
-    description: Properties must use either snake_case or camelCase consistently.
-    message: Property names must be in snake_case or camelCase consistently.
+    description: Properties must use lower camel case.
+    message: Properties must use lower camel case.
 
-  # MUST Query parameters must use either snake_case or camelCase consistently.
-  # => /docs/spectral-rules/must/must-use-consistent-case-for-query-parameters.md
+  # MUST Query parameters must use lower camel case.
+  # => /docs/spectral-rules/must/must-use-camel-case-for-query-parameters.md
 
   must-use-snake-case-for-query-parameters: off
-  must-use-consistent-case-for-query-parameters:
+  must-use-camel-case-for-query-parameters:
     given: $.paths.*.*.parameters[?(@ && @.in=='query')].name
     severity: error
     then:
-      function: pattern
+      function: casing
       functionOptions:
-        match: ^[a-z][a-z0-9]+(?:(?:_|[A-Z])[a-z0-9]+)*$
+        type: camel
     recommended: true
-    description: Query parameters must use either snake_case or camelCase consistently.
-    message: Query parameters must be in snake_case or camelCase consistently.
+    description: Query parameters must use lower camel case.
+    message: Query parameters must use lower camel case.
 
   # MUST The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.
   # => /docs/spectral-rules/must/must-have-info-api-audience.md

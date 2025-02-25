@@ -84,29 +84,23 @@ Avoid:
 
 ## Parameter Names
 
-APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST NOT** mix the two styles.
+APIs **MUST** use lower camel case for query parameter names.
 
 Use:
 > [!TIP]
-> **snake_case**:
->
-> ``` text
-> /product/v1/users?max_results=10&start_index=20
-> ```
->
-> **OR camelCase**:
 >
 > ``` text
 > /product/v1/users?maxResults=10&startIndex=20
 > ```
 
-Avoid:
+Not:
 > [!CAUTION]
-> **mixed case**:
 >
 > ``` text
-> /product/v1/users?max_results=10&startIndex=20
+> /product/v1/users?max_results=10&start_index=20
 > ```
+
+### Terminology
 
 APIs **MUST** use consistent names for query parameters having the same function across different endpoints.
 
@@ -116,40 +110,63 @@ Example:
 >
 > ``` text
 > /product/v1/orders?limit=10&offset=20
-> /product/v1/users?max_results=10&start_index=20
-> ```
-
-Use consistent terminology across the API and in documentation. For instance, if you use `customer` in one part of your API, don't switch to `client` in another API if they represent the same concept.
-
-Example:
-
-> [!CAUTION]
->
-> ``` text
-> /product/v1/orders?customer_id=123
-> /product/v1/users?client_id=123
+> /product/v1/users?maxResults=10&startIndex=20
 > ```
 
 ## Property Names
 
-APIs **MUST** use either **snake_case** or **camelCase** consistently and **MUST NOT** mix the two styles.
+APIs **MUST** use lower camel case for properties.
 
-For example:
+Example:
 
-**snake_case**:
+Use:
+> [!TIP]
+>
+> ``` json
+> {
+>     "customerId": "12345",
+>     "userId" : "54321"
+> }
+> ```
 
-``` json
-{
-    "customer_id": "12345",
-    "user_id" : "54321"
-}
-```
+Not:
+> [!CAUTION]
+>
+> ``` json
+> {
+>     "customer_id": "12345",
+>     "user_id" : "54321"
+> }
+> ```
 
-**OR camelCase**:
+## Terminology
 
-``` json
-{
-    "customerId": "12345",
-    "userId" : "54321"
-}
-```
+Use consistent terminology across the API and in documentation. For instance, if you use `customer` in one part of your API, don't switch to `client` in another API if they represent the same concept.
+
+Example query string:
+
+> [!CAUTION]
+>
+> ``` text
+> /product/v1/orders?customerId=123
+> /product/v1/users?clientId=123
+> ```
+
+Example request/response model:
+> [!CAUTION]
+>
+> ``` json
+> # order
+> {
+>     "orderId": "12345",
+>     "customerId" : "54321"
+>     ...
+> }
+> 
+> # user
+> {
+>     "userId": "12345",
+>     "clientId" : "54321"
+>     ...
+> }
+> ```

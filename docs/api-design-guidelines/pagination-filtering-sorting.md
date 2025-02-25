@@ -40,10 +40,10 @@ The body of responses containing lists of results **SHOULD** contain pagination 
     // ... more results ...
   ],
   "metadata": {
-    "total_results": 100,
-    "total_pages": 10,
-    "current_page": 1,
-    "page_size": 10
+    "totalResults": 100,
+    "totalPages": 10,
+    "currentPage": 1,
+    "pageSize": 10
   }
 }
 ```
@@ -151,10 +151,10 @@ paths:
 
 Default sort order **SHOULD** be considered as undefined and non-deterministic.
 
-If a explicit sort order is desired, the query parameter `sort` **SHOULD** be used with the following general syntax: `{field_name}|{asc|desc},{field_name}|{asc|desc}`.
+If a explicit sort order is desired, the query parameter `sort` **SHOULD** be used with the following general syntax: `{fieldName}|{asc|desc},{fieldName}|{asc|desc}`.
 
 ### Example
 
 ``` text
-GET /product/v1/results?sort=nhs_number|asc,type|desc
+GET /product/v1/results?sort=nhsNumber|asc,type|desc
 ```
