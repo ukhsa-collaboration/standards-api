@@ -4,6 +4,12 @@ extends:
   - https://unpkg.com/@stoplight/spectral-documentation/dist/ruleset.mjs
 
 documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
+
+functions:
+  - is-api-info-json-schema
+
+functionsDir: functions
+
 rules:
   oas3-api-servers: off
   must-have-info-x-api-id: off
@@ -57,6 +63,59 @@ rules:
     recommended: true
     description: 'The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.'
     message: Missing or wrong `info.x-audience`, should be one of company-internal, partner-external, premium-external or public-external.
+
+  # MUST Path must start with a slash and must not end with a slash.
+  # => /docs/spectral-rules/must/must-use-normalized-paths.md
+
+  must-use-normalized-paths-without-trailing-slash: off
+  must-use-normalized-paths:
+    given: $.paths.*~
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: ^\/($|[^\/].*[^\/]$)
+    description: "Path must start with a slash and must not end with a slash (except root path '/')"
+    message: "Path must start with a slash and must not end with a slash (except root path '/')"
+
+  # SHOULD APIs SHOULD have a root path (`/`) defined.
+  # => /docs/spectral-rules/must/should-define-api-root.md
+
+  should-define-api-root:
+    given: $.paths
+    severity: warn
+    then:
+      field: /
+      function: truthy
+    recommended: true
+    description: Good documentation is always welcome, but API consumers should be able to get a pretty long way through interaction with the API alone. They should at least know they're looking at the right place instead of getting a 404 or random 500 error as is common in some APIs.
+    message: APIs SHOULD have a root path (`/`) defined.
+
+  # MUST Root path must define a 200 response..
+  # => /docs/spectral-rules/must/must-return-200-for-api-root.md
+
+  must-return-200-for-api-root:
+    given: $.paths["/"].*.responses
+    severity: error
+    then:
+      field: '200'
+      function: truthy
+    recommended: true
+    description: 'Root path must define a 200 response.'
+    message: 'Root path must define a 200 response.'
+
+  # MUST `ApiInfo` schema must include this set of minimal required properties and validations.
+  # => /docs/spectral-rules/must/must-use-valid-version-info-schema.md
+
+  must-use-valid-version-info-schema:
+    given: $.paths["/"].*.responses["200"].content["application/json"]
+    severity: error
+    then:
+      function: is-api-info-json-schema
+      field: schema
+    recommended: true
+    description: '`ApiInfo` schema must include this set of minimal required properties and validations.'
+    message: '{{error}}'
 
   # MUST The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.
   # => /docs/spectral-rules/must/must-have-info-value-chain.md

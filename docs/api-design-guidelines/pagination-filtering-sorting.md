@@ -76,8 +76,7 @@ paths:
           description: The type of test to filter by.
           schema:
             type: string
-            examples:
-            - Lateral Flow Test
+            example: Lateral Flow Test
         - in: query
           name: result
           required: false
@@ -88,10 +87,7 @@ paths:
               - POSITIVE
               - NEGATIVE
               - UNREADABLE
-            examples:
-              - POSITIVE
-              - NEGATIVE
-              - UNREADABLE
+            example: POSITIVE
 ```
 
 ### Alternative Example
@@ -119,18 +115,14 @@ paths:
             type: string
             pattern: '^\d{3}(?:-| )?\d{3}(?:-| )?\d{4}$'
             description: The nhs number of patient
-            examples:
-              - '4857773456'
-              - '485 777 3456'
-              - '485-777-3456'
+            example: '4857773456'
         - in: query
           name: type
           required: false
           description: The type of test to filter by.
           schema:
             type: string
-            examples:
-            - Lateral Flow Test
+            example: Lateral Flow Test
         - in: query
           name: result
           required: false
@@ -141,10 +133,7 @@ paths:
               - POSITIVE
               - NEGATIVE
               - UNREADABLE
-            examples:
-              - POSITIVE
-              - NEGATIVE
-              - UNREADABLE
+            example: POSITIVE
 ```
 
 ## Sorting
@@ -157,4 +146,23 @@ If a explicit sort order is desired, the query parameter `sort` **SHOULD** be us
 
 ``` text
 GET /product/v1/results?sort=nhsNumber|asc,type|desc
+```
+
+``` yaml
+components:
+  parameters:
+    sortParam:
+      in: query
+      name: sort
+      description: How to sort the results.
+      schema:
+        type: string
+        pattern: ^[a-z]+(?:[A-Z][a-z]+)+\|(?:asc|desc)(?:,[a-z]+(?:[A-Z][a-z]+)*\|(?:asc|desc))*$
+      examples:
+        sortBySingleField:
+          value: nhsNumber|asc
+          summary: Sort by a single field
+        sortByMultipleField:
+          value: nhsNumber|asc,type|desc
+          summary: Sort by multiple fields
 ```

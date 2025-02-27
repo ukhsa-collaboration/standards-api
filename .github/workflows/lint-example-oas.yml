@@ -20,11 +20,21 @@ jobs:
     name: Lint Example OpenAPI
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Run Spectral
-      - uses: stoplightio/spectral-action@latest
-        with:
-          file_glob: "./example/*.{json,yml,yaml}"
+      - name: Install spectral
+        run: curl -L https://raw.github.com/stoplightio/spectral/master/scripts/install.sh | sh
+
+      - name: Lint example OpenAPI
+        run: |
+          spectral --version
+          spectral lint "./example/*.{json,yml,yaml}" -f github-actions

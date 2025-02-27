@@ -1,30 +1,40 @@
 'use strict';
 
 const assertObjectSchema = (schema) => {
+  const results = [];
+
   if (schema.type !== 'object') {
-    throw 'Schema type is not `object`';
+    results.push({ message: "Schema type is not `object`" });
   }
+
   if (schema.additionalProperties) {
-    throw 'Schema is a map';
+    results.push({ message: "Schema is a map" });
   }
+
+  return results;
 };
 
 const check = (schema) => {
-  const combinedSchemas = [...(schema.anyOf || []), ...(schema.oneOf || []), ...(schema.allOf || [])];
+  const combinedSchemas = [...(schema?.anyOf ?? []), ...(schema?.oneOf ?? []), ...(schema?.allOf ?? [])];
+
   if (combinedSchemas.length > 0) {
-    combinedSchemas.forEach(check);
+    return combinedSchemas.map(check).flat();
   } else {
-    assertObjectSchema(schema);
+    return assertObjectSchema(schema);
   }
 };
 
 export default (targetValue) => {
+  if(targetValue === null || typeof targetValue !== "object") {
+      return [];
+  }
+
   try {
-    check(targetValue);
+    return check(targetValue);
   } catch (ex) {
     return [
       {
-        message: ex,
+        message: ex?.message ?? ex,
       },
     ];
   }

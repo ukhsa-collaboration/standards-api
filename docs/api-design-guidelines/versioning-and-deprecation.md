@@ -64,13 +64,15 @@ Avoid:
 
 `MINOR` and `PATCH` versions **MUST NOT** be added to the URI as they do not affect compatibility.
 
-There **SHOULD** be an endpoint to return version metadata that is also documented in the OpenAPI definition.
+## API root endpoint
+
+There **SHOULD** be an endpoint to return version metadata (typically the APIs root `/` endpoint) that is also documented in the OpenAPI definition, not only will this provide useful API metadata but will help API consumers know they're looking at the right place instead of getting a `404` or random `500` error as is common in some APIs.
 
 ``` text
 GET /namespace/product/v1
- 
+
 {
-  "name": "product",
+  "name": "Product API",
   "version": "1.0.1"
   "releaseDate": "2024-09-17"
   "documentation": "https://developer.ukhsa.gov.uk/namespace/product/v1/docs"
