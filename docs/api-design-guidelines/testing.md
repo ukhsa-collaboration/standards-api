@@ -48,13 +48,12 @@
 | **How it's done**       | By using automated tools to scan code, configuration, and network settings for vulnerabilities. | Reconnaissance, vulnerability scanning, attempting to exploit vulnerabilities, and finally providing a detailed report. Typically performed by a security specialist/professional. |
 | **What it reveals**     | A list of known vulnerabilities, misconfigurations, and weaknesses in the API. | Specific vulnerabilities that can be exploited, their impact, and recommendations for remediation. |
 
-
 ## Recommended Testing Tools
 
 | Tool | Useful For | Open Source Licence |
 | -- | -- | -- |
 | **[Spectral CLI](https://docs.stoplight.io/docs/spectral)** | Validating your OpenAPI definitions against the OpenAPI Specification and the [UKSHA spectral ruleset](../spectral-rules/index.md). | [Apache 2.0](https://opensource.org/license/apache-2-0) |
-| **[Prism](https://stoplight.io/open-source/prism)** | <ul><li>API Mock Servers from OpenAPI definition</li><li>Contract Testing for API consumers and developers.</li></ul> | [Apache 2.0](https://opensource.org/license/apache-2-0) |
+| **[Prism](https://stoplight.io/open-source/prism)** | API Mock Servers from OpenAPI definition<br>Contract Testing for API consumers and developers. | [Apache 2.0](https://opensource.org/license/apache-2-0) |
 | **[Pact](https://docs.pact.io/)** | Consumer-Driven Contract Testing to ensure that your API meets the expectations of its consumers. | [MIT](https://opensource.org/license/mit) |
 | **[Zed Attack Proxy (ZAP)](https://www.zaproxy.org/)** | Web application vulnerability scanner. | [Apache 2.0](https://opensource.org/license/apache-2-0) |
 

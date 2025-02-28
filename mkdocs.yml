@@ -21,6 +21,7 @@ nav:
     - api-design-guidelines/performance-reliability-monitoring.md
     - api-design-guidelines/governance.md
     - api-design-guidelines/data-standards.md
+    - api-design-guidelines/common-data-types.md
     - api-design-guidelines/integration-patterns.md
   - API Guidance Summary:
     - guidance-summary/index.md

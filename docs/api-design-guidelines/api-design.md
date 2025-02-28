@@ -52,7 +52,7 @@ Idempotent methods can be be executed multiple times with the same result as exe
 
 ## Response Format
 
-APIs **SHOULD** accept and return valid [JSON](https://www.rfc-editor.org/rfc/rfc8259.html) as the standard default data interchange format.
+APIs **SHOULD** accept and return valid [JSON](https://datatracker.ietf.org/doc/html/rfc8259) as the standard default data interchange format.
 
 APIs **MAY** use the [json.api](https://jsonapi.org/) specification.
 

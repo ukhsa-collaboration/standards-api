@@ -1,6 +1,7 @@
 # **MUST** have info description
 
 The `info` object **MUST** have a `description` property defined.
+
 ## Valid Example
 
 ``` yaml

@@ -1,93 +1,116 @@
 # Data Standards
 
-APIs **SHOULD** follow the GDS Standards
+Data standards provide a common language for representing information, enabling different systems to understand and process data without ambiguity.
 
-## Data Format and Types
+Consideration **MUST** be given to the use of appropriate data standards to ensure consistency and ease of integration.
 
-- You **SHOULD** define explicit data types for all properties in your OpenAPI schemas.
-- You **MUST** ensure that data formats (e.g., date-time, uuid) are used consistently across endpoints.
-- You **MAY** introduce custom formats, but they **SHOULD** be documented clearly.
+## Core Principles
 
-## Data Validation
+- APIs **MUST** use consistent data formats and standards across all endpoints.
+- APIs **MUST** validate all incoming data against defined schemas.
+- APIs **MUST** follow data protection and privacy requirements for sensitive data.
+- APIs **MUST** document any deviations from standard formats.
 
-- You **MUST** validate all incoming request data to maintain consistency and integrity.
-- You **SHOULD** apply validation rules at both the service and model levels.
-- You **MAY** return validation errors following the problem details guidelines.
+## Data Models vs. Data Representations
 
-## Data Integrity and Consistency
+It is important to differentiate between *data models* and *data representations*:
 
-- You **MUST** ensure that data is stored in a reliable manner, preventing partial or corrupted data states.
-- You **SHOULD** handle concurrency and conflict scenarios gracefully, especially with multiple updates.
-- You **SHOULD NOT** alter data without proper versioning or retention strategies if historical accuracy is required.
+- **Data Model** defines the structure, relationships, and constraints of data within a specific domain. It is a conceptual blueprint that outlines how data elements relate to each other and the rules governing their use.
 
-## Data Classification and Privacy
+- **Data Representation** is the concrete format in which data is serialised for exchange or storage. For RESTful APIs, this is commonly [JSON][json].
 
-- You **MUST** classify sensitive data (PII, PHI, etc.) according to organizational security policies.
-- You **SHOULD** mask or encrypt data in transit and at rest, following applicable security guidelines.
-- You **MAY** log non-sensitive data for troubleshooting, but **SHOULD NOT** log secrets or personal identifiers.
+## Industry Standards
 
-## Existing Standards
+APIs **SHOULD** adopt a domain-specific [UKHSA data model](https://confluence.collab.test-and-trace.nhs.uk/display/TCFPP/Logical+Data+Model) or adopt an existing industry standard where appropriate while still using [JSON][json] as its core/principal data representation.
 
-- You **MAY** leverage established data standards and formats, such as [FHIR UK Core](https://digital.nhs.uk/services/fhir-uk-core) and [OMOP](https://www.ohdsi.org/omop/) where appropriate.
-- You **SHOULD** document any adaptations to these standards clearly, ensuring consumers understand how they deviate from the official specifications if necessary.
+When defining new APIs or uplifting APIs it is important to look for industry standards and open standards that have already been adopted within UKHSA or by other related organisations and industries, such as [FHIR][fhir] for health data which is used by NHS England and [OMOP][omop] for data analysis.
 
-This document outlines best practices for adopting recommended API patterns and data standards within the UKHSA. Adhering to these standards will ensure interoperability, data consistency, and efficient information sharing.
+### FHIR Implementations
 
-## API Patterns
+If implementing the FHIR standard:
 
-While the specific API patterns adopted by UKHSA should be clearly defined (e.g., RESTful APIs using JSON), it's crucial to address common errors and their handling. Consistency in error reporting is vital for developers.
-The [NHS Spine Core API Framework](https://digital.nhs.uk/services/gp-connect/develop-gp-connect-services/development/error-handling#top) provides a useful model for standardising error handling. While UKHSA's context may differ, a similar approach can be adopted. This involves defining a consistent set of HTTP status codes and associated error messages for various scenarios. Consider mapping specific error conditions to appropriate HTTP status codes (e.g., 400 Bad Request for invalid input, 404 Not Found for missing resources, 500 Internal Server Error for unexpected server issues). Providing detailed error messages in a structured format (e.g., JSON) will aid debugging.
+- APIs **MUST** use [FHIR UK Core][fhir-uk-core] profiles where they exist.
+- APIs **MUST** document any extensions to standard FHIR resources.
+- APIs  **SHOULD** implement FHIR REST API patterns as described in the [FHIR specification][fhir-restful].
+- APIs **MAY** create custom FHIR profiles when UK Core profiles don't meet your needs.
 
-## Data Standards and Record Keeping
+### OMOP Implementations
 
-The [Professional Record Standards Body (PRSB)](https://theprsb.org/), commissioned by NHS England, plays a vital role in defining data standards for healthcare. Their work, including the [Core Information Standard (CIS)](https://theprsb.org/standards/core-information-standard/), provides a foundation for consistent data recording. CIS defines a set of information elements organised under headings like "Person demographics," covering data points such as `name`, `date of birth`, and `address history`.
+If implementing the OMOP Common Data Model:
 
-Subsets of CIS, like the [Community Pharmacy Standard](https://theprsb.org/standards/communitypharmacy/), tailor the standard to specific healthcare settings. These subsets often share core components with CIS but include additional elements relevant to their specific domain. They may also provide implementation guidance, such as specifying information to be shared with GPs.
+- APIs **MUST** use standardised clinical tables as defined in the [OMOP CDM specification][omop].
+- APIs **MUST** map source terminologies/vocabularies to OMOP standard concepts.
+- APIs **SHOULD** implement [OMOP data quality assessment procedures][omop-dqd].
+- APIs **MAY** create ETL processes to synchronised between OMOP and other standards such as FHIR when both are needed.
 
-While the PRSB standards are valuable, it's important to acknowledge their limitations. Gaps exist, and some terminology may be outdated or contain an excessive number of concepts (e.g., codes for anatomical sites). Other standards, like [OpenEHR](https://specifications.openehr.org/), also exist and should be considered.
+## Terminology Standards
 
-UKHSA **SHOULD** evaluate these options and choose the most appropriate standard(s) for their needs.
+Terminology (or controlled vocabularies) play a crucial role in ensuring that data has a consistent and unambiguous meaning.
 
-## Data Model vs. Representation
+Using common terminologies is essential for data quality, consistency, and interoperability.
 
-A crucial distinction exists between a _data model_ (what is stored) and its _representation_ (how it is transmitted). While a data model might mandate storing a citizen's full address history, the Information Commissioner's Office (ICO) Data Protection Principle (c) dictates that only necessary data should be processed for a specific purpose. Sharing a full address history when only a test result is required would be excessive.
+Terminology is *not* the same as FHIR. FHIR provides the *structure* and *format* for exchanging data, while terminology defines the *meaning* of the data elements within that structure.
 
-Therefore, UKHSA **MUST** carefully consider what data is _stored_ versus what is _sent_. This will vary depending on the use case. Standardising this "what to send" aspect is crucial for efficient and privacy-preserving data exchange.
+APIs **MUST** adopt standardised terminologies (e.g., [SNOMED CT][snomed-ct-uk-ed], [ICD-10][icd-10-5e], [dm+d][dmd]) whenever applicable.
 
-## FHIR (Fast Healthcare Interoperability Resources)
+APIs **SHOULD** specify the required terminologies for each data element within their OpenAPI definition, taking into account regional differences.
 
-FHIR, developed by HL7, offers a solution for standardising healthcare data representation and exchange. It addresses:
+### Terminology Implementations
 
-1. A standard way to represent healthcare concepts in JSON or XML.
-2. A standard way to transact this information between systems using FHIR APIs.
-
-FHIR uses "resources" to represent healthcare concepts (e.g., "Medication," "Observation," "Condition," "Patient"). Resources contain elements, which can be primitive data types or complex types defined by the standard. For example, a "Patient" resource includes a `name` element of type `HumanName`, which has specific sub-elements for given names and surname.
-
-_Cardinality_ specifies the number of occurrences of an element. For example, a patient might have multiple given names (cardinality of `0..*` or `1..*`), but typically one surname (`0..1` or `1..1`).
-
-NHS England has developed "[UK Core](https://digital.nhs.uk/services/fhir-uk-core)" FHIR [profiles](https://www.hl7.org/fhir/profiling.html), which are tailored for UK use and align with international profiles (e.g., [US Core](https://www.hl7.org/fhir/us/core/)) where possible. Using profiles ensures consistency and interoperability within the UK.
-
-## Terminology
-
-Terminology (or controlled vocabularies) plays a crucial role in ensuring that data has a consistent and unambiguous meaning. It provides a standardised set of codes and descriptions for concepts, allowing different systems to understand and interpret data correctly. Imagine you're recording information about a person's health. Someone might describe their ailment as a "headache," while another person might describe it as a "migraine." While both relate to head pain, they are distinct conditions. A simple text field might capture both, but it wouldn't allow systems to easily differentiate between them.
-
-Terminology provides specific codes for "headache" and "migraine" (e.g., specific codes within [SNOMED CT](https://digital.nhs.uk/services/terminology-and-classifications/snomed-ct)). Using these standardised codes ensures that all systems understand the precise nature of the reported condition. This is vital for accurate data analysis, reporting, and clinical decision support.
-
-Terminology is _not_ the same as FHIR. FHIR provides the _structure_ and _format_ for exchanging data (like the container), while terminology defines the _meaning_ of the data elements within that structure (like the contents). FHIR resources often reference terminologies to ensure semantic interoperability. For example, a FHIR Observation resource for headache might use SNOMED CT codes to represent the specific type of headache.
-
-Using standardised terminologies (e.g., [SNOMED CT](https://digital.nhs.uk/services/terminology-and-classifications/snomed-ct), [ICD-10](https://classbrowser.nhs.uk/#/book/ICD-10-5TH-Edition)) is essential for data quality, consistency, and interoperability. Within England, the NHS Dictionary of Medicines and Devices (dm+d) is commonly used for medicines and devices. However, it's important to note that other parts of the UK (Scotland, Wales, and Northern Ireland) may use different drug dictionaries and coding systems. Therefore, when exchanging data across the UK, it's crucial to consider these regional variations and ensure appropriate mapping or translation between terminologies.
-
-UKHSA **SHOULD** specify the required terminologies for each data element within their data standards, taking into account these regional differences.
+- APIs **SHOULD** use [SNOMED CT][snomed-ct-uk-ed] for clinical terms.
+- APIs **SHOULD** use [ICD-10][icd-10-5e] for medical diagnosis.
+- APIs **SHOULD** use [dm+d][dmd] for medicines and devices in England.
+- APIs **SHOULD** document any regional terminology variations for Scotland, Wales, and Northern Ireland.
+- APIs **SHOULD** provide terminology mappings when exchanging data across regions
 
 ## Additional Considerations
 
-Here are a few more points you might consider adding to the guidance:
+### Compliance
 
-- **Versioning:** API patterns, data standards, and terminologies evolve over time. The guidance should address versioning strategies. How will changes be managed? How will backwards compatibility be maintained (or not)? How will consumers of the APIs be notified of changes?
-- **Security:** Security is paramount, especially when dealing with sensitive health data. The guidance should include security best practices, such as authentication, authorisation, data encryption (both in transit and at rest), and regular security audits. Reference relevant security standards (e.g., ISO 27001, NIST cybersecurity framework).
-- **Data Governance:** Clear data governance policies are essential. Who is responsible for the data? How is data quality ensured? How is data access controlled? How is data retention and disposal managed?
-- **Testing:** Robust testing is crucial for ensuring the quality and interoperability of systems. The guidance should encourage thorough testing, including unit tests, integration tests, and performance tests. Consider specifying testing frameworks or tools.
-- **Documentation:** Comprehensive documentation is vital for developers and users. APIs and data standards should be well-documented, including clear explanations of their usage, data elements, error codes, and versioning information. Consider using documentation generators (e.g., Swagger/OpenAPI).
-- **Implementation Guidance:** Provide practical implementation guidance, including examples and best practices. This will help developers adopt the standards more easily.
-- **Conformance Testing:** Consider implementing conformance testing to verify that systems comply with the defined standards. This will help ensure interoperability.
-- **Evolution and Maintenance:** The guidance should address how the standards will be maintained and updated over time. Who is responsible for this? What is the process for proposing changes? How will changes be communicated to stakeholders? (edited)
+If there are regulatory or industry compliance requirements that mandate the use of specific data standards, these **MUST** be adhered to.
+
+### Interoperability
+
+When APIs are designed to exchange data with external systems, especially within a specific industry or domain, a recognised data standard **SHOULD** be adopted. This ensures that both the API and the consuming systems can understand the data exchanged.
+
+### Over-Engineering
+
+Data standards **MUST NOT** be applied blindly to every API. If an API's scope is extremely narrow, if it is not intended for data exchange, and if there are no compelling reasons for standardisation, then a custom model and representation may be more appropriate.
+
+### Performance Degradation
+
+If adopting a data standard would introduce significant overhead in terms of processing or data size, and if interoperability is not a critical requirement, a standard **MUST NOT** be forced into the design.
+
+### Fit for purpose
+
+If the data standard doesn't have the necessary types or fields to correctly describe the data, it **MUST NOT** be forced into the design.
+
+### Internal APIs (Limited Scope)
+
+In cases where APIs are purely internal and their data is not intended for broader exchange, the use of data standards **MAY** be considered if it would improve the consistency between internal services.
+
+## Government Data Standards
+
+As per the [GDS Guidence][gds-guidence] you **SHOULD** design your APIs to follow appropriate government data standards in the [Data Standards Catalog][gds-dsc] and [External Standards Catalog][gds-esc].
+
+### Other relevent standards
+
+- **JSON** ([RFC8259][json]) is a lightweight, text-based,
+   language-independent data interchange format.
+- **GeoJSON** ([RFC7946][geo-json]) is a geospatial data interchange format based on JavaScript Object Notation (JSON).
+
+See [Common Data Types](../api-design-guidelines/common-data-types.md) for additional standards.
+
+[fhir]:https://hl7.org/fhir/
+[fhir-restful]:https://hl7.org/fhir/http.html
+[fhir-uk-core]:https://digital.nhs.uk/services/fhir-uk-core
+[omop]:https://ohdsi.github.io/CommonDataModel/
+[omop-dqd]:https://ohdsi.github.io/DataQualityDashboard/
+[snomed-ct-uk-ed]:https://digital.nhs.uk/services/terminology-and-classifications/snomed-ct
+[icd-10-5e]:https://classbrowser.nhs.uk/#/book/ICD-10-5TH-Edition
+[dmd]:https://www.nhsbsa.nhs.uk/pharmacies-gp-practices-and-appliance-contractors/dictionary-medicines-and-devices-dmd
+[gds-guidence]:https://www.gov.uk/guidance/gds-api-technical-and-data-standards#follow-the-technology-code-of-practice-and-other-standards
+[gds-dsc]:https://alphagov.github.io/data-standards-authority/standards/
+[gds-esc]: https://alphagov.github.io/data-standards-authority/standards/external-standards
+[json]:https://datatracker.ietf.org/doc/html/rfc8259
+[geo-json]:https://datatracker.ietf.org/doc/html/rfc7946
