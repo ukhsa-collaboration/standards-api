@@ -36,19 +36,22 @@ APIs **MUST** use the appropriate HTTP method to perform operations on resources
 
 APIs **SHOULD** observe standard method semantics:
 
-| Method  | Safe? | Is idempotent? | Is cacheable? |
-|---------|-------|----------------|---------------|
-| GET     | Yes   | Yes            | Optional      |
-| HEAD    | Yes   | Yes            | Optional      |
-| POST    | No    | No             | No            |
-| PUT     | No    | Yes            | No            |
-| PATCH   | No    | No             | No            |
-| DELETE  | No    | Yes            | No            |
-| OPTIONS | Yes   | Yes            | No            |
+- [Safe methods](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.1) have no side affects (i.e. using the method does not alter data).
+- [Idempotent methods](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.2) can be be executed multiple times with the same result as executing once.
+- [Cacheable methods](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.3) indicate responses can be cached / stored for future reuse.
 
-Safe methods have no side affects (i.e. using the method does not alter data).
+Method implementations must fulfill the following basic properties according to [RFC9110 Section 9.2](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2):
 
-Idempotent methods can be be executed multiple times with the same result as executing once.
+| Method    | Safe? | Is idempotent? | Is cacheable? |
+|-----------|-------|----------------|---------------|
+| `GET`     | Yes   | Yes            | Optional      |
+| `HEAD`    | Yes   | Yes            | Optional      |
+| `POST`    | No    | No             | No            |
+| `PUT`     | No    | Yes            | No            |
+| `PATCH`   | No    | No             | No            |
+| `DELETE`  | No    | Yes            | No            |
+| `OPTIONS` | Yes   | Yes            | No            |
+| `TRACE`   | Yes   | Yes            | No            |
 
 ## Response Format
 

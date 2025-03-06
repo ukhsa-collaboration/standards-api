@@ -18,7 +18,10 @@ nav:
     - api-design-guidelines/versioning-and-deprecation.md
     - api-design-guidelines/pagination-filtering-sorting.md
     - api-design-guidelines/testing.md
-    - api-design-guidelines/performance-reliability-monitoring.md
+    - Performance, Reliability & Monitoring:
+    #- api-design-guidelines/performance-reliability-monitoring.md
+    #- api-design-guidelines/performance-reliability-monitoring-new.md
+      - api-design-guidelines/caching.md
     - api-design-guidelines/governance.md
     - api-design-guidelines/data-standards.md
     - api-design-guidelines/common-data-types.md
@@ -69,6 +72,11 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
 
 plugins:
   - search
