@@ -56,6 +56,35 @@ Cache-Control: no-cache, no-store, must-revalidate, max-age=0
 
 Whilst this may seem inefficient, there are actually a good reasons for doing so, Preventing any accidental client caching of sensitive/secure data, meaning it's much safer to default to a posture of no client caching by default.
 
+## Server-Side Response Caching
+
+APIs **SHOULD** implement server-controlled response caching that is independent of client-specified caching headers.
+
+APIs **SHOULD** utilise their respective development ecosystem and take advantage of the available caching tools/libraries to support server-side response caching, for example if you are building your API with dotnet there is an [output caching](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/output) middleware specifically for sever controlled caching, and for python there is a framework agnostic caching library called [cachews](https://github.com/Krukov/cashews).
+
+When utilising an API gateway, APIs **SHOULD** make use of any response caching functionality, as this helps to reduces the load on the backend API; Azure Api Management (APIM) provides this functionality [through the use of policies](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-cache).
+
+### Implementation Approaches
+
+#### Basic Implementation Pattern
+
+The general pattern for implementing server-side response caching is:
+
+1. Check if request can be served from cache.
+2. If cached, return cached response.
+3. If not cached, generate response and store in cache.
+4. Return fresh response.
+
+``` mermaid
+flowchart LR
+    Request[Request Arrives] --> Lookup[Cache Key Lookup]
+    Lookup --> Hit{Cache Hit?}
+    Hit -->|Yes| Return[Return Cached Response]
+    Hit -->|No| Generate[Generate Fresh Response]
+    Generate --> CacheResponse[Cache Response]
+    CacheResponse --> ReturnFresh[Return Fresh Response]
+```
+
 ## Client-Side Caching
 
 While server-side caching is preferred, there are cases where client-side caching **MAY** be appropriate:
@@ -70,9 +99,9 @@ If your API *really* requires supporting `HTTP caching` , please observe the fol
 
 **MUST** document all [cacheable](../api-design-guidelines/api-design.md#http-methods-semantics) `GET`, `HEAD`, and `POST` endpoints by declaring the support of [`Cache-Control`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.2), [`Vary`](https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5), and [`ETag`](https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3) headers in response.
 
-**MUST NOT** define the [`Expires`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.3) header to prevent redundant and ambiguous definition of cache lifetime. A sensible default documentation of these headers is given below.
+**MUST NOT** define the [`Expires`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.3) header to prevent redundant and ambiguous definition of cache lifetime.
 
-**MUST** take care to specify the ability to support caching by defining the right caching boundaries, i.e. time-to-live and cache constraints, by providing sensible values for [`Cache-Control`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.2) and [`Vary`](https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5) in your service. We will explain best practices below.
+**MUST** take care to specify the ability to support caching by defining the right caching boundaries, i.e. time-to-live and cache constraints, by providing sensible values for [`Cache-Control`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.2) and [`Vary`](https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5) in your service.
 
 APIs **SHOULD** use appropriate Cache-Control directives:
 
@@ -512,3 +541,40 @@ APIs using caching **SHOULD** monitor:
 - **Cache Size**: Memory/storage consumption by the cache.
 
 APIs **SHOULD** aim for a cache hit rate of at least 80% for cacheable resources.
+
+### Response Headers for Monitoring
+
+APIs **MAY** consider adding headers to help with debugging and monitoring:
+
+``` text
+X-Cache: HIT
+X-Cache-TTL-Remaining: 286
+X-Cache-Key: products:fec65fb3-1e5e-4ff2-a6e0-a423f77f0000
+```
+
+``` text
+X-Cache: HIT
+X-Cache-TTL-Remaining: 286
+X-Cache-Key: products:list:limit=10:offset=0:sort=name|asc
+```
+
+### Example metrics capture
+
+The below pseudo python example shows how you could manually log caching statistics, however there might libraries that could collect this telemetry for you with OpenTelemetry instrumentation such as [opentelemetry-instrumentation-fastapi](https://opentelemetry-python-contrib.readthedocs.io/en/latest/instrumentation/fastapi/fastapi.html).
+
+``` python
+# Python example of cache monitoring
+def get_cached_response(cache_key):
+    start_time = time.time()
+    cached_response = cache.get(cache_key)
+    lookup_time = time.time() - start_time
+    
+    metrics.timing('cache.lookup_time', lookup_time)
+    
+    if cached_response:
+        metrics.increment('cache.hit')
+        return cached_response
+    else:
+        metrics.increment('cache.miss')
+        return None
+```
