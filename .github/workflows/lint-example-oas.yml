@@ -1,24 +1,39 @@
 name: Lint Example OpenAPI
 on:
   pull_request:
-    paths:
-      - 'functions/*'
-      - 'example/*'
-      - '.spectral.yaml'
-      - '*.oas.rules.*'
   push:
-    paths:
-      - 'functions/*'
-      - 'example/*'
-      - '.spectral.yaml'
-      - '*.oas.rules.*'
     branches:
       - main
 
 jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    # Required permissions
+    permissions:
+      contents: read
+      pull-requests: read
+    # Set job outputs to values from filter step
+    outputs:
+      linting: ${{ steps.changes.outputs.linting }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - uses: dorny/paths-filter@v3
+      id: changes
+      with:
+        filters: |
+          linting:
+            - 'functions/**'
+            - 'example/**'
+            - '.spectral.yaml'
+            - '*.oas.rules.*'
+
   lint-example-openapi:
     name: Lint Example OpenAPI
-
+    needs: changes
+    if: ${{ needs.changes.outputs.linting == 'true' }}
     runs-on: ubuntu-latest
 
     permissions:
