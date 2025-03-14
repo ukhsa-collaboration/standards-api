@@ -2,6 +2,11 @@ name: Lint Example OpenAPI
 on:
   pull_request:
   push:
+    paths:
+      - 'functions/*'
+      - 'example/*'
+      - '.spectral.yaml'
+      - '*.oas.rules.*'
     branches:
       - main
 
