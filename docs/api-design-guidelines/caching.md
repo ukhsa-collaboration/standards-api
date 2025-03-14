@@ -87,7 +87,7 @@ flowchart LR
 
 ## Client-Side Caching
 
-Server-side caching is preferred and client-side caching **SHOULD** be avoided. However, there are cases where client-side caching **MAY** be appropriate:
+Client-side caching **SHOULD** be avoided. However in addition to [server-side response caching](#server-side-response-caching), there are cases where client-side caching **MAY** be appropriate:
 
 1. When offline capability is required (e.g., mobile applications)
 2. For static resources that rarely change (e.g., images, stylesheets)
