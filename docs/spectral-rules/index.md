@@ -57,6 +57,36 @@ spectral lint openapi-definition.yml
 
 Once the linter has highlighted any issues or errors, review and fix to ensure your OpenAPI definition remains compliant with the UKHSA guidelines.
 
+### CI/CD Github Actions
+
+The following is a sample Github actions job which can be used as an example of setting up linting as part of you CI/CD pipeline.
+
+``` yaml
+...
+jobs:
+  lint-openapi:
+    name: Lint OpenAPI
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install spectral
+        run: curl -L https://raw.github.com/stoplightio/spectral/master/scripts/install.sh | sh
+
+      - name: Lint example OpenAPI
+        run: |
+          spectral --version
+          spectral lint "*.{json,yml,yaml}" -f github-actions
+```
+
 ### Additional Recommended Tooling
 
 | Tool | Description |

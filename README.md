@@ -30,65 +30,7 @@ If your product API is based on a different API technology, such as GraphQL or g
 
 ## How to Use to Rules with your API
 
-### Install Spectral
-
-[Spectral](https://docs.stoplight.io/docs/spectral) is a flexible JSON/YAML linter for creating automated style guides, with baked in support for OpenAPI (v3.1, v3.0, and v2.0), Arazzo v1.0, as well as AsyncAPI v2.x.
-
-Install Spectral globally or as a dev dependency.
-
-```sh
-npm install -g @stoplight/spectral-cli
-```
-
-Read the [official spectral documentation](https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation) for more installation options.
-
-### Run Spectral against your OpenAPI definition
-
-Run Spectral against your OpenAPI definition, referencing the spectral ruleset.
-
-You can reference a ruleset hosted via [HTTP server](https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#http-server).
-
-> You can only reference the raw Github URL if the github repository is public.
-
-``` sh
-spectral lint openapi-definition.yml --ruleset https://raw.githubusercontent.com/UKHSA-Internal/api-guidelines/refs/heads/main/.spectral.yaml
-```
-
-You can install the ruleset as via [npm package](https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm) and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Working with the npm registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry).
-
-``` sh
-npm install @ukhsa-internal/spectral-rules
-spectral lint openapi-definition.yml --ruleset ./node_modules/@ukhsa-internal/spectral-rules/.spectral.yaml
-```
-
-or create a local `.spectral.yml` ruleset which extends the one in this repository.
-
-```bash
-echo "extends: ['@ukhsa-internal/spectral-rules']" > .spectral.yml
-```
-
-then you can just run the following.
-
-```sh
-spectral lint openapi-definition.yml
-```
-
-### Review and fix any reported issues
-
-Once the linter has highlighted any issues or errors, review and fix to ensure your OpenAPI definition remains compliant with the UKHSA guidelines.
-
-### Additional Recommended Tooling
-
-| Tool | Description |
-| ---- | ----------- |
-| [VS Code Extension](https://marketplace.visualstudio.com/items?itemName=stoplight.spectral) | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
-| [Github Action](https://github.com/marketplace/actions/spectral-linting) | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
-
-> [!IMPORTANT]
-> To run the spectral linter in your git hub CI/CD workflow you will need to ensure your repository is [added to the list of repositories allowed to download the npm package](https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#github-actions-access-for-packages-scoped-to-personal-accounts).
->
-
-Read the [official spectral documentation](https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows) for more development workflows.
+To see how you use these rules with your project checkout the [How to use the rules](docs/spectral-rules/index.md#how-to-use-the-rules) documentation section.
 
 ## How to contribute
 
