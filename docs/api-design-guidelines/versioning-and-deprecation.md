@@ -74,6 +74,7 @@ GET /namespace/product/v1
 {
   "name": "Product API",
   "version": "1.0.1"
+  "status": "LIVE"
   "releaseDate": "2024-09-17"
   "documentation": "https://developer.ukhsa.gov.uk/namespace/product/v1/docs"
   "releaseNotes": "https://developer.ukhsa.gov.uk/namespace/product/v1/releaseNotes"

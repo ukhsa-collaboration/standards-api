@@ -52,8 +52,8 @@ paths:
           required: false
           description: The type of test to filter by.
           schema:
-            type: string
-          example: Lateral Flow Test
+            $ref: '#/components/schemas/RHSFilterExpression'
+          example: eq:Lateral Flow Test
         - in: query
           name: result
           required: false
@@ -234,31 +234,28 @@ components:
       type: object
       description: This object provides paging metadata collection resources.
       properties:
-        totalResults:
+        total:
           type: integer
           format: int32
           description: Total number of results.
           example: 200
-        totalPages:
+        offset:
           type: integer
           format: int32
-          description: Total number of paged results.
-          example: 10
-        currentPage:
-          type: integer
-          format: int32
-          description: Current result page.
+          description: The offset used for the current results set.
           example: 1
-        pageSize:
+        cursor:
+          type: string
+          description: The pointer to the position in the dataset to start the next page.
+          example: abc123
+        limit:
           type: integer
           format: int32
-          description: Number of results per page.
+          description: The maximum number of items returned.
           example: 20
       required:
-        - totalResults
-        - totalPages
-        - currentPage
-        - pageSize
+        - total
+        - limit
 
     ApiInfo:
       type: object
@@ -273,6 +270,15 @@ components:
           pattern: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
           description: The version of the API.
           example: 1.0.0
+        status:
+          type: string
+          description: The status of the API version.
+          x-extensible-enum:
+            - ALPHA
+            - BETA
+            - LIVE
+            - DEPRECATED
+          example: LIVE
         releaseDate:
           type: string
           format: date
@@ -291,6 +297,7 @@ components:
       required:
         - name
         - version
+        - status
         - releaseDate
         - documentation
         - releaseNotes
@@ -373,11 +380,17 @@ components:
       required:
         - detail
 
+    RHSFilterExpression:
+      type: string
+      pattern: '^(eq|ne|gt|lt|gte|lte|in|nin|like|ilike)?:?([^:&]+)$'
+      description: "RHS filter expression in format '{operation}:{value}'."
+      example: 'eq:Lateral%20Flow%20Test'
+
   parameters:
     offsetParam:
       in: query
       name: offset
-      description: The page number of the results to be returned.
+      description: The number of items to skip before starting to collect the result set.
       schema:
         type: integer
         format: int32
@@ -388,7 +401,7 @@ components:
     limitParam:
       in: query
       name: limit
-      description: The numbers of items to return per page.
+      description: The maximum number of items to return.
       schema:
         type: integer
         format: int32

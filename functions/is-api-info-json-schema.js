@@ -14,6 +14,15 @@ properties:
     pattern: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
     description: The version of the API.
     example: 1.0.0
+  status:
+    type: string
+    description: The status of the API version.
+    x-extensible-enum:
+      - ALPHA
+      - BETA
+      - LIVE
+      - DEPRECATED
+    example: LIVE
   releaseDate:
     type: string
     format: date
@@ -49,6 +58,12 @@ const assertApiInfoSchema = (schema) => {
 
   if (version.type !== 'string' || version.pattern !== pattern) {
     results.push({ message: "ApiInfo json must have property 'version' with type 'string' and pattern for semver." });
+  }
+
+  const status = (schema.properties || {}).status || {};
+  const requiredStatus = ["ALPHA", "BETA", "LIVE", "DEPRECATED"];
+  if (status.type !== 'string' || !status["x-extensible-enum"] || !requiredStatus.every((value) => status["x-extensible-enum"].includes(value))) {
+    results.push({ message: "ApiInfo json must have property 'status' with x-extensible-enum values: ALPHA, BETA, LIVE, DEPRECATED." });
   }
 
   const releaseDate = (schema.properties || {}).releaseDate || {};

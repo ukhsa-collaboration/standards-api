@@ -2,18 +2,35 @@
 
 ## Pagination
 
+### Offset-based pagination
+
+**SHOULD** use offset-based pagination for *smaller* result sets.
+
+Offset-based pagination uses `limit` and `offset` query parameters to specify the number of items to return and the starting position in the dataset.
+
+#### Query Parameters
+
+- `limit`: The maximum number of items to return.
+- `offset`: The number of items to skip before starting to collect the result set.
+
+``` text
+GET /product/v1/orders?offset=10&limit=10
+```
+
+**SHOULD** provide sensible default values for the limit and offset parameters when not provided.
+
+**SHOULD** enforce a maximum limit to prevent clients from requesting excessively large pages that could degrade server performance.
+
 ### Cursor-based pagination
 
-**SHOULD** use cursor-based pagination for larger result sets.
-
-**SHOULD** use cursor-based pagination for larger result sets or when the underlying dataset changes frequently.
+**SHOULD** use cursor-based pagination for *larger* result sets or when the underlying dataset changes frequently.
 
 Cursor-based pagination uses a “cursor” that points to a specific item in the dataset, typically a unique identifier, to determine where to start the next page of results. The cursor is passed as a query parameter, often encoded, and allows precise navigation through the dataset.
 
 #### Query Parameters
 
-`cursor`: The pointer to the position in the dataset to start the next page.
-limit: The maximum number of items to return.
+- `cursor`: The pointer to the position in the dataset to start the next page.
+- `limit`: The maximum number of items to return.
 
 ``` text
 GET /product/v1/orders?cursor=eyJvcmRlcklkIjoxMjN9&limit=10
@@ -29,8 +46,9 @@ GET /product/v1/orders?cursor=eyJvcmRlcklkIjoxMjN9&limit=10
 
 The body of responses containing lists of results **SHOULD** contain pagination metadata for larger results sets:
 
-- `Total results`: Include metadata in the response to inform the client of the total number of available items. This is useful for calculating the total number of pages or determining how much data remains.
-- `Page`, `offset` or `cursor info`: Return information about the current page, offset, or cursor position, and how to retrieve the next set of results.
+- `total`: Used to inform the client of the total number of available items. This is useful for calculating the total number of pages or determining how much data remains.
+- `offset` or `cursor`: Information about the current result set, `offset`, or `cursor` position.
+- `limit`: The maximum number of items returned.
 
 ``` json
 {
@@ -40,10 +58,9 @@ The body of responses containing lists of results **SHOULD** contain pagination 
     // ... more results ...
   ],
   "metadata": {
-    "totalResults": 100,
-    "totalPages": 10,
-    "currentPage": 1,
-    "pageSize": 10
+    "total": 100,
+    "offset": 10,
+    "limit": 10
   }
 }
 ```
@@ -76,7 +93,10 @@ paths:
           description: The type of test to filter by.
           schema:
             type: string
-            example: Lateral Flow Test
+            pattern: '^(eq|ne|gt|lt|gte|lte|in|nin|like|ilike)?:?([^:&]+)$'
+            description: "RHS filter expression in format '{operation}:{value}'."
+            example: "eq:Lateral%20Flow%20Test"
+          example: Lateral Flow Test
         - in: query
           name: result
           required: false
@@ -88,6 +108,49 @@ paths:
               - NEGATIVE
               - UNREADABLE
             example: POSITIVE
+```
+
+### Expressions
+
+**SHOULD** use Right-Hand Side (`RHS`) operators to filter on specific fields in a resource.
+
+`RHS` operators allow more sophisticated filtering than simple equality checks. Use these operators by appending them to the field name with a colon.
+
+#### Operators
+
+Available RHS operators include:
+
+| Operator | Description                                             |
+| :------: | ------------------------------------------------------- |
+| `eq`     | Equal to (default if no operator specified).            |
+| `ne`     | Not equal to.                                           |
+| `gt`     | Greater than.                                           |
+| `gte`    | Greater than or equal to.                               |
+| `lt`     | Less than.                                              |
+| `lte`    | Less than or equal to.                                  |
+| `in`     | Matches any value in a comma-separated list.            |
+| `nin`    | Does not match any value in a comma-separated list.     |
+| `like`   | Pattern matching with wildcards (`*`).                  |
+| `ilike`  | Case-insensitive pattern matching with wildcards (`*`). |
+
+### Examples
+
+``` text
+GET /product/v1/results?type=Lateral%20Flow%20Test&result=in:POSITIVE,NEGATIVE
+```
+
+``` text
+GET /product/v1/results?nhsNumber=like:485777*
+```
+
+``` text
+GET /products?category=electronics&price=gte:100
+```
+
+You can combine multiple filters using the same URL by separating them with ampersands (&).
+
+``` text
+GET /products?category=electronics&price=gte:100&price=lte:500
 ```
 
 ### Alternative Example
