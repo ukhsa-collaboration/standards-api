@@ -54,15 +54,19 @@ rules:
     given: $.info
     severity: error
     then:
-      - function: pattern
-        functionOptions:
-          match: ^(company-internal|partner-external|premium-external|public-external)$
+      - function: enumeration
         field: x-audience
+        functionOptions:
+          values:
+            - company-internal
+            - partner-external
+            - premium-external
+            - public-external
       - function: defined
         field: x-audience
     recommended: true
     description: 'The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.'
-    message: Missing or wrong `info.x-audience`, should be one of company-internal, partner-external, premium-external or public-external.
+    message: Missing or wrong `info.x-audience`, {{error}}.
 
   # MUST Path must start with a slash and must not end with a slash.
   # => /docs/spectral-rules/must/must-use-normalized-paths.md
@@ -124,15 +128,21 @@ rules:
     given: $.info
     severity: error
     then:
-      - function: pattern
-        functionOptions:
-          match: ^(prevent|detect|analyse|respond|cross-cutting|enabling)$
+      - function: enumeration
         field: x-value-chain
+        functionOptions:
+          values:
+            - prevent
+            - detect
+            - analyse
+            - respond
+            - cross-cutting
+            - enabling
       - function: defined
         field: x-value-chain
     recommended: true
     description: 'The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.'
-    message: Missing or wrong `info.x-value-chain`, should be one of prevent, detect, analyse, respond, cross-cutting or enabling.
+    message: "Missing or wrong `info.x-value-chain`, {{error}}."
 
   # MUST ALL requests MUST go through `https` protocol only
   # => /docs/spectral-rules/must/must-use-https-protocol-only.md
