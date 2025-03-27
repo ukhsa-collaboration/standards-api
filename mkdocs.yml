@@ -1,5 +1,5 @@
 site_name: API Guidelines
-site_description: 'Home of UKHSA API Guidelines'
+site_description: 'UKHSA API Guidelines'
 site_author: 'UKSHA'
 docs_dir: docs/
 repo_name: 'UKHSA-Internal/api-guidelines'
@@ -19,8 +19,6 @@ nav:
     - api-design-guidelines/pagination-filtering-sorting.md
     - api-design-guidelines/testing.md
     - Performance, Reliability & Monitoring:
-    #- api-design-guidelines/performance-reliability-monitoring.md
-    #- api-design-guidelines/performance-reliability-monitoring-new.md
       - api-design-guidelines/caching.md
     - api-design-guidelines/governance.md
     - api-design-guidelines/data-standards.md
@@ -36,13 +34,15 @@ nav:
       - ... | flat | spectral-rules/should/*.md
 
 theme:
-  name: material
-  logo: assets/images/logo-ukhsa-landscape.svg
-  favicon: assets/images/favicon.svg
+  name: tech_docs_template
+  custom_dir: overrides
+  logo: assets/images/logo-ukhsa-landscape-new.svg
+  favicon: assets/images/favicon-new.svg
   palette:
-    - primary: white
+    # - primary: black
+    #   accent: teal
+    - scheme: default
       accent: teal
-      scheme: default
 
   features:
     - navigation.instant
@@ -58,9 +58,11 @@ theme:
     - content.code.select
     - content.action.edit
     - content.action.view
+    #- toc.integrate
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/pdf.css
 
 markdown_extensions:
   - github-callouts
@@ -79,7 +81,8 @@ markdown_extensions:
           case: lower
 
 plugins:
-  - search
+  - material/search
+  #- search
   - awesome-pages
   - redirects:
       redirect_maps:
@@ -93,26 +96,9 @@ plugins:
       repository: UKHSA-Internal/api-guidelines
       token: !ENV [GITHUB_TOKEN]
       branch: main
-  - exporter:
-      buttons:
-        - title: View as PDF
-          icon: material-file-move-outline
-          enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
-          attributes:
-            target: _blank
-            href: /ukhsa-api-guidelines.pdf
-        - title: Download as PDF
-          icon: material-file-download-outline
-          enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
-          attributes: 
-            download: ukhsa-api-guidelines.pdf
-            href: /ukhsa-api-guidelines.pdf
-      formats:
-        pdf:
-          enabled: !ENV [MKDOCS_EXPORTER_PDF_ENABLED, false]
-          stylesheets:
-            - docs/stylesheets/pdf.scss
-          aggregator:
-            enabled: true
-            output: ukhsa-api-guidelines.pdf
-            covers: none
+  - print-site:
+      add_to_navigation: false
+      add_cover_page: true
+      include_css: true
+      path_to_pdf: "ukhsa-api-guidelines.pdf"
+      enabled: !ENV [MKDOCS_EXPORTER_PDF_ENABLED, false]

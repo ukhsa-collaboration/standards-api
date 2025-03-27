@@ -40,22 +40,41 @@ jobs:
     - uses: actions/cache@v4
       with:
         key: mkdocs-material-${{ env.cache_id }}
-        path: .cache
+        path: ~/.cache
         restore-keys: |
           mkdocs-material-
 
-    - run: |
+    - name: install mkdocs and plugins
+      run: |
         pip install mkdocs-material
         pip install markdown-callouts
         pip install mkdocs-git-revision-date-localized-plugin
         pip install mkdocs-git-committers-plugin-2
-        pip install mkdocs-exporter
+        pip install pytest-playwright
+        pip install mkdocs-print-site-plugin
+        pip install mkdocs-tech-docs-template
         pip install mkdocs-redirects
         pip install mkdocs-awesome-pages-plugin
 
-    - run: |
+    - name: install playwright
+      run: |
         playwright install --with-deps
         playwright install chrome --with-deps
+
+    - name: generate site pdf 
+      run: |
+        mkdocs serve --no-livereload -c -q &
+        echo "waiting for mkdocs dev server to start..."
+        until curl --output /dev/null --silent --head --fail http://localhost:8000; do
+          printf '.'
+          sleep 1
+        done
+        playwright pdf --wait-for-selector=#print-site-page localhost:8000/print_page/ docs/ukhsa-api-guidelines.pdf
+        killall -9 mkdocs
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MKDOCS_GIT_PROVENANCE_ENABLED: true
+        MKDOCS_EXPORTER_PDF_ENABLED: true
 
     - name: Publish docs
       run: mkdocs build
