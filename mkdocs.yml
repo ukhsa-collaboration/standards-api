@@ -2,8 +2,8 @@ site_name: API Guidelines
 site_description: 'UKHSA API Guidelines'
 site_author: 'UKSHA'
 docs_dir: docs/
-repo_name: 'UKHSA-Internal/api-guidelines'
-repo_url: 'https://github.com/UKHSA-Internal/api-guidelines'
+repo_name: 'ukhsa-collaboration/api-guidelines'
+repo_url: 'https://github.com/ukhsa-collaboration/api-guidelines'
 edit_uri: edit/main/docs/
 nav:
   #- index.md
@@ -95,7 +95,7 @@ plugins:
       enable_creation_date: true
   - git-committers:
       enabled: !ENV [MKDOCS_GIT_PROVENANCE_ENABLED, false]
-      repository: UKHSA-Internal/api-guidelines
+      repository: ukhsa-collaboration/api-guidelines
       token: !ENV [GITHUB_TOKEN]
       branch: main
   - print-site:

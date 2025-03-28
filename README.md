@@ -10,7 +10,7 @@ Standardising API design reduces friction, making APIs easier to understand, use
 
 These guidelines will ensure that all APIs follow accepted design, security and governance models, thereby raising the bar on API quality across the organisation.
 
-You will find the documentation in markdown form in the `docs/` directory, you can also view the [documentation site](https://refactored-chainsaw-8qmo7ge.pages.github.io/) for a friendly searchable format.
+You will find the documentation in markdown form in the `docs/` directory, you can also view the [documentation site](https://ukhsa-collaboration.github.io/api-guidelines/) for a friendly searchable format.
 
 As part of the above this repository provides the spectral rules to help developers align their OpenAPI definition with the standards laid out in these guidelines.
 
@@ -37,7 +37,7 @@ To see how you use these rules with your project checkout the [How to use the ru
 ### Clone the Repository
 
 ``` sh
-git clone https://github.com/UKHSA-Internal/api-guidelines.git
+git clone https://github.com/ukhsa-collaboration/api-guidelines.git
 cd api-guidelines
 ```
 

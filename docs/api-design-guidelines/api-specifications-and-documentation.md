@@ -4,7 +4,7 @@ The [OpenAPI specification](https://swagger.io/specification/) (OAS; formerly kn
 
 Using the OpenAPI Specification to create an OpenAPI definition is an essential design output when developing your API. The definition can be created in a simple text editor, integrated development environment (IDE), or using a dedicated tool such as [Swagger Editor](https://editor.swagger.io/).
 
-A sample OpenAPI definition based on these guidelines can be viewed [here](https://github.com/UKHSA-Internal/api-guidelines/blob/main/example/example.1.0.0.oas.yml).
+A sample OpenAPI definition based on these guidelines can be viewed [here](https://github.com/ukhsa-collaboration/api-guidelines/blob/main/example/example.1.0.0.oas.yml).
 
 ## Generating code from OpenAPI definitions
 

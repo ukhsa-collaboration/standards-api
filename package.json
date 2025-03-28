@@ -1,14 +1,14 @@
 {
-  "name": "@ukhsa-internal/spectral-rules",
+  "name": "@ukhsa-collaboration/spectral-rules",
   "version": "0.2.2",
   "description": "UKHSA Spectral ruleset",
   "main": ".spectral.yaml",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UKHSA-internal/api-guidelines.git"
+    "url": "git+https://github.com/ukhsa-collaboration/api-guidelines.git"
   },
-  "homepage": "https://refactored-chainsaw-8qmo7ge.pages.github.io/",
+  "homepage": "https://ukhsa-collaboration.github.io/api-guidelines/",
   "keywords": [
     "UKHSA",
     "spectral",

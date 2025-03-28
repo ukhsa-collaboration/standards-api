@@ -31,20 +31,20 @@ You can reference a ruleset hosted via [HTTP server](https://meta.stoplight.io/d
 > You can only reference the raw Github URL if the github repository is public.
 
 ``` sh
-spectral lint openapi-definition.yml --ruleset https://raw.githubusercontent.com/UKHSA-Internal/api-guidelines/refs/heads/main/.spectral.yaml
+spectral lint openapi-definition.yml --ruleset https://raw.githubusercontent.com/ukhsa-collaboration/api-guidelines/refs/heads/main/.spectral.yaml
 ```
 
 You can install the ruleset as via [npm package](https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm) and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Working with the npm registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry).
 
 ``` sh
-npm install @ukhsa-internal/spectral-rules
-spectral lint openapi-definition.yml --ruleset ./node_modules/@ukhsa-internal/spectral-rules/.spectral.yaml
+npm install @ukhsa-collaboration/spectral-rules
+spectral lint openapi-definition.yml --ruleset ./node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml
 ```
 
 or create a local `.spectral.yml` ruleset which extends the one in this repository.
 
 ```bash
-echo "extends: ['@ukhsa-internal/spectral-rules']" > .spectral.yml
+echo "extends: ['@ukhsa-collaboration/spectral-rules']" > .spectral.yml
 ```
 
 then you can just run the following.
@@ -83,9 +83,9 @@ jobs:
           node-version: '22.x'
           registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          scope: '@ukhsa-internal'
+          scope: '@ukhsa-collaboration'
 
-      - run: npm install @ukhsa-internal/spectral-rules
+      - run: npm install @ukhsa-collaboration/spectral-rules
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -95,7 +95,7 @@ jobs:
       - name: Lint example OpenAPI
         run: |
           spectral --version
-          spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-internal/spectral-rules/.spectral.yaml -f github-actions
+          spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions
 ```
 
 ### Additional Recommended Tooling
