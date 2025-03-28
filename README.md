@@ -58,10 +58,13 @@ pip install mkdocs-material
 pip install markdown-callouts
 pip install mkdocs-git-revision-date-localized-plugin
 pip install mkdocs-git-committers-plugin-2
-pip install mkdocs-exporter
+pip install pytest-playwright
+pip install mkdocs-print-site-plugin
+pip install mkdocs-tech-docs-template
 pip install mkdocs-redirects
 pip install mkdocs-awesome-pages-plugin
 
+# Only needed if you want to generate site pdf locally
 playwright install --with-deps
 playwright install chrome --with-deps
 ```
@@ -70,6 +73,8 @@ To serve the documentation using MkDocs:
 
 ``` sh
 mkdocs serve
+# generate a pdf locally with the following command
+# playwright pdf --wait-for-selector=#print-site-page localhost:8000/print_page/ docs/ukhsa-api-guidelines.pdf
 ```
 
 This will start a local server, and you can view the documentation in your browser at `http://127.0.0.1:8000`.
