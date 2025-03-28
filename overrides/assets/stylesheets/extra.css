@@ -56,10 +56,23 @@
   border-color: #b1b4b6;
 }
 
+.md-footer-meta__inner {
+  align-items: flex-end;
+  justify-content: center;
+}
+
 /* Configure the copyright */
+.md-copyright.grow {
+  flex: 1;
+  @media (max-width: 40.0525em) {
+    flex-basis: 320px;
+  }
+}
+
 .md-copyright {
   font-size: 0.85rem;
   color: #000000;
+  width: auto;
 }
 
 .md-copyright a {
@@ -69,6 +82,21 @@
 
 .md-copyright a:focus-within {
   background-color: #ffdd00 !important;
+}
+
+.md-copyright .licence-logo {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+  forced-color-adjust: auto;
+
+  @media (max-width: 48.0525em) {
+    margin-bottom: 15px;
+  }
+}
+
+.md-copyright .licence-text {
+  display: inline-block;
 }
 
 .md-copyright a.gocuk-crest {
