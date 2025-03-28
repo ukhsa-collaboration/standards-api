@@ -78,13 +78,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          scope: '@ukhsa-internal'
+
+      - run: npm install @ukhsa-internal/spectral-rules
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install spectral
         run: curl -L https://raw.github.com/stoplightio/spectral/master/scripts/install.sh | sh
 
       - name: Lint example OpenAPI
         run: |
           spectral --version
-          spectral lint "*.{json,yml,yaml}" -f github-actions
+          spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-internal/spectral-rules/.spectral.yaml -f github-actions
 ```
 
 ### Additional Recommended Tooling
