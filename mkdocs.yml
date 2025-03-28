@@ -20,6 +20,8 @@ nav:
     - api-design-guidelines/testing.md
     - Performance, Reliability & Monitoring:
       - api-design-guidelines/caching.md
+      - api-design-guidelines/resilience.md
+      - api-design-guidelines/monitoring.md
     - api-design-guidelines/governance.md
     - api-design-guidelines/data-standards.md
     - api-design-guidelines/common-data-types.md
