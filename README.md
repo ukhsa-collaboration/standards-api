@@ -83,10 +83,22 @@ This will start a local server, and you can view the documentation in your brows
 
 When you are ready to submit your contribution please follow the contribution guidelines and submit a pull request with your changes.
 
-## License
+## Deploy
 
-TODO
+This repo is continuously deployed from the `main` branch by GitHub Actions, using the workflow defined in [`/.github/workflows/publish-guidelines.yml`](/.github/workflows/publish-guidelines.yml).
+
+## Licence
+
+Unless stated otherwise, the codebase is released under [the MIT License][mit].
+This covers both the codebase and any sample code in the documentation.
+
+The documentation is [© Crown copyright][copyright] and available under the terms
+of the [Open Government 3.0][ogl] licence.
 
 ## Contact
 
 TODO
+
+[mit]: LICENCE
+[copyright]: https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/
+[ogl]: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
