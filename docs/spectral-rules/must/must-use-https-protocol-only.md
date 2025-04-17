@@ -18,4 +18,4 @@ servers:
     ...
 ```
 
-[UKHSA Security](../../api-design-guidelines/security.md#data-protection)
+[UKHSA Guidelines Security](../../api-design-guidelines/security.md#data-protection)
