@@ -88,4 +88,4 @@ Use [standard HTTP status codes](https://www.iana.org/assignments/http-status-co
 - **404 Not Found**, if the resource does not exist.
 - **500 Internal Server Error**, for server-side issues.
 
-`201 Created` responses to `POST` methods **SHOULD** have a `Location` header identifying the location of the newly created resource.
+`201 Created` responses to `POST` methods **SHOULD** have a `Location` header identifying the location of the newly created resource according to [RFC9110 Section 10.2.2](https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.2).

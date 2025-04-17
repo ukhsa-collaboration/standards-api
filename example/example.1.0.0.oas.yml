@@ -113,11 +113,7 @@ paths:
           description: This response returns a JSON object containing the test result data.
           headers:
             Location:
-              description: The URL of the created test result.
-              schema:
-                type: string
-                format: uri
-                example: https://azgw.api.ukhsa.gov.uk/detect/testing/v1/results/de750613-ef3c-4f5d-8148-10308b91896c
+              $ref: '#/components/headers/Location'
           content:
             application/json:
               schema:
@@ -431,6 +427,14 @@ components:
         sortByMultipleField:
           value: nhsNumber|asc,type|desc
           summary: Sort by multiple fields
+
+  headers:
+    Location:
+      description: The URL of the created test result.
+      schema:
+        type: string
+        format: uri
+        example: https://azgw.api.ukhsa.gov.uk/detect/testing/v1/results/de750613-ef3c-4f5d-8148-10308b91896c
 
   responses:
     BadRequest:

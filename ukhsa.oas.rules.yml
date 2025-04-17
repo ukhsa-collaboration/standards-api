@@ -220,3 +220,47 @@ rules:
     recommended: true
     description: This API definition does not have any security scheme defined, which means the entire API is open to the public. That's probably not what you want, even if all the data is read-only. Setting lower rate limits for the public and letting known consumers use more resources is a handy path to monetization, and helps know who your power users are when changes need feedback or migration, even if not just good practice.
     message: All APIs MUST have a security scheme defined.
+
+  # SHOULD `201 Created` responses to `POST` methods SHOULD have a `Location` header identifying the location of the newly created resource.
+  # => /docs/spectral-rules/should/should-have-location-header-in-201-response.md
+
+  should-have-location-header-in-201-response:
+    given: $.paths..post.responses["201"]
+    severity: warn
+    then:
+      function: schema
+      field: headers
+      functionOptions:
+        allErrors: true
+        schema:
+          type: object
+          properties:
+            Location:
+              type: object
+              properties:
+                description:
+                  type: string
+                  description: 'The URL of the created resource.'
+                schema:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [string]
+                    format:
+                      type: string
+                      enum: [uri]
+                    example:
+                      type: string
+                  required:
+                    - type
+                    - format
+                    - example
+              required:
+                - description
+                - schema
+          required:
+            - Location
+    recommended: true
+    description: '`201 Created` responses to `POST` methods SHOULD have a `Location` header identifying the location of the newly created resource.'
+    message: '{{error}}'
