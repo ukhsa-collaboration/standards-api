@@ -1,6 +1,6 @@
 {
   "name": "@ukhsa-collaboration/spectral-rules",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "UKHSA Spectral ruleset",
   "main": ".spectral.yaml",
   "scripts": {},
