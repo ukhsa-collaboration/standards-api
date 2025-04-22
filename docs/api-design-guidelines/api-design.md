@@ -82,8 +82,10 @@ APIs **MUST** use standard HTTP response codes
 Use [standard HTTP status codes](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml) to indicate the result of the operation. For example:
 
 - **200 OK**, for a successful `GET` or `PUT` request.
-- **201 Create**d, for a successful `POST` request that results in resource creation.
+- **201 Created**, for a successful `POST` request that results in resource creation.
 - **204 No Content**, for a successful `DELETE` request.
 - **400 Bad Request**, for a request with invalid data.
 - **404 Not Found**, if the resource does not exist.
 - **500 Internal Server Error**, for server-side issues.
+
+`201 Created` responses to `POST` methods **SHOULD** have a `Location` header identifying the location of the newly created resource.

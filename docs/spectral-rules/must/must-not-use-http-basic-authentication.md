@@ -20,4 +20,4 @@ security:
   - basicAuth: []
 ```
 
-[UKHSA Security](../../api-design-guidelines/security.md#authentication)
+[UKHSA Guidelines Security](../../api-design-guidelines/security.md#authentication)
