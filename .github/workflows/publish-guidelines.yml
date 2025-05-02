@@ -55,7 +55,7 @@ jobs:
         pip install mkdocs-print-site-plugin
         pip install mkdocs-tech-docs-template
         pip install mkdocs-redirects
-        pip install mkdocs-awesome-pages-plugin
+        pip install mkdocs-awesome-nav
 
     - name: install playwright
       run: |

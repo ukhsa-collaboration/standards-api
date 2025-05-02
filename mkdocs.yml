@@ -5,35 +5,6 @@ docs_dir: docs/
 repo_name: 'ukhsa-collaboration/api-guidelines'
 repo_url: 'https://github.com/ukhsa-collaboration/api-guidelines/'
 edit_uri: edit/main/docs/
-nav:
-  #- index.md
-  - API Guidelines:
-    - api-design-guidelines/index.md
-    - api-design-guidelines/api-specifications-and-documentation.md
-    - api-design-guidelines/organisational-data-models.md
-    - api-design-guidelines/api-design.md
-    - api-design-guidelines/naming-conventions.md
-    - api-design-guidelines/security.md
-    - api-design-guidelines/error-handling.md
-    - api-design-guidelines/versioning-and-deprecation.md
-    - api-design-guidelines/pagination-filtering-sorting.md
-    - api-design-guidelines/testing.md
-    - Performance, Reliability & Monitoring:
-      - api-design-guidelines/caching.md
-      - api-design-guidelines/resilience.md
-      - api-design-guidelines/monitoring.md
-    - api-design-guidelines/governance.md
-    - api-design-guidelines/data-standards.md
-    - api-design-guidelines/common-data-types.md
-    - api-design-guidelines/integration-patterns.md
-  - API Guidance Summary:
-    - guidance-summary/index.md
-  - Spectral Rules:
-    - spectral-rules/index.md
-    - MUST:
-      - ... | flat | spectral-rules/must/*.md
-    - SHOULD:
-      - ... | flat | spectral-rules/should/*.md
 
 theme:
   name: tech_docs_template
@@ -85,7 +56,7 @@ markdown_extensions:
 plugins:
   - material/search
   #- search
-  - awesome-pages
+  - awesome-nav
   - redirects:
       redirect_maps:
         'index.md': 'api-design-guidelines/index.md'
