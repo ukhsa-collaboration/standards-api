@@ -73,7 +73,7 @@ These are the core high level principles to follow when designing, building, tes
 ### Test API Performance
 
 > [!TIP]
-> Adopt the recommended [performance, reliability and monitoring guidelines](../api-design-guidelines/performance-reliability-monitoring.md) and use the features of Developer Portal in the NFT environment.
+> Adopt the recommended [performance, reliability and monitoring guidelines](../api-design-guidelines/performance-reliability-monitoring/index.md) and use the features of Developer Portal in the NFT environment.
 
 - **Test performance meets non-functional requirements**. Response times and availability must conform to UKHSA standards and provide a high quality of service to clients.
 
