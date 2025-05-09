@@ -28,64 +28,13 @@ All the above APIs are expected to apply the same guidelines, patterns and stand
 
 If your product API is based on a different API technology, such as GraphQL or gRPC, this guidance may only partially apply. Further guidance may be provided in future depending on demand.
 
-## How to Use to Rules with your API
+## How to Use the Rules with your API
 
-To see how you use these rules with your project checkout the [How to use the rules](docs/spectral-rules/index.md#how-to-use-the-rules) documentation section.
+To see how you use these rules with your project, check out the [How to use the rules](docs/spectral-rules/index.md#how-to-use-the-rules) documentation section.
 
-## How to contribute
+## Contributing
 
-### Clone the Repository
-
-``` sh
-git clone https://github.com/ukhsa-collaboration/api-guidelines.git
-cd api-guidelines
-```
-
-### Navigate the Documentation
-
-The documentation is organised into various markdown files under the `docs/` directory. You can add or edit markdown files, see the [MkDocs documentation](https://www.mkdocs.org/user-guide/writing-your-docs/) for more information.
-
-### View the Guidelines
-
-You can view the guidelines directly in your markdown viewer of choices or use the same static site generator (MkDocs) used to produce the github pages to serve the documentation locally.
-
-To install MkDocs your will require python 3.X once you have this you can install MkDocs and its plugins.
-
-MkDocs requires an `mkdocs.yml` file for configuration and navigation control, the one supplied in the repo is the one used for github pages but should work fine locally also.
-
-``` sh
-pip install mkdocs-material
-pip install markdown-callouts
-pip install mkdocs-git-revision-date-localized-plugin
-pip install mkdocs-git-committers-plugin-2
-pip install pytest-playwright
-pip install mkdocs-print-site-plugin
-pip install mkdocs-tech-docs-template
-pip install mkdocs-redirects
-pip install mkdocs-awesome-pages-plugin
-
-# Only needed if you want to generate site pdf locally
-playwright install --with-deps
-playwright install chrome --with-deps
-```
-
-To serve the documentation using MkDocs:
-
-``` sh
-mkdocs serve
-# generate a pdf locally with the following command
-# playwright pdf --wait-for-selector=#print-site-page localhost:8000/print_page/ docs/ukhsa-api-guidelines.pdf
-```
-
-This will start a local server, and you can view the documentation in your browser at `http://127.0.0.1:8000`.
-
-### 3. Create a Pull Request
-
-When you are ready to submit your contribution please follow the contribution guidelines and submit a pull request with your changes.
-
-## Deploy
-
-This repo is continuously deployed from the `main` branch by GitHub Actions, using the workflow defined in [`/.github/workflows/publish-guidelines.yml`](/.github/workflows/publish-guidelines.yml).
+We welcome contributions to improve these guidelines. Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on how to get involved.
 
 ## Licence
 
