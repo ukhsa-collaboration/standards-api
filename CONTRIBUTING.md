@@ -23,6 +23,7 @@ Thank you for your interest in contributing to the UKHSA API Guidelines! This re
       - [4. Sign your commits](#4-sign-your-commits)
     - [Opening New Issues](#opening-new-issues)
     - [Making Changes](#making-changes)
+      - [Example](#example)
     - [Pull Request Process](#pull-request-process)
   - [Development Guidelines](#development-guidelines)
     - [Documentation Standards](#documentation-standards)
@@ -82,6 +83,12 @@ python --version
 node --version
 npm --version
 spectral --version
+```
+
+install the required dependencies with the following command:
+
+``` bash
+npm install
 ```
 
 #### 4. Install MkDocs (required for documentation)
@@ -197,13 +204,48 @@ Before opening a new issue:
 3. **Test your changes** (see [Testing Guidelines](#testing-guidelines))
 4. **Commit your changes** with clear commit messages and sign them (see [Signed Commits](#signed-commits)):
 
-   ```bash
-   # With signing enabled by default
-   git commit -m "Add new guideline for XYZ"
-   
-   # Or explicitly sign a commit
-   git commit -S -m "Add new guideline for XYZ"
-   ```
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for commit messages. This provides a standardised format that makes the commit history more readable and enables automated tools for versioning and changelog generation.
+
+The commit message should be structured as follows:
+
+```text
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+| Type | Description | SemVer Impact |
+|------|-------------|---------------|
+| `build` | Changes that affect the build system or external dependencies | None (*unless functionality is affected*) |
+| `chore` | Changes to build process or auxiliary tools | None |
+| `ci` | Changes to CI configuration files and scripts | None |
+| `docs` | Documentation changes | None |
+| `feat` | A new feature | MINOR (`x.Y.z`) |
+| `fix` | A bug fix | PATCH (`x.y.Z`) |
+| `perf` | Changes that improve performance | PATCH (`x.y.Z`) |
+| `refactor` | Code changes that neither fix a bug nor add a feature | None (*unless functionality is affected*) |
+| `revert` | Reverts a previous commit | Depends on the reverted change |
+| `style` | Changes that don't affect code meaning (formatting, etc) | None |
+| `test` | Adding or correcting tests | None |
+
+> [!NOTE]
+> A commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with [`MAJOR`](http://semver.org/#summary) in Semantic Versioning). A BREAKING CHANGE can be part of commits of any *type*.
+
+#### Example
+
+```bash
+git commit -m "feat(scope): add rate limiting recommendations"
+```
+
+or with more details:
+
+```bash
+git commit -m "fix(scope): correct validation for API versioning
+
+Resolves issue #123"
+```
 
 ### Pull Request Process
 

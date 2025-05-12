@@ -3,7 +3,9 @@
   "version": "0.2.3",
   "description": "UKHSA Spectral ruleset",
   "main": ".spectral.yaml",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ukhsa-collaboration/api-guidelines.git"
@@ -13,5 +15,10 @@
     "UKHSA",
     "spectral",
     "ruleset"
-  ]
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "husky": "^9.1.7"
+  }
 }
