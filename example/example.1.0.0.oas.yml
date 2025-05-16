@@ -33,6 +33,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiInfo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/UnexpectedError'
         default:
           $ref: '#/components/responses/UnexpectedError'
 
@@ -78,6 +88,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResultsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/UnexpectedError'
         default:
           $ref: '#/components/responses/UnexpectedError'
     post:
@@ -120,6 +140,14 @@ paths:
                 $ref: '#/components/schemas/ResultResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/UnexpectedError'
         default:
           $ref: '#/components/responses/UnexpectedError'
   /results/{resultId}:
@@ -145,8 +173,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResultResponse'
           description: This response returns a JSON object containing the test result data.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/UnexpectedError'
         default:
           $ref: '#/components/responses/UnexpectedError'
 
@@ -448,6 +484,24 @@ components:
               $ref: '#/components/examples/validation-error'
             validation-errors:
               $ref: '#/components/examples/validation-errors'
+    Unauthorized:
+      description: The request is not authenticated.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/unauthorized'
+    Forbidden:
+      description: The request is authenticated but the user is not authorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            forbidden:
+              $ref: '#/components/examples/forbidden'
     NotFound:
       description: The requested resource was not found.
       content:

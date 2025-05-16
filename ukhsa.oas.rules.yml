@@ -7,6 +7,7 @@ documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
 
 functions:
   - is-api-info-json-schema
+  - has-required-problem-details-error-responses
 
 functionsDir: functions
 
@@ -264,3 +265,22 @@ rules:
     recommended: true
     description: '`201 Created` responses to `POST` methods SHOULD have a `Location` header identifying the location of the newly created resource.'
     message: '{{error}}'
+
+  # MUST each operation include Problem Details error responses
+
+  must-define-common-problem-details-errors:
+    description: |
+      Each operation MUST declare HTTP error responses for:
+        • 400 Bad Request  
+        • 404 Not Found  
+        • 500 Internal Server Error  
+      If security is required (global or operation-level), also:
+        • 401 Unauthorized  
+        • 403 Forbidden  
+      All responses must use `application/problem+json` and include examples.
+    message: '{{error}}'
+    severity: error
+    recommended: true
+    given: $.paths[*][*]
+    then:
+      function: has-required-problem-details-error-responses
