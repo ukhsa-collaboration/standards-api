@@ -100,17 +100,9 @@ To install MkDocs your will require python 3.X once you have this you can instal
 MkDocs requires an `mkdocs.yml` file for configuration and navigation control, the one supplied in the repo is the one used for github pages but should work fine locally also.
 
 ``` bash
-pip install mkdocs-material
-pip install markdown-callouts
-pip install mkdocs-git-revision-date-localized-plugin
-pip install mkdocs-git-committers-plugin-2
-pip install mkdocs-print-site-plugin
-pip install mkdocs-tech-docs-template
-pip install mkdocs-redirects
-pip install mkdocs-awesome-nav
+pip install -r requirements.txt
 
 # Only needed if you want to generate site PDF locally
-pip install pytest-playwright
 playwright install --with-deps
 playwright install chrome --with-deps
 ```
