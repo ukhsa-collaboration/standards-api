@@ -218,12 +218,12 @@ The commit message should be structured as follows:
 
 | Type | Description | SemVer Impact |
 |------|-------------|---------------|
-| `build` | Changes to the build/CI process, auxilary tools, or external dependencies | None (*unless functionality is affected*) |
-| `docs` | Documentation changes | None |
+| `build` | A change to CI configuration files and scripts, or that affect the build system or external dependencies | None (*unless functionality is affected*) |
+| `docs` | Documentation only changes | None |
 | `feat` | A new feature | MINOR (`x.Y.z`) |
 | `fix` | A bug fix | PATCH (`x.y.Z`) |
-| `perf` | Changes that improve performance | PATCH (`x.y.Z`) |
-| `refactor` | Code changes that improve code quality but have no functional effect | None (*unless functionality is affected*) |
+| `perf` | A code change that improves performance | PATCH (`x.y.Z`) |
+| `refactor` | A code change that improve code quality but have no functional effect | None (*unless functionality is affected*) |
 | `revert` | Reverts a previous commit | Depends on the reverted change |
 | `test` | Adding or correcting tests | None |
 
