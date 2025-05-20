@@ -11,3 +11,4 @@ rules:
     'revert',
     'test'
   ]]
+  scope-empty: [2, 'always']

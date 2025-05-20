@@ -209,7 +209,7 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 The commit message should be structured as follows:
 
 ```text
-<type>[optional scope]: <description>
+<type>: <description>
 
 [optional body]
 
@@ -229,6 +229,8 @@ The commit message should be structured as follows:
 
 > [!NOTE]
 > A commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with [`MAJOR`](http://semver.org/#summary) in Semantic Versioning). A BREAKING CHANGE can be part of commits of any *type*.
+
+Although the [Conventional Commits](https://www.conventionalcommits.org/) specification allows for an optional `scope` component within the commit message, we do not currently have any defined scopes that need this. Linting rules have been configured to disallow commit messages that include a scope.
 
 #### Example
 
