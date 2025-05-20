@@ -11,4 +11,7 @@ rules:
     'revert',
     'test'
   ]]
-  scope-empty: [2, 'always']
+  scope-enum: [2, 'always', [
+    'spectral'
+  ]]
+  scope-empty: [0, 'never']

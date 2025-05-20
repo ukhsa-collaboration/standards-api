@@ -209,11 +209,20 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 The commit message should be structured as follows:
 
 ```text
-<type>: <description>
+Subject:
+<type>(<scope>): <short summary>
+  │       │             │
+  │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
+  │       │
+  │       └─⫸ Commit Scope: "spectral" for changes to spectral rules or should be omitted otherwise
+  │
+  └─⫸ Commit Type: build|docs|feat|fix|perf|refactor|revert|test
 
-[optional body]
+Body:
+<detailed description of changes made in the commit> (wrap at 72 characters)
 
-[optional footer(s)]
+Footer:
+<any additional information, such as references or issue numbers>
 ```
 
 | Type | Description | SemVer Impact |
@@ -229,8 +238,6 @@ The commit message should be structured as follows:
 
 > [!NOTE]
 > A commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with [`MAJOR`](http://semver.org/#summary) in Semantic Versioning). A BREAKING CHANGE can be part of commits of any *type*.
-
-Although the [Conventional Commits](https://www.conventionalcommits.org/) specification allows for an optional `scope` component within the commit message, we do not currently have any defined scopes that need this. Linting rules have been configured to disallow commit messages that include a scope.
 
 #### Example
 
