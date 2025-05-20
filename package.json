@@ -4,7 +4,7 @@
   "description": "UKHSA Spectral ruleset",
   "main": ".spectral.yaml",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky && git config commit.template .gitmessage"
   },
   "repository": {
     "type": "git",
