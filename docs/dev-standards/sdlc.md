@@ -150,7 +150,7 @@ All environments MUST be defined in code so that they can be created/re-created 
 **Quality checks**
 
 1. User acceptance testing (UAT) SHOULD be performed and pass.
-1. Full system regression tests MUST be run and pass.
+1. Full system regression tests MUST be run and pass. Regression tests SHOULD be fully automated.
 
 **Data**: Test data only
 
