@@ -32,12 +32,9 @@ jobs:
       - name: Conventional Commits
         if: github.event.pull_request != null
         run: |
-          echo "${{ github.event.pull_request.title }}
-
-          ${{ github.event.pull_request.body }}"
-          echo "${{ github.event.pull_request.title }}
-
-          ${{ github.event.pull_request.body }}" | npx commitlint --verbose
+          echo "title: ${{ github.event.pull_request.title }}"
+          echo "body: ${{ github.event.pull_request.body }}"
+          echo "${{ github.event.pull_request.title }}" | npx commitlint --verbose
 
     #   - uses: amannn/action-semantic-pull-request@v5
     #     env:
