@@ -1,0 +1,62 @@
+name: "Semantic PR Check"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+jobs:
+  main:
+    name: Validate PR title
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Use latest Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Conventional Commits
+        if: github.event.pull_request != null
+        run: |
+          echo "${{ github.event.pull_request.title }}
+
+          ${{ github.event.pull_request.body }}"
+          echo "${{ github.event.pull_request.title }}
+
+          ${{ github.event.pull_request.body }}" | npx commitlint --verbose
+
+    #   - uses: amannn/action-semantic-pull-request@v5
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       # Configure which types are allowed (newline-delimited).
+    #       # Default: https://github.com/commitizen/conventional-commit-types
+    #       types: |
+    #         build
+    #         docs
+    #         feat
+    #         fix
+    #         perf
+    #         refactor
+    #         revert
+    #         test
+    #       # Configure which scopes are allowed (newline-delimited).
+    #       # These are regex patterns auto-wrapped in `^ $`.
+    #       scopes: |
+    #         spectral
+    #       # Configure that a scope must always be provided.
+    #       requireScope: false
