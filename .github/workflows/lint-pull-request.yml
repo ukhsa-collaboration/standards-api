@@ -1,6 +1,10 @@
 name: "Semantic PR Check"
 
 on:
+  issue_comment:
+    types:
+      - created
+      - edited
   pull_request:
     types:
       - opened
@@ -9,13 +13,42 @@ on:
       - synchronize
 
 jobs:
-  main:
+  get-permissions:
+    if: github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && github.event.issue.pull_request)
+
+    permissions: {}
+
+    name: Get User Permissions
+    runs-on: ubuntu-latest
+
+    outputs:
+      permission: ${{ steps.permission.outputs.permission }}
+
+    steps:
+
+      - name: Get permissions
+        id: permission
+        env:
+          USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching permissions for user: $USERNAME"
+          RESPONSE=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/$GITHUB_REPOSITORY/collaborators/$USERNAME/permission | jq -r .permission)
+          echo "Permission: $RESPONSE"
+          echo "permission=$RESPONSE" >> $GITHUB_OUTPUT
+
+  pr-lint:
     name: Validate PR title
+    needs: get-permissions
+    if: contains(fromJSON('["write", "admin"]'), needs.get-permissions.outputs.permission)
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
-    steps:
 
+    steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -31,13 +64,13 @@ jobs:
 
       - name: Conventional Commits
         if: github.event.pull_request != null
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          echo "${{ github.event.pull_request.title }}
-
-          ${{ github.event.pull_request.body }}"
-          echo "${{ github.event.pull_request.title }}
-
-          ${{ github.event.pull_request.body }}" | npx commitlint --verbose
+          echo "title: $PR_TITLE"
+          echo "body: $PR_BODY"
+          echo "$PR_TITLE" | npx commitlint --verbose
 
     #   - uses: amannn/action-semantic-pull-request@v5
     #     env:
