@@ -339,7 +339,15 @@ Resolves issue #123"
     >
     > Always use [`rebase`](https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase) instead of `merge` when keeping your branch up to date with the `main` branch.
 
-9. **Merge the PR**: Once approved and all status checks have passed, you can merge the PR into the main branch. If you're an external contributor, this may be done by a maintainer.
+9. **Merge the PR**: Once approved and all status checks have passed, you can trigger a `fast-forward` merge by commenting `/merge` on the pull request. This will initiate an automated, permission checked `fast-forward` merge process. Only users with `write` or `admin` permissions on the repository can trigger this action. If you're an external contributor, a maintainer may need to do this for you.
+
+    The merge process is handled by our two-phase GitHub Actions workflow:
+    - **[Phase 1](./.github/workflows/override-pr-merge-init.md):** Checks your permissions and PR status when you comment `/merge`.
+    - **[Phase 2](./.github/workflows/override-pr-merge-privileged.md):** If you have sufficient permissions and the PR is mergeable, the workflow will perform a true `fast-forward` merge and post the result as a comment on the PR.
+
+    If you do not have permission, the workflow will notify you and request you contact a member of the [API Standards Team](https://github.com/orgs/ukhsa-collaboration/teams/api-standards-team).
+
+    Information on why we use a non-standard GitHub merge process can be found in the [`override-pr-merge-init.yml`](./.github/workflows/override-pr-merge-init.md#why-is-this-workflow-needed) documentation.
 
 10. Congratulations! 🎉🎉 You've successfully contributed to the UKHSA API Guidelines, any documentation changes will be automatically deployed to the [UKHSA API Guidelines](https://ukhsa-collaboration.github.io/api-guidelines/) site.
 
