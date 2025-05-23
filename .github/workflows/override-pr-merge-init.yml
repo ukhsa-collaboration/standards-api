@@ -1,0 +1,40 @@
+name: Override PR Merge Initialise
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  get-permissions:
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      github.event.comment.body == '/merge' &&
+      !github.event.issue.closed_at &&
+      github.event.issue.state == 'open'
+
+    name: Get User Permissions
+    runs-on: ubuntu-latest
+    permissions: {}
+
+    steps:
+
+      - name: Get permissions
+        id: permission
+        env:
+          USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching permissions for user: $USERNAME"
+          RESPONSE=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/$GITHUB_REPOSITORY/collaborators/$USERNAME/permission | jq -r .permission)
+          echo "Permission: $RESPONSE"
+          echo "permission=$RESPONSE" >> $GITHUB_OUTPUT
+
+      - name: Set failure message
+        uses: actions/github-script@v7
+        if: ${{ !contains(fromJSON('["write", "admin"]'), steps.permission.outputs.permission) }}
+        with:
+          script: core.setFailed("You do not have permission to merge this PR. Please contact a repository admin for assistance.");
