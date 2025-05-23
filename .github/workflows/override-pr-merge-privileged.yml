@@ -16,6 +16,19 @@ jobs:
 
     steps:
 
+        - name: 'Download artifact'
+          uses: actions/download-artifact@v4
+          with:
+            name: event-artifact
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            run-id: ${{ github.event.workflow_run.id }}
+
+        - name: 'Read artifact'
+          id: read-artifact
+          run: |
+            echo "Reading artifact"
+            cat event.json
+
         - run: echo $event_details
           env:
             event_details: ${{ toJson(github.event.workflow_run) }}

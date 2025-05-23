@@ -38,3 +38,16 @@ jobs:
         if: ${{ !contains(fromJSON('["write", "admin"]'), steps.permission.outputs.permission) }}
         with:
           script: core.setFailed("You do not have permission to merge this PR. Please contact a repository admin for assistance.");
+
+      - name: Create event artifact 
+        id: write_event
+        env:
+          event_details: ${{ toJson(github.event) }}
+        run: |
+          echo "$event_details" > event.json
+
+      - name: Upload Event Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: event-artifact
+          path: event.json
