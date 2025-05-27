@@ -28,4 +28,7 @@ nav:
     - SHOULD:
       - "spectral-rules/should/*.md"
   - Development Standards:
+    - "dev-standards/index.md"
+    - "dev-standards/sdlc.md"
+    - "dev-standards/environments.md"
     - "dev-standards/*.md"
