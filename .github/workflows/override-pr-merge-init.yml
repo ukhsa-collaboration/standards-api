@@ -44,7 +44,8 @@ jobs:
           repository: ${{ github.repository }}
           pull_number: ${{ github.event.issue.number }}
           body: |
-            You do not have permission to merge this PR.
+            ### ⚠️ You do not have permission to merge this PR! ⚠️
+
             Please contact a repository admin for assistance.
         run: |
           echo "Adding failure comment to PR"
