@@ -34,11 +34,10 @@ jobs:
           echo "event_json=$(cat event.json | jq -c)" >> $GITHUB_OUTPUT
 
   get-permissions:
+    name: Get User Permissions
     needs: import-event
     # Run only if the workflow run was triggered by an issue comment and the previous workflow run was successful.
     if: |
-      github.event.workflow_run.event == 'issue_comment' &&
-      github.event.workflow_run.conclusion == 'success' &&
       ${{ fromJson(needs.import-event.outputs.trigger_event).issue.pull_request }} &&
       ${{ fromJson(needs.import-event.outputs.trigger_event).comment.body == '/merge' }} &&
       ${{ !fromJson(needs.import-event.outputs.trigger_event).issue.closed_at }} &&
@@ -48,118 +47,139 @@ jobs:
     runs-on: ubuntu-latest
     permissions: {}
 
-    # outputs:
-    #   user_permission: ${{ steps.permission.outputs.permission }}
+    outputs:
+      user_permission: ${{ steps.permission.outputs.permission }}
 
     steps:
 
-        - run: echo $event_details
-          env:
-            event_details: ${{ toJson(needs.import-event.outputs.trigger_event) }}
+      - name: Get permissions
+        id: permission
+        env:
+          USERNAME: ${{ github.event.workflow_run.event == 'issue_comment' && fromJson(needs.import-event.outputs.trigger_event).comment.user.login || github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#       - name: Get permissions
-#         id: permission
-#         env:
-#           USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
-#           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         run: |
-#           echo "Fetching permissions for user: $USERNAME"
-#           RESPONSE=$(gh api \
-#             -H "Accept: application/vnd.github+json" \
-#             -H "X-GitHub-Api-Version: 2022-11-28" \
-#             repos/$GITHUB_REPOSITORY/collaborators/$USERNAME/permission | jq -r .permission)
-#           echo "Permission: $RESPONSE"
-#           echo "permission=$RESPONSE" >> $GITHUB_OUTPUT
+        run: |
+          echo "Fetching permissions for user: $USERNAME"
+          RESPONSE=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/$GITHUB_REPOSITORY/collaborators/$USERNAME/permission | jq -r .permission)
+          echo "Permission: $RESPONSE"
+          echo "permission=$RESPONSE" >> $GITHUB_OUTPUT
 
-#   merge_comment:
-#     needs: get-permissions
+  merge_comment:
+    name: FF Merge PR
+    needs:
+      - import-event
+      - get-permissions
 
-#     permissions:
-#       pull-requests: write
-#       issues: write
-#       contents: read
+    runs-on: ubuntu-latest
 
-#     # Run only if
-#     # 1. The comment was made on a PR.
-#     # 2. The comment was made by @samkit-jain.
-#     # 3. The comment was exactly "/merge" sans the quotes.
-#     # 4. The PR is open.
-#     if: |
-#       github.event.issue.pull_request &&
-#       github.event.comment.body == '/merge' &&
-#       !github.event.issue.closed_at &&
-#       github.event.issue.state == 'open' &&
-#       contains(fromJSON('["write", "admin"]'), needs.get-permissions.outputs.user_permission)
-#     runs-on: ubuntu-latest
-#     name: Merge PR
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: write
 
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
+    # Run only if
+    # 1. The comment was made on a PR.
+    # 2. The comment was exactly "/merge" sans the quotes.
+    # 3. The PR is open.
+    # 4. The user has write or admin permissions on the repository.
+    if: |
+      ${{ fromJson(needs.import-event.outputs.trigger_event).issue.pull_request }} &&
+      ${{ fromJson(needs.import-event.outputs.trigger_event).comment.body == '/merge' }} &&
+      ${{ !fromJson(needs.import-event.outputs.trigger_event).issue.closed_at }} &&
+      ${{ fromJson(needs.import-event.outputs.trigger_event).issue.state == 'open' }} &&
+      ${{ contains(fromJSON('["write", "admin"]'), needs.get-permissions.outputs.user_permission) }}
 
-#       # Get details of the PR. The target and base branch. And also whether the PR can be merged in or not.
-#       - name: Get PR details
-#         id: get-pr-details
-#         env:
-#           USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
-#           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           repository: ${{ github.repository }}
-#           pull_number: ${{ github.event.issue.number }}
-#         run: |
-#           echo "Fetching pull request details"
-#           RESPONSE=$(gh api \
-#             -H "Accept: application/vnd.github+json" \
-#             -H "X-GitHub-Api-Version: 2022-11-28" \
-#             repos/$repository/pulls/$pull_number)
-#           echo "response: $RESPONSE"
-#           echo "data=$RESPONSE" >> $GITHUB_OUTPUT
+    env:
+      USERNAME: ${{ github.event.workflow_run.event == 'issue_comment' && fromJson(needs.import-event.outputs.trigger_event).comment.user.login || github.actor }}
+      PULL_NUMBER: ${{ fromJson(needs.import-event.outputs.trigger_event).issue.number }}
+      ERROR_MESSAGE: |
+        ### ⚠️ PR cannot be merged in! ⚠️
 
-#       # Merge (rebase) the PR if it is allowed.
-#       - name: Merge the PR
-#         id: merge-status
-#         shell: bash
-#         env:
-#           MERGEABLE_STATUS: ${{ fromJson(steps.get-pr-details.outputs.data).mergeable_state }}
-#           BASE_BRANCH: ${{ fromJson(steps.get-pr-details.outputs.data).base.ref }}
-#           HEAD_BRANCH: ${{ fromJson(steps.get-pr-details.outputs.data).head.ref }}
-#         run: |
-#           if [ "$MERGEABLE_STATUS" = "clean" ]; then
-#             git config --global user.email "<>"
-#             git config --global user.name "GitHub Actions"
-#             git checkout $HEAD_BRANCH
-#             git pull origin $HEAD_BRANCH
-#             git checkout $BASE_BRANCH
-#             git pull origin $BASE_BRANCH
-#             git rebase $HEAD_BRANCH
-#             git push origin $BASE_BRANCH
-#             echo "::set-output name=message::'PR merged in succesfully.'"
-#           else
-#             echo "::set-output name=message::'PR cannot be merged in.'"
-#           fi
+        Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
 
-#       # Post a success/failure comment to the PR.
-#       - name: Add comment to PR
-#         env:
-#           USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
-#           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           repository: ${{ github.repository }}
-#           pull_number: ${{ github.event.issue.number }}
-#           body: ${{ steps.merge-status.outputs.message }}
-#         run: |
-#           echo "Adding success/failure comment to PR"
-#           RESPONSE=$(gh pr comment $pull_number --repo "$repository" -b "$body")
-#           echo "response: $RESPONSE"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-#       # Post a failure message when any of the previous steps fail.
-#       - name: Add failure comment to PR
-#         env:
-#           USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
-#           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           repository: ${{ github.repository }}
-#           pull_number: ${{ github.event.issue.number }}
-#           body: PR cannot be merged in. Check the Actions execution tab for details.
-#         run: |
-#           echo "Adding failure comment to PR"
-#           RESPONSE=$(gh pr comment $pull_number --repo "$repository" -b "$body")
-#           echo "response: $RESPONSE"
+      # Get details of the PR. The target and base branch. And also whether the PR can be merged in or not.
+      - name: Get PR details
+        id: get-pr-details
+        env:
+          USERNAME: ${{ env.USERNAME }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.PULL_NUMBER }}
+        run: |
+          echo "Fetching pull request details"
+          RESPONSE=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/$repository/pulls/$pull_number)
+          echo "response: $RESPONSE"
+          echo "data=$RESPONSE" >> $GITHUB_OUTPUT
+
+      # Merge (rebase) the PR if it is allowed.
+      - name: Merge the PR
+        id: merge-status
+        shell: bash
+        env:
+          MERGEABLE_STATUS: ${{ fromJson(steps.get-pr-details.outputs.data).mergeable_state }}
+          BASE_BRANCH: ${{ fromJson(steps.get-pr-details.outputs.data).base.ref }}
+          HEAD_BRANCH: ${{ fromJson(steps.get-pr-details.outputs.data).head.ref }}
+          SUCCESS_MESSAGE: |
+            ### 🎉 Success! 🎉
+
+            PR successfully Fast Forward merged in ✅.
+        run: |
+          if [ "$MERGEABLE_STATUS" = "clean" ]; then
+            git config --global user.email "<>"
+            git config --global user.name "GitHub Actions"
+            git checkout $HEAD_BRANCH
+            git pull origin $HEAD_BRANCH
+            git checkout $BASE_BRANCH
+            git pull origin $BASE_BRANCH
+            git rebase $HEAD_BRANCH
+            git push origin $BASE_BRANCH
+            {
+              echo 'message<<EOF'
+              echo "${{ env.SUCCESS_MESSAGE }}"
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo 'message<<EOF'
+              echo "${{ env.ERROR_MESSAGE }}"
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      # Post a success/failure comment to the PR.
+      - name: Add comment to PR
+        env:
+          USERNAME: ${{ env.USERNAME }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.PULL_NUMBER }}
+          body: ${{ steps.merge-status.outputs.message }}
+        run: |
+          echo "Adding success/failure comment to PR"
+          RESPONSE=$(gh pr comment $pull_number --repo "$repository" -b "$body")
+          echo "response: $RESPONSE"
+
+      # Post a failure message when any of the previous steps fail.
+      - name: Add failure comment to PR
+        if: ${{ failure() }}
+        env:
+          USERNAME: ${{ env.USERNAME }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.PULL_NUMBER }}
+          body: ${{ env.ERROR_MESSAGE }}
+        run: |
+          echo "Adding failure comment to PR"
+          RESPONSE=$(gh pr comment $pull_number --repo "$repository" -b "$body")
+          echo "response: $RESPONSE"
