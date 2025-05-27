@@ -1,206 +1,106 @@
 # SDLC
 
-## Overview
+This page provides guidance and policy regarding the software delivery lifecycle (SDLC) &mdash; i.e. the sequence of activities required and recommended to ensure the quality of individual work items such as user stories or bugs. See also [Environments](environments.md).
 
-Changes are developed in a [local development environment](#dev-environment) and committed to a feature branch. When the feature is complete, a Pull Request (PR) is created.
+## Work items
+
+Work is delivered as a series of work item (such as user story or a bug fix) that represent the unit of delivery. A work item MUST be completed in its entirety to be considered done. If at any stage it becomes clear that this is infeasible or undesirable then the work item MUST be split, or moved back to a pending state, or closed as not done.
+
+Different work item types represent different types of work. For software delivery initiatives, work item types MUST include the following and should usually be restricted to only these options:
+
+- **User story**: A user-focused requirement written from the end user's perspective that describes a software feature, the type of user, what they want, and why. This SHOULD be formatted as "As a [type of user], I want [goal] so that [benefit]."
+- **Enabler**: Changes such as refactoring or retrofitting missing tests that improve the quality of the system but do not deliver functional changes. 
+- **Bug**: A defect in the system that causes it to behave incorrectly or unexpectedly. Bugs MUST include steps to reproduce, expected behavior, actual behavior, and information about the environment in which the bug occurs.
+- **Spike**: A time-boxed investigation activity aimed at exploring alternative approaches or to determine the feasibility of a possible design. Any code developed during the spike SHOULD be discarded.
+- **Tasks**: Clearly defined activity that has business benefit but does not involve code changes.
+
+User stories MUST be formulated following the INVEST principal as described below. Most of these characteristics are also desirable for other types of work item.
+
+- **Independent** of each other.
+- **Negotiable**, leaving room for details of the solution to emerge during implementation.
+- **Valuable** on their own, with the value clearly indicated.
+- **Estimable**, meaning they are well enough understood for the required effort to be estimated, at least approximately.
+- **Small**, ideally requiring hours or a small number of days to deliver, but not more.
+- **Testable**, so that correctness can be validated.
+
+## Flow of work
+
+In high level terms, [work items](#work-items) are created in a pending state, move through various in-progress states, and when complete move to a done state.
 
 ``` mermaid
 flowchart LR
-    L[Local<br>dev env] -->|commit/<br>push| FB([Feature<br>branch])
-    click L "#local-environment"
-    FB -->|create| PR([Pull<br>request])
+    P[[Pending]] --> IP[[In progress]] --> D[[Done/<br>Closed not done]]
 ```
 
-The PR triggers the [CI build](#ci-environment). Peer approval MUST be given and the CI build MUST pass for code to be merged to `main`.
+We discuss each of this high level groupings in more detail in the sections that follow.
+
+## Pending
+
+### Backlog ordering
+
+> [!IMPORTANT]
+> 
+> Pending work items SHOULD be split into a loosely ordered backlog and a strictly ordered _Next up_ stage, which SHOULD contain 10&ndash;20 items at all times.
 
 ``` mermaid
 flowchart LR
-    PR([Pull<br>request]) -->|trigger| CI([CI]) -->|build in| CIE[CI env]
-    click CIE "#ci-environment"
-    CI -.->|"(optional)<br>deploy"| PRE[Pull Request<br>environment] --- A@{ shape: comment, label: "Ephemeral<br>environment<br>for each PR" }
-    click PRE "#pull-request-environment"
-    PR -->|approval| Me([Merge])
-    CI -->|pass| Me
-    Me -->|commit/<br>push| M([main])
+    a(Loosely ordered backlog) --> b(Strictly ordered Next up)
 ```
 
-Once changes are merged to `main`, a build is performed and changes are deployment to the QA environment. Changes are progressed through environments once quality checks have passed in each.
+Conceptually the backlog of pending work items should be ordered strictly in the sequence that they should be delivered. In practice, it is not practical to insist that the entire backlog should be kept in order like this and a couple of pragmatic options are available:
+
+1. Agree tha the top _N_ items of the backlog will be kept in order.
+1. Keep the main backlog loosely in order and introduce a _Next up_ stage which is kept strictly ordered and periodically topped up to ensure the team have a ready list of work items to pick up.
+
+The second option is preferred as it tends to be easier to enforce.
+
+In addition to being strictly ordered, work items MUST be [refined](#refinement) before being considered ready to move to the Next up queue to ensure the goal is clear.
+
+### Refinement
+
+_Next up_ is a holding stage indicating that items are ready to move into implementation. Refinement is the process that ensures items are ready to move into that stage. 
+
+After refinement, work items SHOULD NOT contain much detail beyond what is described below. The work to add further detail should be deferred to the elaboration **(TO DO — add link)** stage where there is richer information. 
+
+#### User stories
+
+- The **title** MUST briefly state who will benefit from the change and what the proposed change is, using the form "[user] can [action]".
+    - e.g. _New user can register with email address and password"_
+- The **description** MUST be a statement that clearly states who will benefit from the change, what the proposed change is, and why it is beneficial.
+    - e.g. _"As a new user, I can register with my email address and password, so that I can control access to my account without requiring a social login."_
+
+#### Enablers
+
+- The **title** MUST briefly state the proposed change and what it enables.
+    - e.g. _Refactor user registration code to enable social log in options."_
+- The **description** MUST be a statement that clearly states the need that the enabler will meet and how it will do so.
+    - e.g. _"The user registration code currently assumes users will register and subsequently log in by providing a password. To enable the addition of social log in options, this must be made more generic, allowing for other authentication mechanisms."_
+
+#### Bugs
+
+- The **title** MUST briefly state the user, action and unexpected result.
+    - e.g. _New user can register with same email address as an existing account"_
+- The **description** MUST be a statement that clearly states who triggered the defect, what they did, the expected result, and the actual result. If not implicit, the description MUST also describe why the expected result is correct.
+    - e.g. _"When a new user tries to register with the same email address as an existing account, they should be prevented from doing so and presented with an error message, but instead they can do so without error. This allows duplicate accounts to be created which will break subsequent log ins and other functionality."_
+
+#### Spikes
+
+
+#### Tasks
+
+
+
+### In progress
 
 ``` mermaid
 flowchart LR
-    M([main]) -->|deploy| Dev[Dev<br>env]
-    Dev -->|deploy| QA[QA<br>env]
-    click Dev "#dev-environment"
-    QA -->|deploy| PP[Preprod<br>environment]
-    click QA "#qa-environment"
-    PP -->|deploy| Pr[Production<br>environment]
-    click PP "#preprod-environment"
-    Pr -->|deploy| Tr[Training<br>environment]
-    click Pr "#production-environment"
-    click Tr "#training-environment"
+    a(Elaboration) --> i(Implementation) --> v(Validation)
 ```
 
-## Environments
+1. All work items must TODO
 
-### Terminology
+- The **test** approach MUST be specified, and SHOULD include acceptance criteria using given/when/then form.
+    - e.g. _"Given I am on the registration screen, when I enter an email address for an existing user, then I see an error message explaining this."_
+- An **implementation approach** MUST be documented.
 
-#### Size
-
-- **Small**: smaller than production scale.
-- **Large**: production scale.
-
-#### Quality checks
-
-The listed checks MUST or SHOULD be run and pass before changes are promoted to the next environment, as indicated.
-
-#### Data
-
-- **Test data only**: This SHOULD be synthetic data, created with scripts. As an alternative, this COULD be anonymised live data but this requires care to ensure GDPR compliance. Test data MUST NOT contain [Personal Information (PI)](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/personal-information-what-is-it/what-is-personal-information-a-guide/).
-- **Live**: Live data, possibly including PI.
-
-### All environments
-
-All environments MUST be defined in code so that they can be created/re-created and brought to a known state automatically.
-
-### Local environment
-
-**Description**:
-
-- Environment used for local development of features.
-- Typically runs on a developer's personal machine or cloud-hosted development environment.
-- Every developer MUST use their own local development environment and perform at a minimum the quality checks indicated as MUST below.
-- Components other than that under development MAY be stubbed or mocked.
-
-**Size**: Small
-
-**Quality checks**
-
-1. Exploratory testing by developer MUST be done to perform basic validation of changes.
-1. Unit tests MUST be run and pass.
-1. Linting SHOULD be run and pass.
-1. Static code analysis SHOULD be run and pass.
-1. Dependency checks SHOULD be run and pass.
-
-**Data**: Test data only
-
-**What next**: When feature is complete and testing all passes, create a Pull Request.
-
-### CI environment
-
-**Description**:
-
-- All changes MUST be validated in a Continuous Integration (CI) environment before merging to `main`.
-- This is an environment within the CI system, and is typically ephemeral (using containers) or hosted on dedicated VMs.
-
-**Size**: Small
-
-**Quality checks**
-
-1. Unit tests MUST be run and pass.
-1. Linting MUST be run and pass.
-1. Static code analysis MUST be run and pass.
-1. Dependency checks MUST be run and pass.
-1. Automated accessibility testing SHOULD be run and pass.
-
-**Data**: Test data only
-
-**What next**: When all checks pass and approval is granted then automatically deploy to [Dev](#dev-environment).
-
-### Pull Request environment
-
-**Description**:
-
-- This environment is optional.
-- If present, this is an ephemeral environment to which the changes on a single branch are deployed when an associated PR is created.
-- This environment will usually be cloud hosted and MUST be automatically destroyed when the PR is merged or cancelled.
-
-**Size**: Small
-
-**Quality checks**: Exploratory testing MUST be performed to provide validation of the changes. This is usually done by a specialist tester or Product Owner.
-
-**Data**: Test data only
-
-**What next**: When testing is completed successfully, approve the PR.
-
-### Dev environment
-
-**Description**:
-
-- Typically long-lived environment which is generally unstable because every merge to `main` will trigger a deployment to this environment.
-- In contrast to the [Local](#local-environment) environment, all components that the team is responsible for MUST be deployed in this environment, though external dependencies MAY be stubbed or mocked.
-
-**Size**: Small
-
-**Quality checks**: If there is no Pull Request environment, then exploratory testing MUST be performed to provide validation of the changes. This is usually done by a specialist tester or Product Owner.
-
-**Data**: Test data only
-
-**What next**: Manually trigger deployment to [QA](#qa-environment), timed to avoid disrupting quality assurance activities being performed in that environment. 
-
-### QA environment
-
-**Description**: 
-
-- Typically long-lived environment which is generally stable because changes are deployed to this environment in a controlled manner to avoid disrupting tests while they are being performed.
-- Deployments to this environment MUST be triggered by a manual approval step.
-- Like the [Dev](#dev-environment) environment, all components that the team is responsible for MUST be deployed in this environment, though external dependencies MAY be stubbed or mocked.
-
-**Size**: Small
-
-**Quality checks**
-
-1. User acceptance testing (UAT) SHOULD be performed and pass.
-1. Full system regression tests MUST be run and pass. Regression tests SHOULD be fully automated.
-
-**Data**: Test data only
-
-**What next**: Manually trigger deployment to [Preprod](#preprod-environment).
-
-### Preprod environment
-
-**Description**:
-
-- Typically long-lived environment which is generally stable because changes are deployed to this environment in a controlled manner to avoid disrupting tests while they are being performed.
-- Deployments to this environment MUST be triggered by a manual approval step.
-- Unlike earlier environments, all components that the team is responsible for MUST be deployed in this environment, and integrations with external dependencies MUST be in place.
-- Non-production instances of external dependencies SHOULD be used where practical.
-
-**Size**: Large (Replica of Production)
-
-**Quality checks**
-
-1. Functional sanity testing MUST be done and pass for every deployment.
-1. Performance and load testing SHOULD be done and pass (not on every deployment but at some agreed maximum interval).
-1. Penetration testing MUST be done and pass (not on every deployment but at some agreed maximum interval).
-
-**Data**: Test data only
-
-**What next**: If all in-scope checks pass, automatically trigger deployment to [Production](#production-environment).
-
-### Production environment
-
-**Description**:
-
-- Stable environment consisting of all production components.
-
-**Size**: Large
-
-**Quality checks**: Functional smoke tests MUST be done and pass. Failure MUST trigger alerts and MAY trigger automatic rollback.
-
-**Data**: Live
-
-**What next**: Automatically trigger deployment to [Training](#training-environment).
-
-### Training environment
-
-**Description**:
-
-- Generally stable environment used for training requirements.
-- Consists of all components deployed to production.
-- This environment is optional.
-
-**Size**: Small
-
-**Quality checks**: None
-
-**Data**: Test data only
+### Done
