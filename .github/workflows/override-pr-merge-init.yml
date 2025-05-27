@@ -15,14 +15,17 @@ jobs:
 
     name: Get User Permissions
     runs-on: ubuntu-latest
-    permissions: {}
+    permissions:
+      pull-requests: write
+
+    env:
+      USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
 
     steps:
 
       - name: Get permissions
         id: permission
         env:
-          USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching permissions for user: $USERNAME"
@@ -32,6 +35,21 @@ jobs:
             repos/$GITHUB_REPOSITORY/collaborators/$USERNAME/permission | jq -r .permission)
           echo "Permission: $RESPONSE"
           echo "permission=$RESPONSE" >> $GITHUB_OUTPUT
+
+      # Post a failure message when any of the previous steps fail.
+      - name: Add failure comment to PR
+        if: ${{ !contains(fromJSON('["write", "admin"]'), steps.permission.outputs.permission) }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ github.event.issue.number }}
+          body: |
+            You do not have permission to merge this PR.
+            Please contact a repository admin for assistance.
+        run: |
+          echo "Adding failure comment to PR"
+          RESPONSE=$(gh pr comment $pull_number --repo "$GITHUB_REPOSITORY" -b "$body")
+          echo "response: $RESPONSE"
 
       - name: Set failure message
         uses: actions/github-script@v7
