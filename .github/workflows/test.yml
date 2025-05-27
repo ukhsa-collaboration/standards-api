@@ -1,0 +1,42 @@
+name: Run Unit Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '__tests__/**'
+      - 'functions/**'
+      - 'package.json'
+      - 'jest.config.*'
+  pull_request:
+    branches: [main]
+    paths:
+      - '__tests__/**'
+      - 'functions/**'
+      - 'package.json'
+      - 'jest.config.*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test -- --coverage
+
+      - name: Upload Jest coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
