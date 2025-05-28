@@ -9,14 +9,10 @@ jobs:
 
   import-event:
     name: Import Event Details
-    # Run only if
-    # 1. The workflow run was triggered by an issue comment.
-    # 2. The previous workflow run was successful.
-    if: |
-      github.event.workflow_run.event == 'issue_comment' &&
-      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    permissions: {}
+
+    permissions:
+      actions: read
 
     outputs:
       trigger_event: ${{ steps.read-artifact.outputs.event_json }}
@@ -35,32 +31,87 @@ jobs:
           echo "Reading artifact"
           echo "event_json=$(cat event.json | jq -c)" >> $GITHUB_OUTPUT
 
-  get-permissions:
-    name: Get User Permissions
+  on-failure:
+    name: On Failure
+    needs: import-event
+    if: |
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+
+    env:
+      pull_number: ${{ fromJson(needs.import-event.outputs.trigger_event).pull_request.number}}
+
+    steps:
+      # Post a failure message when the triggering workflow run fails.
+      - name: Add failure comment to PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pull_number: ${{ env.pull_number }}
+          body: |
+            ### ⚠️ PR cannot be merged in! ⚠️
+
+            Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}) for details.
+        run: |
+          echo "Adding failure comment to PR"
+          RESPONSE=$(gh pr comment $pull_number --repo "$GITHUB_REPOSITORY" -b "$body")
+          echo "response: $RESPONSE"
+
+      - name: Set failure message
+        uses: actions/github-script@v7
+        if: ${{ always() }}
+        with:
+          script: core.setFailed("Please check the workflow run ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }} for details.");
+
+      - name: Remove label
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.pull_number}}
+        run: |
+          echo "Removing 'fast-forward' label from PR"
+          RESPONSE=$(gh pr edit $pull_number --repo "$repository" --remove-label "fast-forward")
+          echo "response: $RESPONSE"
+
+  on-success:
+    name: On Success
     needs: import-event
     # Run only if
-    # 1. The comment was made on a PR.
-    # 2. The comment was exactly "/merge" sans the quotes.
-    # 3. The PR is open.
+    # 1. The workflow run was triggered by a pull request.
+    # 2. The workflow run was successful.
+    # 3. The pull request was labeled with 'fast-forward'.
+    # 4. The pull request is still open and not closed.
     if: |
-      ${{ fromJson(needs.import-event.outputs.trigger_event).issue.pull_request }} &&
-      ${{ fromJson(needs.import-event.outputs.trigger_event).comment.body == '/merge' }} &&
-      ${{ !fromJson(needs.import-event.outputs.trigger_event).issue.closed_at }} &&
-      ${{ fromJson(needs.import-event.outputs.trigger_event).issue.state == 'open' }}
+      ${{ github.event.workflow_run.event == 'pull_request' }} &&
+      ${{ github.event.workflow_run.conclusion == 'success' }} &&
+      ${{ fromJson(needs.import-event.outputs.trigger_event).pull_request }} &&
+      ${{ fromJson(needs.import-event.outputs.trigger_event).action == 'labeled' }} &&
+      ${{ fromJson(needs.import-event.outputs.trigger_event).label.name == 'fast-forward' }} &&
+      ${{ !fromJson(needs.import-event.outputs.trigger_event).pull_request.closed_at }} &&
+      ${{ fromJson(needs.import-event.outputs.trigger_event).pull_request.state == 'open' }}
 
     # name: Get User Permissions
     runs-on: ubuntu-latest
-    permissions: {}
+
+    permissions:
+      pull-requests: write
 
     outputs:
       user_permission: ${{ steps.permission.outputs.permission }}
 
+    env:
+      pull_number: ${{ fromJson(needs.import-event.outputs.trigger_event).pull_request.number}}
+
     steps:
 
-      - name: Get permissions
+      - name: Get user permissions
         id: permission
         env:
-          USERNAME: ${{ github.event.workflow_run.event == 'issue_comment' && fromJson(needs.import-event.outputs.trigger_event).comment.user.login || github.actor }}
+          USERNAME: ${{ github.actor }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         run: |
@@ -72,25 +123,57 @@ jobs:
           echo "Permission: $RESPONSE"
           echo "permission=$RESPONSE" >> $GITHUB_OUTPUT
 
+      # Post a failure message when any of the previous steps fail.
+      - name: Add failure comment to PR
+        if: ${{ !contains(fromJSON('["write", "admin"]'), steps.permission.outputs.permission) }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.pull_number }}
+          body: |
+            ### ⚠️ You do not have permission to merge this PR! ⚠️
+
+            Please contact a member of the [API Standards Team](${{ github.server_url }}/orgs/${{ github.repository_owner }}/teams/api-standards-team) for assistance.
+        run: |
+          echo "Adding failure comment to PR"
+          RESPONSE=$(gh pr comment $pull_number --repo "$GITHUB_REPOSITORY" -b "$body")
+          echo "response: $RESPONSE"
+
+      - name: Set failure message
+        uses: actions/github-script@v7
+        if: ${{ !contains(fromJSON('["write", "admin"]'), steps.permission.outputs.permission) }}
+        with:
+          script: core.setFailed("You do not have permission to merge this PR. Please contact a member of ${{ github.server_url }}/orgs/${{ github.repository_owner }}/teams/api-standards-team for assistance.");
+
+      - name: Remove label
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.pull_number }}
+        run: |
+          echo "Removing 'fast-forward' label from PR"
+          RESPONSE=$(gh pr edit $pull_number --repo "$repository" --remove-label "fast-forward")
+          echo "response: $RESPONSE"
+
   merge_comment:
     name: FF Merge PR
     needs:
       - import-event
-      - get-permissions
+      - on-success
 
     runs-on: ubuntu-latest
 
     permissions:
       pull-requests: write
-      issues: write
       contents: write
 
     # Run only if
     # 1. The user has write or admin permissions on the repository.
-    if: ${{ contains(fromJSON('["write", "admin"]'), needs.get-permissions.outputs.user_permission) }}
+    if: ${{ contains(fromJSON('["write", "admin"]'), needs.on-success.outputs.user_permission) }}
 
     env:
-      PULL_NUMBER: ${{ fromJson(needs.import-event.outputs.trigger_event).issue.number }}
+      PULL_NUMBER: ${{ fromJson(needs.import-event.outputs.trigger_event).pull_request.number }}
       ERROR_MESSAGE: |
         ### ⚠️ PR cannot be merged in! ⚠️
 
@@ -135,12 +218,15 @@ jobs:
           if [ "$MERGEABLE_STATUS" = "clean" ]; then
             git config --global user.email "<>"
             git config --global user.name "GitHub Actions"
+            git remote show origin
             git checkout $HEAD_BRANCH
             git pull origin $HEAD_BRANCH
             git checkout $BASE_BRANCH
             git pull origin $BASE_BRANCH
             git rebase $HEAD_BRANCH
-            git push $REMOTE_URL $BASE_BRANCH
+            git remote set-url origin $REMOTE_URL
+            git remote show origin
+            git push origin $BASE_BRANCH
             {
               echo 'message<<EOF'
               echo "${{ env.SUCCESS_MESSAGE }}"
@@ -177,4 +263,15 @@ jobs:
         run: |
           echo "Adding failure comment to PR"
           RESPONSE=$(gh pr comment $pull_number --repo "$repository" -b "$body")
+          echo "response: $RESPONSE"
+
+      - name: Remove label
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.PULL_NUMBER }}
+        run: |
+          echo "Removing 'fast-forward' label from PR"
+          RESPONSE=$(gh pr edit $pull_number --repo "$repository" --remove-label "fast-forward")
           echo "response: $RESPONSE"
