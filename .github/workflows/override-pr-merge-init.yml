@@ -1,25 +1,28 @@
 name: Override PR Merge Initialise
 
 on:
-  issue_comment:
-    types: [created]
+  pull_request:
+    types: [labeled]
 
 jobs:
   get-permissions:
     if: |
-      github.event_name == 'issue_comment' &&
-      github.event.issue.pull_request &&
-      github.event.comment.body == '/merge' &&
-      !github.event.issue.closed_at &&
-      github.event.issue.state == 'open'
+      github.event_name == 'pull_request' &&
+      github.event.action == 'labeled' &&
+      contains(github.event.pull_request.labels.*.name, 'fast-forward') &&
+      !github.event.pull_request.closed_at &&
+      github.event.pull_request.state == 'open'
 
     name: Get User Permissions
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
 
+    outputs:
+      user_permission: ${{ steps.permission.outputs.permission }}
+
     env:
-      USERNAME: ${{ github.event_name == 'issue_comment' && github.event.comment.user.login || github.actor }}
+      USERNAME: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login || github.actor }}
 
     steps:
 
@@ -42,7 +45,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          pull_number: ${{ github.event.issue.number }}
+          pull_number: ${{ github.event.number }}
           body: |
             ### ⚠️ You do not have permission to merge this PR! ⚠️
 
@@ -58,15 +61,114 @@ jobs:
         with:
           script: core.setFailed("You do not have permission to merge this PR. Please contact a member of ${{ github.server_url }}/orgs/${{ github.repository_owner }}/teams/api-standards-team for assistance.");
 
-      - name: Create event artifact 
-        id: write_event
+      - name: Remove label
+        if: ${{ failure() }}
         env:
-          event_details: ${{ toJson(github.event) }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ github.event.pull_request.number }}
         run: |
-          echo "$event_details" > event.json
+          echo "Removing 'fast-forward' label from PR"
+          RESPONSE=$(gh pr edit $pull_number --repo "$repository" --remove-label "fast-forward")
+          echo "response: $RESPONSE"
 
-      - name: Upload Event Artifact
-        uses: actions/upload-artifact@v4
+  merge_comment:
+    name: FF Merge PR
+    needs:
+      - get-permissions
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: write
+
+    # Run only if
+    # 1. The user has write or admin permissions on the repository.
+    if: ${{ contains(fromJSON('["write", "admin"]'), needs.get-permissions.outputs.user_permission) }}
+
+    env:
+      PULL_NUMBER: ${{ github.event.pull_request.number }}
+      ERROR_MESSAGE: |
+        ### ⚠️ PR cannot be merged in! ⚠️
+
+        Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
+
+    steps:
+      - uses: actions/checkout@v4
         with:
-          name: event-artifact
-          path: event.json
+          fetch-depth: 0
+
+      # Merge (rebase) the PR if it is allowed.
+      - name: Merge the PR
+        id: merge-status
+        shell: bash
+        env:
+          MERGEABLE_STATUS: ${{ github.event.pull_request.mergeable_state }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+          # this is used to perform the final push to the base branch to allow the standard push triggers to run.
+          REMOTE_URL: https://${{ secrets.FAST_FORWARD_MERGE_TOKEN }}@github.com/${{ github.repository }}.git
+          SUCCESS_MESSAGE: |
+            ### 🎉 Success! 🎉
+
+            PR successfully Fast Forward merged in ✅.
+        run: |
+          if [ "$MERGEABLE_STATUS" = "clean" ]; then
+            git config --global user.email "<>"
+            git config --global user.name "GitHub Actions"
+            git checkout $HEAD_BRANCH
+            git pull origin $HEAD_BRANCH
+            git checkout $BASE_BRANCH
+            git pull origin $BASE_BRANCH
+            git rebase $HEAD_BRANCH
+            git push $REMOTE_URL $BASE_BRANCH
+            {
+              echo 'message<<EOF'
+              echo "${{ env.SUCCESS_MESSAGE }}"
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo 'message<<EOF'
+              echo "${{ env.ERROR_MESSAGE }}"
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      # Post a success/failure comment to the PR.
+      - name: Add comment to PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.PULL_NUMBER }}
+          body: ${{ steps.merge-status.outputs.message }}
+        run: |
+          echo "Adding success/failure comment to PR"
+          RESPONSE=$(gh pr comment $pull_number --repo "$repository" -b "$body")
+          echo "response: $RESPONSE"
+
+      # Post a failure message when any of the previous steps fail.
+      - name: Add failure comment to PR
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ env.PULL_NUMBER }}
+          body: ${{ env.ERROR_MESSAGE }}
+        run: |
+          echo "Adding failure comment to PR"
+          RESPONSE=$(gh pr comment $pull_number --repo "$repository" -b "$body")
+          echo "response: $RESPONSE"
+
+      - name: Remove label
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_number: ${{ github.event.pull_request.number }}
+        run: |
+          echo "Removing 'fast-forward' label from PR"
+          RESPONSE=$(gh pr edit $pull_number --repo "$repository" --remove-label "fast-forward")
+          echo "response: $RESPONSE"
