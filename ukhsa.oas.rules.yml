@@ -266,21 +266,41 @@ rules:
     description: '`201 Created` responses to `POST` methods SHOULD have a `Location` header identifying the location of the newly created resource.'
     message: '{{error}}'
 
-  # MUST each operation include Problem Details error responses
+  # MUST Each operation MUST define 400, 404, and 500 responses using `application/problem+json` with examples.
+  # => ...
 
-  must-define-common-problem-details-errors:
-    description: |
-      Each operation MUST declare HTTP error responses for:
-        • 400 Bad Request  
-        • 404 Not Found  
-        • 500 Internal Server Error  
-      If security is required (global or operation-level), also:
-        • 401 Unauthorized  
-        • 403 Forbidden  
-      All responses must use `application/problem+json` and include examples.
-    message: '{{error}}'
+  must-define-critical-problem-responses:
+    description: "Operations must define 400, 404, 500 with examples and application/problem+json"
+    message: "{{error}}"
     severity: error
-    recommended: true
     given: $.paths[*][*]
     then:
       function: has-required-problem-details-error-responses
+      functionOptions:
+        mode: 'critical'
+
+  # MUST Operations with their own non-empty `security` MUST define 401 and 403 responses using `application/problem+json` with examples.
+  # => ...
+
+  must-define-security-problem-responses:
+    description: "Operations with their own non-empty 'security' MUST define 401 and 403"
+    message: "{{error}}"
+    severity: error
+    given: $.paths[*][*]
+    then:
+      function: has-required-problem-details-error-responses
+      functionOptions:
+        mode: 'explicit-security'
+
+  # SHOULD Root path SHOULD define 401 and 403 when inheriting global security, using `application/problem+json` with examples.
+  # => ...
+
+  should-define-root-inherited-security-responses:
+    description: "Root path SHOULD declare 401 and 403 when inheriting global security"
+    message: "{{error}}"
+    severity: warn
+    given: $.paths["/"].*
+    then:
+      function: has-required-problem-details-error-responses
+      functionOptions:
+        mode: 'root-inherit'

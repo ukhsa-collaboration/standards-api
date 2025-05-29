@@ -24,77 +24,77 @@ const REQUIRED_ALWAYS = ['400', '404', '500'];
 const REQUIRED_IF_SECURED = ['401', '403'];
 
 /**
- * Checks if a response defines the application/problem+json content type.
+ * Checks if a response defines application/problem+json and includes at least one example.
  */
-function hasProblemJsonContent(response) {
-  return Boolean(response?.content?.['application/problem+json']);
-}
-
-/**
- * Checks if a response includes at least one example.
- */
-function hasExamples(response) {
-  const content = response?.content?.['application/problem+json'];
-  return Boolean(content?.examples && Object.keys(content.examples).length);
-}
-
-/**
- * Determines if security is enabled for the operation or globally.
- */
-function isSecurityEnabled(operationSecurity, globalSecurity) {
-  if (Array.isArray(operationSecurity)) return operationSecurity.length > 0;
-  if (Array.isArray(globalSecurity)) return globalSecurity.length > 0;
-  return false;
-}
-
-/**
- * Validates a single response for presence, media type, and examples.
- */
-function validateResponseRequirement(responses, statusCode, requireExample) {
+function validateResponse(responses, code) {
   const issues = [];
-  const response = responses?.[statusCode];
+  const response = responses?.[code];
   if (!response) {
     issues.push('missing response');
-    return { statusCode, issues };
+  } else {
+    const content = response.content?.['application/problem+json'];
+    if (!content) {
+      issues.push('missing application/problem+json');
+    } else if (!content.examples || Object.keys(content.examples).length === 0) {
+      issues.push('missing example');
+    }
   }
-  if (!hasProblemJsonContent(response)) {
-    issues.push('missing application/problem+json');
-  }
-  if (requireExample && !hasExamples(response)) {
-    issues.push('missing example');
-  }
-  return issues.length ? { statusCode, issues } : null;
+  return issues.length ? { statusCode: code, issues } : null;
 }
 
 /**
  * Spectral custom function to validate common error responses on operations.
  */
-export default function validateCommonErrorResponses(targetVal, _opts, context) {
-  const operation = targetVal;
-  const responses = operation.responses || {};
+export default function validateCommonErrorResponses(targetVal, opts, context) {
+  const { responses = {}, security: opSecurity } = targetVal;
   const globalSecurity = context.document?.data?.security;
-  const operationSecurity = operation.security;
-  const securityEnabled = isSecurityEnabled(operationSecurity, globalSecurity);
+  const path = context.path?.[1] || '';
+  const isRoot = path === '/';
+  const mode = opts?.mode;
 
-  const requiredStatusCodes = [
-    ...REQUIRED_ALWAYS,
-    ...(securityEnabled ? REQUIRED_IF_SECURED : [])
-  ];
+  let requiredStatusCodes = [];
+  let shouldRun = false;
 
-  const issues = requiredStatusCodes
-    .map(code => validateResponseRequirement(responses, code, true))
-    .filter(Boolean);
-
-  if (issues.length > 0) {
-    const details = issues
-      .map(item => `${item.statusCode} (${item.issues.join(', ')})`)
-      .join('; ');
-
-    return [{
-      message: `Each operation must define Problem Details for: ${requiredStatusCodes.join(', ')}. Issues: ${details}.`,
-      path: [...context.path, 'responses'],
-    }];
+  if (mode === 'critical') {
+    requiredStatusCodes = REQUIRED_ALWAYS;
+    shouldRun = true;
   }
 
-  return [];
+  if (mode === 'explicit-security') {
+    if (Array.isArray(opSecurity) && opSecurity.length > 0) {
+      requiredStatusCodes = REQUIRED_IF_SECURED;
+      shouldRun = true;
+    }
+  }
+
+  if (mode === 'root-inherit') {
+    const isInheritingGlobalSecurity =
+      isRoot && (opSecurity === undefined || opSecurity === null) &&
+      Array.isArray(globalSecurity) && globalSecurity.length > 0;
+
+    if (isInheritingGlobalSecurity) {
+      requiredStatusCodes = REQUIRED_IF_SECURED;
+      shouldRun = true;
+    }
+  }
+
+  if (!shouldRun) return [];
+
+  const issues = requiredStatusCodes
+    .map(code => validateResponse(responses, code))
+    .filter(Boolean);
+
+  if (issues.length === 0) return [];
+
+  const level = context.rule.severity === 0 ? 'MUST' : 'SHOULD';
+  const details = issues
+    .map(issue => `${issue.statusCode} (${issue.issues.join(', ')})`)
+    .join('; ');
+
+  return [
+    {
+      message: `Each operation ${level} define Problem Details for: ${requiredStatusCodes.join(', ')}. Issues: ${details}.`,
+      path: [...context.path, 'responses'],
+    },
+  ];
 }
