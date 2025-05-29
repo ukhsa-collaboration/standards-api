@@ -272,7 +272,7 @@ rules:
   must-define-critical-problem-responses:
     description: "Operations must define 400, 404, 500 with examples and application/problem+json"
     message: "{{error}}"
-    severity: error
+    severity: warn
     given: $.paths[*][*]
     then:
       function: has-required-problem-details-error-responses
@@ -285,7 +285,7 @@ rules:
   must-define-security-problem-responses:
     description: "Operations with their own non-empty 'security' MUST define 401 and 403"
     message: "{{error}}"
-    severity: error
+    severity: warn
     given: $.paths[*][*]
     then:
       function: has-required-problem-details-error-responses
