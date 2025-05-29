@@ -1,9 +1,19 @@
-# name: Override PR Merge Complete
-# on:
-#   workflow_run:
-#     workflows: ["Override PR Merge Initialise"]
-#     types:
-#       - completed
+name: Override PR Merge Complete
+on:
+  workflow_run:
+    workflows: ["Override PR Merge Initialise"]
+    types:
+      - completed
+
+jobs:
+    dump-context:
+      name: Dump Context
+      runs-on: ubuntu-latest
+      steps:
+        - name: Dump context
+          run: |
+            echo "Dumping context"
+            echo '${{ toJson(github) }}'
 
 # jobs:
 

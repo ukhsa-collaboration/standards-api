@@ -118,6 +118,7 @@ jobs:
           if [ "$MERGEABLE_STATUS" = "clean" ]; then
             git config --global user.email "<>"
             git config --global user.name "GitHub Actions"
+            git remote show origin
             git checkout $HEAD_BRANCH
             git pull origin $HEAD_BRANCH
             git checkout $BASE_BRANCH
