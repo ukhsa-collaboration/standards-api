@@ -48,6 +48,7 @@ function validateResponse(responses, code) {
 export default function validateCommonErrorResponses(targetVal, opts, context) {
   const { responses = {}, security: opSecurity } = targetVal;
   const globalSecurity = context.document?.data?.security;
+  const globalSecurityActive = Array.isArray(globalSecurity) && globalSecurity.length > 0;
   const path = context.path?.[1] || '';
   const isRoot = path === '/';
   const mode = opts?.mode;
@@ -61,7 +62,7 @@ export default function validateCommonErrorResponses(targetVal, opts, context) {
   }
 
   if (mode === 'explicit-security') {
-    if (Array.isArray(opSecurity) && opSecurity.length > 0) {
+    if ((Array.isArray(opSecurity) && opSecurity.length > 0) || (!isRoot && globalSecurityActive)) {
       requiredStatusCodes = REQUIRED_IF_SECURED;
       shouldRun = true;
     }
@@ -69,8 +70,7 @@ export default function validateCommonErrorResponses(targetVal, opts, context) {
 
   if (mode === 'root-inherit') {
     const isInheritingGlobalSecurity =
-      isRoot && (opSecurity === undefined || opSecurity === null) &&
-      Array.isArray(globalSecurity) && globalSecurity.length > 0;
+      isRoot && (opSecurity === undefined || opSecurity === null) && globalSecurityActive;
 
     if (isInheritingGlobalSecurity) {
       requiredStatusCodes = REQUIRED_IF_SECURED;
