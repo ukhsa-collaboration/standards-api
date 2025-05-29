@@ -7,7 +7,7 @@ Every operation MUST include:
   - 400 Bad Request
   - 404 Not Found
   - 500 Internal Server Error
-    → MUST use `application/problem+json`
+    → MUST use `application/problem+json` or `application/problem+xml`
     → MUST include examples
 
 If the API or operation is secured, then also required:
@@ -24,7 +24,7 @@ const REQUIRED_ALWAYS = ['400', '404', '500'];
 const REQUIRED_IF_SECURED = ['401', '403'];
 
 /**
- * Checks if a response defines application/problem+json and includes at least one example.
+ * Checks if a response defines application/problem+json or application/problem+xml and includes at least one example.
  */
 function validateResponse(responses, code) {
   const issues = [];
@@ -32,9 +32,10 @@ function validateResponse(responses, code) {
   if (!response) {
     issues.push('missing response');
   } else {
-    const content = response.content?.['application/problem+json'];
+    const content = response?.content?.['application/problem+json'] ||
+    response?.content?.['application/problem+xml'];
     if (!content) {
-      issues.push('missing application/problem+json');
+      issues.push('missing application/problem+json or application/problem+xml');
     } else if (!content.examples || Object.keys(content.examples).length === 0) {
       issues.push('missing example');
     }
