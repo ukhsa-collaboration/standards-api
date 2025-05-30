@@ -12,6 +12,29 @@ A Problem Detail response **MUST NOT** contain a program stack trace or server l
 
 You **MUST** include all the base Problem Details members: `status`, `title`, `detail`, `type` and `instance`.
 
+## Required Error Responses
+
+Operations in the OpenAPI specification **MUST** include the following standard Problem Details responses:
+
+- `400 Bad Request`
+- `404 Not Found`
+- `500 Internal Server Error`
+
+Each response **MUST** include at least one example.
+
+### Conditional Security Errors
+
+Depending on the security definition:
+
+- If an operation has its **own non-empty `security` block**, it **MUST** define:
+  - `401 Unauthorized`
+  - `403 Forbidden`
+
+- If the operation under the root path `/` with no local `security` **inherits a non-empty global security block**:
+  - It **SHOULD** define:
+    - `401 Unauthorized`
+    - `403 Forbidden`
+
 ### Extended Details
 
 As per the [RFC-9457](https://www.rfc-editor.org/rfc/rfc9457.html) you **MAY** extend the Problem Details object to include additional context/information that are specific to the problem type.
