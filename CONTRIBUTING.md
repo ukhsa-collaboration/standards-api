@@ -91,7 +91,20 @@ install the required dependencies with the following command:
 npm install
 ```
 
-#### 4. Install MkDocs (required for documentation)
+#### 4. Compile TypeScript
+
+To transpile TypeScript files to JavaScript:
+
+```bash
+npm run build
+```
+Or directly with:
+```
+npx tsc
+```
+This generates `.js` files in the output directory (default: `./dist` or based on tsconfig.json).
+
+#### 5. Install MkDocs (required for documentation)
 
 You can view the guidelines directly in your markdown viewer of choices or use the same static site generator ([MkDocs](https://www.mkdocs.org/)) used to produce the github pages to serve the documentation locally.
 
