@@ -4,7 +4,8 @@
   "description": "UKHSA Spectral ruleset",
   "main": ".spectral.yaml",
   "scripts": {
-    "prepare": "husky && git config commit.template .gitmessage"
+    "prepare": "husky && git config commit.template .gitmessage",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "husky": "^9.1.7"
+    "@stoplight/spectral-core": "^1.20.0",
+    "husky": "^9.1.7",
+    "typescript": "^5.8.3"
   }
 }
