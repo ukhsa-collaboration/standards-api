@@ -8,6 +8,7 @@ documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
 functions:
   - is-api-info-json-schema
   - has-required-problem-details-error-responses
+  - has-valid-leading-capability
 
 functionsDir: dist/functions
 
@@ -309,3 +310,16 @@ rules:
     recommended: true
     description: 'The `info` object SHOULD contain `x-contains-sensitive-data` to indicate presence of sensitive data such as PII or PHI.'
     message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'."
+
+  # MUST `info` object MUST include a valid `x-leading-capability` value from the controlled list of UKHSA Business Capabilities.
+  # => /docs/spectral-rules/must/must-have-info-leading-capability.md
+
+  must-have-info-leading-capability:
+    description: 'The `info` object must have a `x-leading-capability` that matches a valid UKHSA Business Capability.'
+    message: "Missing or wrong `info.x-leading-capability`, should be a valid UKHSA Business Capability."
+    severity: error
+    given: $.info
+    then:
+      - function: has-valid-leading-capability
+        field: x-leading-capability
+    recommended: true
