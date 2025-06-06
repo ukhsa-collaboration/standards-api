@@ -9,6 +9,7 @@ functions:
   - isApiInfoJsonSchema
   - hasRequiredProblemDetailsErrorResponses
   - overrideSeverity
+  - has-valid-leading-capability
 
 functionsDir: dist/functions
 
@@ -357,3 +358,16 @@ rules:
     recommended: true
     description: 'APIs MAY include info.x-api-type to indicate API category. When present, it MUST be one of: standard, pygeoapi. When omitted, standard is assumed.'
     message: "Missing or wrong 'info.x-api-type'. Assuming 'standard'. Valid values: standard, pygeoapi."
+
+  # MUST `info` object MUST include a valid `x-leading-capability` value from the controlled list of UKHSA Business Capabilities.
+  # => /docs/spectral-rules/must/must-have-info-leading-capability.md
+
+  must-have-info-leading-capability:
+    description: 'The `info` object must have a `x-leading-capability` that matches a valid UKHSA Business Capability.'
+    message: "Missing or wrong `info.x-leading-capability`, should be a valid UKHSA Business Capability."
+    severity: error
+    given: $.info
+    then:
+      - function: has-valid-leading-capability
+        field: x-leading-capability
+    recommended: true
