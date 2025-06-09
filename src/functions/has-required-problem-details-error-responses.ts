@@ -105,7 +105,9 @@ const validateCommonErrorResponses = function (
   }
 
   if (mode === 'explicit-security') {
-    if ((Array.isArray(opSecurity) && opSecurity.length > 0) || (!isRoot && globalSecurityActive)) {
+    const securityExplicitlyDisabled = Array.isArray(opSecurity) && opSecurity.length === 0;
+    const securityExplicitlyActive = Array.isArray(opSecurity) && opSecurity.length > 0;
+    if (securityExplicitlyActive || (!securityExplicitlyDisabled && !isRoot && globalSecurityActive)) {
       requiredStatusCodes = [...REQUIRED_IF_SECURED];
       shouldRun = true;
     }
