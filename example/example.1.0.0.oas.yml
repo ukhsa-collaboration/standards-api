@@ -4,6 +4,7 @@ info:
   version: '1.0.0'
   description: This API is for obtaining or submitting test results.
   x-audience: public-external
+  x-contains-sensitive-data: false
   x-value-chain: detect
   contact:
     name: Result API contact

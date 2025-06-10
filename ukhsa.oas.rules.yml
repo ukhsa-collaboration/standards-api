@@ -291,3 +291,21 @@ rules:
       function: has-required-problem-details-error-responses
       functionOptions:
         mode: 'explicit-security'
+
+  # SHOULD include `x-contains-sensitive-data` boolean in the `info` object to indicate presence of sensitive data like PII or PHI.
+  # => /docs/spectral-rules/should/should-have-info-x-contains-sensitive-data.md
+
+  should-have-info-x-contains-sensitive-data:
+    given: $.info
+    severity: warn
+    then:
+      - function: defined
+        field: x-contains-sensitive-data
+      - function: schema
+        field: x-contains-sensitive-data
+        functionOptions:
+          schema:
+            type: boolean
+    recommended: true
+    description: 'The `info` object SHOULD contain `x-contains-sensitive-data` to indicate presence of sensitive data such as PII or PHI.'
+    message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'."
