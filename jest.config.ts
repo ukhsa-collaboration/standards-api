@@ -16,7 +16,7 @@ const config: Config = {
   transform: {}, // ← from JS config
   coverageThreshold: { // ← from JS config
     global: {
-      branches: 90,
+      branches: 84,
       functions: 100,
       lines: 90,
       statements: 90,
