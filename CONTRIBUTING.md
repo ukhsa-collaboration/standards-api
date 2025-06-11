@@ -441,6 +441,11 @@ If you want to generate the site pdf locally you can do so with the following co
 
 ``` bash
 # To generate a PDF locally (optional)
+
+# Run the site with print-site functionality enabled
+MKDOCS_EXPORTER_PDF_ENABLED=true mkdocs serve
+
+# Run Playwright to convert the site to PDF form
 playwright pdf --wait-for-selector="#print-site-page" localhost:8000/print_page/ docs/ukhsa-api-guidelines.pdf
 ```
 
