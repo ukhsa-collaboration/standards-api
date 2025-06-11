@@ -3,26 +3,28 @@
 ## Git
 
 - All code MUST be version controlled using git.
-- Code SHOULD wherever possible be stored in GitHub in either [UKHSA-Internal](https://github.com/UKHSA-Internal) or [ukhsa-collaboration](https://github.com/ukhsa-collaboration), as appropriate.
+- Code SHOULD wherever possible be stored in GitHub, in either [UKHSA-Internal](https://github.com/UKHSA-Internal) or [ukhsa-collaboration](https://github.com/ukhsa-collaboration), as appropriate.
 
 ## Commits
 
 - Commits MUST be small and cohesive.
 - Commit messages MUST be brief, clear and accurate.
-  - They SHOULD include a work-item reference, typically a Jira ID.
-  - They MAY follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+    - They SHOULD include a work-item reference, typically a Jira ID.
+    - They MAY follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 - All commits SHOULD be signed.
 
-## Trunk-based development
+## GitHub Flow
 
 - The default branch in each repository MUST be `main` (preferred) or `master`.
-- This branch SHOULD be the only long-lived branch in the repository.
+- Changes MUST ONLY be merged to this default branch if they are ready to deploy.
+- [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow) SHOULD be used.
+- This default branch SHOULD be the only long-lived branch in the repository.
 - Each change SHOULD be developed on its own "feature" branch (though see below for an extended set of short-lived branch types). These branches MUST be short-lived, ideally hours or days, at most a couple of weeks.
 - Branch names SHOULD include a prefix that indicates the nature of the change, as follows:
-  - `feature/`: functional changes that deliver user or business value, including documentation changes. Should be kept up to date with `main` HEAD.
-  - `bugfix/`: changes that fix a bug. Should be kept up to date with `main` HEAD.
-  - `spike/`: experimental changes that SHOULD NOT be merged to `main`.
-  - `hotfix/`: emergency changes to fix a problem in a version of the software deployed in production. Typically created from a [release tag](#tags).
+    - `feature/`: functional changes that deliver user or business value, including documentation changes. Should be kept up to date with `main` HEAD.
+    - `bugfix/`: changes that fix a bug. Should be kept up to date with `main` HEAD.
+    - `spike/`: experimental changes that SHOULD NOT be merged to `main`.
+    - `hotfix/`: emergency changes to fix a problem in a version of the software deployed in production. Typically created from a [release tag](#tags).
 
 ## Tags
 
@@ -43,6 +45,7 @@ The following applies to the `main`/`master` branch. The aim is to strongly prot
 ### (New style) Ruleset
 
 - There MUST NOT be any roles, teams configured in the _bypass list_.
+- _Restrict deletions_ MUST be enabled.
 - _Require signed commits_ SHOULD be enabled.
 - _Require a pull request before merging_ MUST be enabled.
 - _Require status checks to pass_ MUST be enabled.
