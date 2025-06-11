@@ -1,5 +1,6 @@
 .idea
 .vscode
 .cache
+coverage/
 node_modules/
 site/
