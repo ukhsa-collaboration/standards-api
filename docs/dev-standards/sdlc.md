@@ -1,6 +1,6 @@
 # SDLC
 
-This page provides guidance and policy regarding the software delivery lifecycle (SDLC) &mdash; i.e. the sequence of activities required and recommended to ensure the quality of individual work items such as user stories or bugs. See also [Environments](environments.md).
+This page provides guidance and policy regarding the software delivery lifecycle (SDLC) --- i.e. the sequence of activities required and recommended to ensure the quality of individual work items such as user stories or bugs. See also [Environments](environments.md).
 
 ## Work items
 

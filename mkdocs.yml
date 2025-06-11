@@ -53,6 +53,11 @@ markdown_extensions:
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
           case: lower
+  - smarty:
+      smart_quotes: true
+      smart_angled_quotes: true
+      smart_dashes: true
+      smart_ellipses: true
 
 plugins:
   - material/search
