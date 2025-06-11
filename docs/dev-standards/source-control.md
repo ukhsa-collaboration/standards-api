@@ -40,9 +40,9 @@
 
 ## GitHub branch protections
 
-The following applies to the `main`/`master` branch. The aim is to strongly protect this branch and enforce the associated quality processes.
+The following applies to the default `main`/`master` branch. The aim is to strongly protect this branch and enforce the associated quality processes. Either a new style Ruleset (preferred) or an old style branch protection rule MUST be configured for this default branch.
 
-### (New style) Ruleset
+### (New style) Ruleset --- preferred
 
 - There MUST NOT be any roles, teams configured in the _bypass list_.
 - _Restrict deletions_ MUST be enabled.
