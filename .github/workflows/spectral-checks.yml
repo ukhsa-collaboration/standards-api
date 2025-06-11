@@ -1,12 +1,15 @@
-name: Lint Example OpenAPI
+name: Spectral Checks
+
 on:
   pull_request:
   push:
     paths:
-      - 'functions/*'
-      - 'example/*'
+      - 'src/**'
+      - 'example/**'
       - '.spectral.yaml'
       - '*.oas.rules.*'
+      - 'package.json'
+      - 'tsconfig.json'
     branches:
       - main
 
@@ -30,10 +33,12 @@ jobs:
       with:
         filters: |
           linting:
-            - 'functions/**'
+            - 'src/**'
             - 'example/**'
             - '.spectral.yaml'
             - '*.oas.rules.*'
+            - 'package.json'
+            - 'tsconfig.json'
 
   lint-example-openapi:
     name: Lint Example OpenAPI
@@ -51,10 +56,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install spectral
+      - name: Install Spectral
         run: curl -L https://raw.github.com/stoplightio/spectral/master/scripts/install.sh | sh
 
       - name: Lint example OpenAPI
         run: |
           spectral --version
           spectral lint "./example/*.{json,yml,yaml}" -f github-actions
+
+  run-typescript-tests:
+    name: Run TypeScript Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.linting == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript tests with coverage
+        run: npm test
