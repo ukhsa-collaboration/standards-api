@@ -5,7 +5,7 @@ functions:
   - is-problem-json-schema
   - count-resource-types
 
-functionsDir: functions
+functionsDir: dist/functions
 
 description: >-
   Not covered: Zalando guidelines [223](https://opensource.zalando.com/restful-api-guidelines/#223), [224](https://opensource.zalando.com/restful-api-guidelines/#224), [104](https://opensource.zalando.com/restful-api-guidelines/#104), [105](https://opensource.zalando.com/restful-api-guidelines/#105), and [225](https://opensource.zalando.com/restful-api-guidelines/#225)

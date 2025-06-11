@@ -9,7 +9,7 @@ functions:
   - is-api-info-json-schema
   - has-required-problem-details-error-responses
 
-functionsDir: functions
+functionsDir: dist/functions
 
 rules:
   oas3-api-servers: off
