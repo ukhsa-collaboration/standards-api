@@ -34,6 +34,12 @@ flowchart LR
 
 We discuss each of these high level groupings in more detail in the sections that follow.
 
+## Cycle time
+
+We use **cycle time** to mean the time that an item is _In progress_.
+ 
+The mean cycle time SHOULD be two days or less, and MUST be less than four days.
+
 ## Pending
 
 ### Backlog ordering
@@ -210,6 +216,8 @@ All items MUST be estimated in story points, derived by whole-team blind estimat
 - All **unit tests** MUST be run and pass
 - **Static code analysis** to UKHSA standards MUST be run and all issues resolved.
 - Appropriate **automated testing** at other levels (e.g. component, integration, API, UI, system) and to validate non-functional requirements MUST be implemented and pass.
+    - Load/performance testing MAY be performed in the pre-prod environment after code is merged rather than within the CI environment before it is merged if a large (production) scale environment is needed.
+    - Load/performance testing MAY be performed periodically (e.g. nightly) rather than on every release candidate if the risk is deemed to be sufficiently low.
 - All code MUST be **peer reviewed** and all issues addressed.
 
 ### Validation

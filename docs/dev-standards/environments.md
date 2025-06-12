@@ -42,6 +42,10 @@ flowchart LR
     click Tr "#training-environment"
 ```
 
+## DORA metrics
+
+The DORA metrics are an important tool in measuring and optimising the fast and safe flow of value from code commit to production. See [DORA metrics](dora.md).
+
 ## Environments
 
 ### Terminology
