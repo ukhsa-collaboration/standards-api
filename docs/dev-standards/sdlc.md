@@ -213,8 +213,8 @@ All items MUST be estimated in story points, derived by whole-team blind estimat
 
 - All **acceptance criteria** MUST be met.
 - For **user stories**, **enablers**, and **bugs**, appropriate unit testing MUST be implemented. This SHOULD achieve at least 80% code coverage.
-- All **unit tests** MUST be run and pass
-- **Static code analysis** to UKHSA standards MUST be run and all issues resolved.
+- All **unit tests** MUST be run and pass.
+- **Static code analysis** to UKHSA standards MUST be run and all issues resolved. See [static analysis](static-analysis.md).
 - Appropriate **automated testing** at other levels (e.g. component, integration, API, UI, system) and to validate non-functional requirements MUST be implemented and pass.
     - Load/performance testing MAY be performed in the pre-prod environment after code is merged rather than within the CI environment before it is merged if a large (production) scale environment is needed.
     - Load/performance testing MAY be performed periodically (e.g. nightly) rather than on every release candidate if the risk is deemed to be sufficiently low.

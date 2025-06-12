@@ -84,7 +84,7 @@ All environments MUST be defined in code so that they can be created/re-created 
 1. Exploratory testing by developer MUST be done to perform basic validation of changes.
 1. Unit tests MUST be run and pass.
 1. Linting SHOULD be run and pass.
-1. Static code analysis SHOULD be run and pass.
+1. [Static code analysis](static-analysis.md) SHOULD be run and pass.
 1. Dependency checks SHOULD be run and pass.
 
 **Data**: Test data only
@@ -104,7 +104,7 @@ All environments MUST be defined in code so that they can be created/re-created 
 
 1. Unit tests MUST be run and pass.
 1. Linting MUST be run and pass.
-1. Static code analysis MUST be run and pass.
+1. [Static code analysis](static-analysis.md) MUST be run and pass.
 1. Dependency checks MUST be run and pass.
 1. Automated accessibility testing SHOULD be run and pass.
 
