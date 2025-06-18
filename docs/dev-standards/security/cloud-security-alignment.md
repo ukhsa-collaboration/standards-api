@@ -1,4 +1,4 @@
-# 7. Cloud Security Alignment
+# Cloud Security Alignment
 
 ## Introduction
 
