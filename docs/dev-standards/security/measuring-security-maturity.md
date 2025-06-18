@@ -1,4 +1,4 @@
-# 9. Measuring Security Maturity
+# Measuring Security Maturity
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-# 8. Penetration Testing
+# Penetration Testing
 
 ## Introduction
 

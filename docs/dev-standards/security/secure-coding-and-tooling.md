@@ -1,4 +1,4 @@
-# 5. Secure Coding and Tooling
+# Secure Coding and Tooling
 
 ## Introduction
 Secure coding practices and automated tooling are essential to prevent vulnerabilities and maintain code quality. These practices help teams detect issues early and reduce the cost of remediation.
