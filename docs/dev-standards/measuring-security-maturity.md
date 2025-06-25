@@ -6,9 +6,9 @@ Measuring security maturity helps teams understand their current posture and ide
 
 ## Guidance
 
-- Teams MUST complete a quarterly security self-assessment.
-- Maturity indicators SHOULD be tracked using NIST SSDF, NCSC CAF, and MVSP frameworks.
-- Results MAY be used to inform training, tooling, or process improvements.
+- Teams **MUST** complete a quarterly security self-assessment.
+- Maturity indicators **SHOULD** be tracked using NIST SSDF, NCSC CAF, and MVSP frameworks.
+- Results **MAY** be used to inform training, tooling, or process improvements.
 
 ## Measurement
 

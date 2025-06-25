@@ -2,14 +2,14 @@
 
 ## Introduction
 
-Penetration testing provides an independent assessment of a system’s security posture. It helps identify vulnerabilities that may not be caught through automated tools or internal reviews.
+Penetration testing provides an independent assessment of a system’s security posture. It helps identify vulnerabilities that **MAY** not be caught through automated tools or internal reviews.
 
 ## Guidance
 
-- All services MUST undergo penetration testing before their first release to production.
-- Penetration testing MUST be repeated at least annually.
-- Penetration testing MUST also be repeated after any significant architectural change.
-- Findings from penetration tests MUST be tracked and remediated in a timely manner.
+- All services **MUST** undergo penetration testing before their first release to production.
+- Penetration testing **MUST** be repeated at least annually.
+- Penetration testing **MUST** also be repeated after any significant architectural change.
+- Findings from penetration tests **MUST** be tracked and remediated in a timely manner.
 
 ## Measurement
 
