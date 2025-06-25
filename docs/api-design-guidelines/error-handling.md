@@ -8,11 +8,14 @@ APIs **MUST** use the appropriate content type `application/problem+json` or `ap
 
 Problem Details responses **MUST** be described in the APIs open api specification.
 
-A Problem Detail response **MUST NOT** contain a program stack trace or server log for debugging purposes, instead consider an extended member such as `traceId` as described bellow.
+A Problem Detail response **MUST NOT** contain a program stack trace or server log for debugging purposes, instead consider an extended member such as `traceId` as described below.
 
 You **MUST** include all the base Problem Details members: `status`, `title`, `detail`, `type` and `instance`.
 
 ## Required Error Responses
+
+> \[!WARNING]
+> The requirements in this section are **MUST**s as per the guidelines. However, the current Spectral rule severity is set to *warning* rather than *error*, so existing APIs are not forced to implement these changes immediately, as doing so may constitute a breaking change.
 
 Operations in the OpenAPI specification **MUST** include the following standard Problem Details responses:
 
