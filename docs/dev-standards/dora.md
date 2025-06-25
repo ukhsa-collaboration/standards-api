@@ -1,42 +1,87 @@
 # DORA metrics
 
-The [DORA metrics](https://www.atlassian.com/devops/frameworks/dora-metrics) are an important tool in measuring and optimising the fast and safe flow of value from code commit to production. They are [Deployment frequency](#deployment-frequency), [Lead time for changes](#lead-time-for-changes), [Change failure rate](#change-failure-rate), and [Time to restore service](#time-to-restore-service).
+## Introduction
 
-## Deployment frequency
+[DevOps Research and Assessment (DORA) metrics][1] help teams measure and improve how quickly and safely they deliver software. They focus on the flow of work from code commit to production, and are a key indicator of delivery performance.
 
-_Deployment frequency_ is the mean number of production deployments per day. More, small deployments are preferred, because:
+These metrics are used across the industry to benchmark engineering teams and support continuous improvement. They are especially useful for identifying bottlenecks and improving team agility.
 
-- This gives fast feedback and allows for rapid iteration and learning.
-- It reduces the risk of each deployment. Since each deployment contains less, there is less to go wrong. And it's easier to identify the cause when something does go wrong, meaning it is quicker to diagnose and fix any issues.
-- It shortens the time to value, getting changes into the hands of users earlier.
+## Guidance
 
-Deployment frequency **MUST** be measured and reviewed at least every two weeks. Frequency **SHOULD** be at least weekly, and ideally daily or multiple times per day.
+Teams **MUST** measure and review [DORA][1] metrics at least every two weeks.
 
-## Lead time for changes
+The four metrics are:
 
-_Lead time for changes_ is the mean time for items to progress from code being merged to the default branch to it running in production. This specific measure focuses on the path to live, not the implementation of changes (see [cycle time](sdlc.md#cycle-time)). Shorter lead time for changes is preferred, because:
+1. [Deployment frequency](#deployment-frequency)
+2. [Lead time for changes](#lead-time-for-changes)
+3. [Change failure rate](#change-failure-rate)
+4. [Time to restore service](#time-to-restore-service)
 
-- It reduces the dead time between change being implemented and the resultant learning and value being realised.
-- It reduced complexity by reducing the amount of undeployed work being held in the system.
-- It allows more rapid correction of any issues.
+## The metrics
 
-Lead time for changes **MUST** be measured and reviewed at least every two weeks. Lead time **SHOULD** ideally be minutes or hours, and at most a small number of days.
+### Deployment frequency
 
-## Change failure rate
+**Deployment frequency** measures how often code is deployed to production.
 
-_Change failure rate_ is the proportion of deployments that cause a failure in production.
+Frequent, small deployments are preferred because they:
 
-- Lower failure rate is of course desirable, but the focus **SHOULD** be more on reducing the time to restore service than aiming for zero failure rate.
-- High failure rates clearly indicate a quality issue, but some failures are normal.
-- An over-focus on driving out any failures is not the best use of time and small gains typically take a big investment of time and leads to increased lead time for changes (and consequently time to restore service).
+- reduce the risk of each change
+- make it easier to identify and fix issues
+- shorten the time to deliver value to users
 
-Change failure rate **MUST** be measured and reviewed at least every two weeks. Failure rate **SHOULD** normally be single digit percentages.
+Teams **SHOULD** aim to deploy at least weekly, and ideally daily or more often.
 
-## Time to restore service
+### Lead time for changes
 
-_Time to restore service_ is the mean time between an issue occurring in the production environment and when it is resolved. Short times are preferred because:
+**Lead time for changes** measures the time from code being merged to it running in production.
 
-- This minimises user and business impact.
-- Being able to fix issues faster enables teams to iterate faster.
+Shorter lead times:
 
-Time to restore service **MUST** be measured and reviewed at least every two weeks. Time **SHOULD** ideally be minutes or at most hours.
+- reduce the amount of undeployed work in the system
+- allow faster feedback and learning
+- make it easier to respond to issues or change priorities
+
+This metric is different from cycle time, which includes the time spent implementing the change.
+
+Teams **SHOULD** aim for lead times of minutes or hours, and no more than a few days.
+
+### Change failure rate
+
+**Change failure rate** is the percentage of deployments that cause a failure in production.
+
+Some failures are expected — the goal is not to eliminate them entirely, but to reduce their impact and recover quickly.
+
+Teams **SHOULD** focus on improving recovery time rather than chasing zero failures, which can lead to over-engineering and slower delivery.
+
+A failure might include:
+
+- a bug that affects users
+- a rollback or hotfix
+- a degraded service
+
+### Time to restore service
+
+**Time to restore service** measures how long it takes to recover from a production incident.
+
+Short recovery times:
+
+- reduce the impact on users and the business
+- build confidence in the team’s ability to respond
+- support faster iteration and learning
+
+Teams **SHOULD** aim to restore service in minutes or hours, not days.
+
+## Measurement
+
+| ID     | Indicator               | Green            | Amber       | Red              |
+| ------ | ----------------------- | ---------------- | ----------- | ---------------- |
+| DORA-1 | Deployment frequency    | Daily or more    | Weekly      | Less than weekly |
+| DORA-2 | Lead time for changes   | Minutes or hours | 1 to 3 days | More than 3 days |
+| DORA-3 | Change failure rate     | <10%             | 10–20%      | >20%             |
+| DORA-4 | Time to restore service | <1 hour          | 1–4 hours   | >4 hours         |
+
+## References
+
+- [DORA metrics: How to measure Open DevOps success – Atlassian][1]
+
+[1]: https://www.atlassian.com/devops/frameworks/dora-metrics
