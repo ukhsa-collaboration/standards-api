@@ -21,10 +21,10 @@ Teams MUST perform threat modelling for:
 ### Use structured methodology
 Follow the [OWASP Threat Modelling Process](https://owasp.org/www-community/Threat_Modeling_Process):
 
-1. **Decompose** - understand the system.
-1. **Identify threats** - use STRIDE methodology.
-1. **Mitigate** - define security controls.
-1. **Validate** - test controls work.
+1. **Decompose** --- understand the system.
+1. **Identify threats** --- use STRIDE methodology.
+1. **Mitigate** --- define security controls.
+1. **Validate** --- test controls work.
 
 ### Core deliverables
 
@@ -41,7 +41,7 @@ Simple diagram showing:
 - External entities and trust relationships.
 - Key processes and data movements.
 
-Keep this high-level - focus on trust boundaries, not implementation details.
+Keep this high-level --- focus on trust boundaries, not implementation details.
 
 #### 3. STRIDE threat analysis
 For each component, systematically consider:
@@ -53,9 +53,9 @@ For each component, systematically consider:
 - **Elevation of Privilege**: Compromises authorisation by gaining capabilities improperly.
 
 #### 4. Risk assessment
-- Rate impact (High/Medium/Low) and likelihood (High/Medium/Low).
-- Focus on High impact or High likelihood threats.
-- Consider current threat intelligence from [NCSC](https://www.ncsc.gov.uk/).
+- Rate impact (high/medium/low) and likelihood (high/medium/low).
+- Prioritise on high impact or high likelihood threats first.
+- Consider current threat intelligence from [National Cyber Security Centre (NCSC)](https://www.ncsc.gov.uk/section/keep-up-to-date/ncsc-news?q=&defaultTypes=news,information&sort=date%2Bdesc).
 
 #### 5. Security controls
 - Map existing controls to threats.
@@ -69,7 +69,7 @@ Transform threat model outputs into:
 - Security user stories with clear acceptance criteria, linked to specific threats.
 - Test scenarios for validation.
 
-**Example**:
+**Example user story**:
 ```
 As a GP accessing patient records
 I need to see only the health data for patients under my care
@@ -84,8 +84,8 @@ Acceptance criteria:
 
 #### Documentation
 - Store in version control alongside code.
-- Update within 30 days of significant changes.
-- Keep documentation lightweight - diagrams and bullet points, not essays.
+- Update in line with system changes or within 30 days of new information emerging.
+- Keep documentation lightweight --- diagrams and bullet points, not essays.
 
 ### Quality assurance
 
@@ -101,36 +101,28 @@ Acceptance criteria:
 ## Team collaboration
 
 ### Shared resources
-- Use standard templates for common health system patterns.
 - Share threat models for reusable components.
 - Contribute learnings to community of practice.
 
 ### Integration with SDLC
 - Complete during design phase.
 - Inform security testing strategy.
-- Update when system changes affect trust boundaries.
+- Update as part of system changes.
 
-## Practical guidance
-
-### Getting started
-1. **Start simple** - basic data flow diagram and 30-minute STRIDE session.
-1. **Focus on high-risk areas** - don't try to model everything initially.
-1. **Iterate** - improve the model as you learn more about the system.
-
-### Tools
-- **OWASP Threat Dragon** (recommended) - free, browser-based, supporting STRIDE methodology with diagram creation and threat tracking.
+## Tools
+- **OWASP Threat Dragon** (recommended) --- free, browser-based, supporting STRIDE methodology with diagram creation and threat tracking.
 - **Confluence diagrams plug-in** (draw.io): For creating and maintaining data flow diagrams.
 - **UKHSA enterprise GitHub**: All threat models SHOULD be stored in version control systems alongside code repositories.
 
 ## Measurement
 
-| ID | Indicator | GREEN | AMBER | RED |
+| ID | Indicator | GREEN | AMBER | RED 
 | :- | :- | :- | :- | :- 
-| TM-1 | Threat model currency | Updated as part of system changes | Updated within 30 days | >30 days out of date |
-| TM-2 | Security controls implementation | All high-risk threats addressed | Some medium-risk gaps | High-risk threats unaddressed |
-| TM-3 | Documentation quality | Complete, accessible, peer-reviewed | Minor gaps or limited review | Incomplete or not reviewed |
-| TM-4 | Integration with development | Security stories in backlog, tests implemented | Some integration gaps | Poor integration |
-
+| TM-1 | Threat model coverage | 100% of components | >80% coverage | <80% coverage
+| TM-2 | Threat model currency | Updated as part of system changes | Updated within 30 days | >30 days out of date
+| TM-3 | Security controls implementation | All high-risk threats addressed | Some medium-risk gaps | High-risk threats unaddressed
+| TM-4 | Documentation quality | Complete, accessible, peer-reviewed | Minor gaps or limited review | Incomplete or not reviewed
+| TM-5 | Integration with development | Security stories in backlog, tests implemented | Some integration gaps | Poor integration
 
 ## References
 - [OWASP Threat Modelling Process](https://owasp.org/www-community/Threat_Modeling_Process)
