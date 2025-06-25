@@ -4,7 +4,7 @@
 Security MUST be embedded throughout the software development lifecycle. Teams MUST take a DevSecOps approach, treating security and operations as intrinsic to the development process. This ensures that risks are identified and mitigated early, security controls are continuously validated, and secure practices are consistently applied from planning through to deployment and maintenance.
 
 ## Policy Framework
-This standard implements the NIST Secure Software Development Framework (SSDF) practices within UKHSA's development processes. Teams MUST follow these requirements as the minimum baseline for secure development, with a risk-based approach that scales security controls appropriate to system criticality and data sensitivity.
+This standard implements the [NIST Secure Software Development Framework (SSDF)](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf) practices within UKHSA's development processes. Teams MUST follow these requirements as the minimum baseline for secure development, with a risk-based approach that scales security controls appropriate to system criticality and data sensitivity.
 
 ## Guidance
 
@@ -16,9 +16,9 @@ This standard implements the NIST Secure Software Development Framework (SSDF) p
 - All security control exceptions MUST follow the formal risk acceptance process with appropriate compensating controls.
 
 ### Technical Standards
-- Critical national infrastructure (CNI) applications MUST comply with [OWASP OWASP Application Security Verification Standard (ASVS)](https://owasp.org/www-project-application-security-verification-standard/) Level 3 requirements. CNI applications are systems whose failure could impact national security, public safety, or economic stability.
+- Critical national infrastructure (CNI) applications MUST comply with [OWASP Application Security Verification Standard (ASVS)](https://owasp.org/www-project-application-security-verification-standard/) Level 3 requirements. CNI applications are systems whose failure could impact national security, public safety, or economic stability.
 - Applications processing personal or classified information MUST comply with OWASP ASVS Level 2 requirements as a minimum.
-- All other applications MUST comply with OWASP ASVS Level 1 requirements as a minimum. These applications include internal tools, public information systems, abd lower-risk business applications.
+- All other applications MUST comply with OWASP ASVS Level 1 requirements as a minimum. These applications include internal tools, public information systems, and lower-risk business applications.
 
 ### Training and Awareness
 - All development team members MUST complete [OWASP Top 10](https://owasp.org/www-project-top-ten/) awareness training annually with demonstrated knowledge retention through assessment.
