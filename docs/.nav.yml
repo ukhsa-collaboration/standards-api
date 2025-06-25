@@ -29,9 +29,5 @@ nav:
           - "spectral-rules/should/*.md"
   - Development Standards:
       - dev-standards/index.md
-      - dev-standards/sdlc.md
-      - dev-standards/environments.md
       - "dev-standards/*.md"
-      - Security:
-          - dev-standards/security/index.md
-          - dev-standards/security/*.md
+      - "dev-standards/measurement-framework.md"
