@@ -25,18 +25,9 @@ Operations in the OpenAPI specification **MUST** include the following standard 
 
 Each response **MUST** include at least one example.
 
-### Conditional Security Errors
-
-Depending on the security definition:
-
-- If an operation has its **own non-empty `security` block**, it **MUST** define:
+If an operation inherits or has its **own non-empty `security` block**, it **MUST** define:
   - `401 Unauthorized`
   - `403 Forbidden`
-
-- If the operation under the root path `/` with no local `security` **inherits a non-empty global security block**:
-  - It **SHOULD** define:
-    - `401 Unauthorized`
-    - `403 Forbidden`
 
 ### Extended Details
 

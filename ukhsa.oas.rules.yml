@@ -291,16 +291,3 @@ rules:
       function: has-required-problem-details-error-responses
       functionOptions:
         mode: 'explicit-security'
-
-  # SHOULD Root path SHOULD define 401 and 403 when inheriting global security, using `application/problem+json` with examples.
-  # => /docs/spectral-rules/should/should-define-root-inherited-security-responses.md
-
-  should-define-root-inherited-security-responses:
-    description: "Root path SHOULD declare 401 and 403 when inheriting global security"
-    message: "{{error}}"
-    severity: warn
-    given: $.paths["/"].*
-    then:
-      function: has-required-problem-details-error-responses
-      functionOptions:
-        mode: 'root-inherit'
