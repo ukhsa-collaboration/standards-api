@@ -27,5 +27,5 @@ Teams **MUST**:
 
 ## References
 
-- [OWASP Penetration Testing Guide](https://owasp.org/www-project-web-security-testing-guide)
 - [NCSC Penetration Testing Guidance](https://www.ncsc.gov.uk/guidance/penetration-testing)
+- [OWASP Penetration Testing Guide](https://owasp.org/www-project-web-security-testing-guide)

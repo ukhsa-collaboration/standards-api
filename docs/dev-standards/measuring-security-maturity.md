@@ -28,9 +28,9 @@ Assessment results **MAY** be used to:
 
 ## References
 
-- [NIST Secure Software Development Framework (SSDF)][1]
-- [NCSC Cyber Assessment Framework (CAF)][2]
 - [Minimum Viable Secure Product (MVSP)][3]
+- [NCSC Cyber Assessment Framework (CAF)][2]
+- [NIST Secure Software Development Framework (SSDF)][1]
 
 [1]: https://csrc.nist.gov/Projects/ssdf
 [2]: https://www.ncsc.gov.uk/collection/caf

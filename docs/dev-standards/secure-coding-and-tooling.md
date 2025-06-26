@@ -53,10 +53,10 @@ Use these indicators to assess adoption and effectiveness of secure coding and t
 
 ## References
 
-- [SonarQube][1]
-- [Snyk][2]
-- [detect-secrets][3]
 - [Dependabot][4]
+- [detect-secrets][3]
+- [Snyk][2]
+- [SonarQube][1]
 
 [1]: https://www.sonarsource.com/products/sonarqube
 [2]: https://snyk.io
