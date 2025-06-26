@@ -31,3 +31,5 @@ nav:
       - dev-standards/index.md
       - "dev-standards/*.md"
       - "dev-standards/measurement-framework.md"
+      - Appendix:
+          - "dev-standards/appendix/*.md"
