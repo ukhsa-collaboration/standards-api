@@ -1,21 +1,20 @@
-# Development Standards
-
-## Introduction
+# Introduction
 
 At UKHSA, we build and operate digital services that support public health outcomes. To ensure these services are secure, reliable and maintainable, we follow a consistent set of engineering standards. These standards reflect industry best practice and are tailored to the unique needs of public sector delivery, including regulatory compliance, data protection and operational resilience.
 
-This guidance provides a shared foundation for how we design, build, test and operate software. It promotes collaboration across disciplines, supports continuous improvement and ensures that quality and security are embedded from the outset — not added as an afterthought.
+This guidance provides a shared foundation for how we design, build, test and operate software. It promotes collaboration across disciplines, supports continuous improvement and ensures that quality and security are embedded from the outset --- not added as an afterthought.
 
 ## Scope and audience
 
-These standards apply to all software development activities at UKHSA, including internal tools, public-facing services and third-party integrations. They cover the full software delivery lifecycle (SDLC), from planning and design through to deployment, monitoring and decommissioning.
+These standards apply to all engineering teams involved in building and operating software at UKHSA. They cover the full software delivery lifecycle, from planning and design through to deployment, monitoring and decommissioning.
+
+The guidance is intended to support teams in meeting the expectations of architecture, security and governance functions by embedding good practice into day-to-day delivery.
 
 Intended audience:
 
 - Software engineers and developers
-- Technical architects and engineering leads
-- Product managers and delivery leads
-- Security champions and assurance professionals
+- Engineering leads and delivery teams
+- People involved in designing, building or operating software systems
 
 ## How to read the guidelines
 
