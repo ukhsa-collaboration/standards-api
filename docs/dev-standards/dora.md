@@ -83,5 +83,7 @@ Teams **SHOULD** aim to restore service in minutes or hours, not days.
 ## References
 
 - [DORA metrics: How to measure Open DevOps success – Atlassian][1]
+- [DORA’s software delivery metrics: the four keys][2]
 
 [1]: https://www.atlassian.com/devops/frameworks/dora-metrics
+[2]: https://dora.dev/guides/dora-metrics-four-keys
