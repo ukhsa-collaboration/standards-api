@@ -1,4 +1,6 @@
-import validateApiInfo from '../functions/is-api-info-json-schema.js';
+import validateApiInfo from '../functions/legacy/is-api-info-json-schema.js';
+
+type ValidationResult = { message: string };
 
 describe('is-api-info-json-schema', () => {
   it('passes with a fully valid ApiInfo schema', () => {
@@ -8,7 +10,8 @@ describe('is-api-info-json-schema', () => {
         name: { type: 'string' },
         version: {
           type: 'string',
-          pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+          pattern:
+            '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$'
         },
         status: {
           type: 'string',
@@ -19,15 +22,14 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result = validateApiInfo(schema);
+    const result: ValidationResult[] = validateApiInfo(schema);
     expect(result).toEqual([]);
   });
-  
 
   it('fails when name is missing or invalid', () => {
     const schema = { type: 'object', properties: { name: {} } };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes('name'))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes('name'))).toBe(true);
   });
 
   it('fails when version is missing semver pattern', () => {
@@ -36,14 +38,17 @@ describe('is-api-info-json-schema', () => {
       properties: {
         name: { type: 'string' },
         version: { type: 'string', pattern: '^1.0$' },
-        status: { type: 'string', 'x-extensible-enum': ['ALPHA', 'BETA', 'LIVE', 'DEPRECATED'] },
+        status: {
+          type: 'string',
+          'x-extensible-enum': ['ALPHA', 'BETA', 'LIVE', 'DEPRECATED']
+        },
         releaseDate: { type: 'string', format: 'date' },
         documentation: { type: 'string', format: 'uri' },
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes('semver'))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes('semver'))).toBe(true);
   });
 
   it('fails when status enum is invalid or missing', () => {
@@ -58,8 +63,8 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes('status'))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes('status'))).toBe(true);
   });
 
   it('fails when releaseDate is missing format', () => {
@@ -68,14 +73,17 @@ describe('is-api-info-json-schema', () => {
       properties: {
         name: { type: 'string' },
         version: { type: 'string', pattern: 'valid' },
-        status: { type: 'string', 'x-extensible-enum': ['ALPHA', 'BETA', 'LIVE', 'DEPRECATED'] },
+        status: {
+          type: 'string',
+          'x-extensible-enum': ['ALPHA', 'BETA', 'LIVE', 'DEPRECATED']
+        },
         releaseDate: { type: 'string' },
         documentation: { type: 'string', format: 'uri' },
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes('releaseDate'))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes('releaseDate'))).toBe(true);
   });
 
   it('fails when documentation and releaseNotes formats are missing', () => {
@@ -84,19 +92,22 @@ describe('is-api-info-json-schema', () => {
       properties: {
         name: { type: 'string' },
         version: { type: 'string', pattern: 'valid' },
-        status: { type: 'string', 'x-extensible-enum': ['ALPHA', 'BETA', 'LIVE', 'DEPRECATED'] },
+        status: {
+          type: 'string',
+          'x-extensible-enum': ['ALPHA', 'BETA', 'LIVE', 'DEPRECATED']
+        },
         releaseDate: { type: 'string', format: 'date' },
         documentation: { type: 'string' },
         releaseNotes: { type: 'string' }
       }
     };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes('documentation'))).toBe(true);
-    expect(result.some(r => r.message.includes('releaseNotes'))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes('documentation'))).toBe(true);
+    expect(result.some((r: ValidationResult) => r.message.includes('releaseNotes'))).toBe(true);
   });
 
   it('fails when schema is null', () => {
-    const result = validateApiInfo(null);
+    const result: ValidationResult[] = validateApiInfo(null as any);
     expect(result).toEqual([]);
   });
 
@@ -118,8 +129,8 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes('semver'))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes('semver'))).toBe(true);
   });
 
   it('fails when x-extensible-enum is missing entirely', () => {
@@ -129,25 +140,23 @@ describe('is-api-info-json-schema', () => {
         name: { type: 'string' },
         version: {
           type: 'string',
-          pattern: "valid"
+          pattern: 'valid'
         },
-        status: { type: 'string' }, // missing x-extensible-enum
+        status: { type: 'string' },
         releaseDate: { type: 'string', format: 'date' },
         documentation: { type: 'string', format: 'uri' },
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes('status'))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes('status'))).toBe(true);
   });
 
   it('skips validation if schema is not an object', () => {
     const schema = {
       type: 'string'
     };
-    const result = validateApiInfo(schema);
-    expect(result.some(r => r.message.includes("type 'object'"))).toBe(true);
+    const result: ValidationResult[] = validateApiInfo(schema);
+    expect(result.some((r: ValidationResult) => r.message.includes("type 'object'"))).toBe(true);
   });
-
-
 });

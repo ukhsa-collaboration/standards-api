@@ -1,4 +1,8 @@
-import validateProblemSchema from '../functions/is-problem-json-schema.js';
+import validateProblemSchema from '../functions/legacy/is-problem-json-schema.js';
+
+interface ValidationResult {
+  message: string;
+}
 
 describe('is-problem-json-schema', () => {
   it('passes with a fully valid Problem schema', () => {
@@ -12,13 +16,13 @@ describe('is-problem-json-schema', () => {
         instance: { type: 'string' }
       }
     };
-    const result = validateProblemSchema(schema);
+    const result: ValidationResult[] = validateProblemSchema(schema);
     expect(result).toEqual([]);
   });
 
   it('fails when top-level type is not object', () => {
     const schema = { type: 'array' };
-    const result = validateProblemSchema(schema);
+    const result: ValidationResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes("type 'object'"))).toBe(true);
   });
 
@@ -33,7 +37,7 @@ describe('is-problem-json-schema', () => {
         instance: { type: 'string' }
       }
     };
-    const result = validateProblemSchema(schema);
+    const result: ValidationResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('type'))).toBe(true);
   });
 
@@ -43,12 +47,12 @@ describe('is-problem-json-schema', () => {
       properties: {
         type: { type: 'string', format: 'uri-reference' },
         title: { type: 'string' },
-        status: { type: 'string' },
+        status: { type: 'string' }, // should be integer
         detail: { type: 'string' },
         instance: { type: 'string' }
       }
     };
-    const result = validateProblemSchema(schema);
+    const result: ValidationResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('status'))).toBe(true);
   });
 
@@ -59,11 +63,11 @@ describe('is-problem-json-schema', () => {
         type: { type: 'string', format: 'uri-reference' },
         title: { type: 'string' },
         status: { type: 'integer', format: 'int32' },
-        detail: { type: 'number' },
-        instance: { type: 'boolean' }
+        detail: { type: 'number' }, // should be string
+        instance: { type: 'boolean' } // should be string
       }
     };
-    const result = validateProblemSchema(schema);
+    const result: ValidationResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('detail'))).toBe(true);
     expect(result.some(r => r.message.includes('instance'))).toBe(true);
   });
@@ -73,14 +77,13 @@ describe('is-problem-json-schema', () => {
       type: 'object',
       properties: {}
     };
-    const result = validateProblemSchema(schema);
+    const result: ValidationResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('type'))).toBe(true);
     expect(result.some(r => r.message.includes('title'))).toBe(true);
     expect(result.some(r => r.message.includes('status'))).toBe(true);
     expect(result.some(r => r.message.includes('detail'))).toBe(true);
     expect(result.some(r => r.message.includes('instance'))).toBe(true);
   });
-
 
   it('handles combined schemas (anyOf)', () => {
     const schema = {
@@ -97,16 +100,18 @@ describe('is-problem-json-schema', () => {
         }
       ]
     };
-    const result = validateProblemSchema(schema);
+    const result: ValidationResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('type'))).toBe(true);
   });
 
   it('gracefully handles unexpected errors', () => {
     const proxy = new Proxy({}, {
-      get: () => { throw new Error("Unexpected crash"); }
+      get: () => {
+        throw new Error("Unexpected crash");
+      }
     });
-    const result = validateProblemSchema(proxy);
+
+    const result: ValidationResult[] = validateProblemSchema(proxy as any);
     expect(result[0].message).toContain('Unexpected crash');
   });
-
 });
