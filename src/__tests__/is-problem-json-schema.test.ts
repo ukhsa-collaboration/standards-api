@@ -1,4 +1,4 @@
-import validateProblemSchema from '../functions/legacy/is-problem-json-schema.js';
+import validateProblemSchema from 'src/functions/legacy/is-problem-json-schema.js';
 
 interface ValidationResult {
   message: string;

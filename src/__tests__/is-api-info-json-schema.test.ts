@@ -1,4 +1,4 @@
-import validateApiInfo from '../functions/legacy/is-api-info-json-schema.js';
+import validateApiInfo from 'src/functions/legacy/is-api-info-json-schema.js';
 
 type ValidationResult = { message: string };
 

@@ -2,26 +2,25 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  preset: 'ts-jest',
+  // ESM preset for TS modules, CJS for legacy JS
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.ts'],
   moduleFileExtensions: ['ts', 'js', 'json'],
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    },
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '^src/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverage: true,
   coverageDirectory: 'coverage',
-  transform: {}, // ← from JS config
-  coverageThreshold: { // ← from JS config
+  coverageThreshold: {
     global: {
       branches: 84,
       functions: 100,
       lines: 90,
       statements: 90,
     }
-  },
+  }
 };
 
 export default config;
