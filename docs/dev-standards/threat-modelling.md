@@ -1,148 +1,78 @@
-# Threat Modelling Policy and Guidance
+# Threat modelling
 
 ## Introduction
 
-All UKHSA systems **MUST** be designed with security considerations from the outset. Threat modelling is a lightweight, systematic approach to identify and mitigate security risks during system design, protecting public health data and maintaining service availability.
+Threat modelling is a structured approach to identifying and mitigating security risks early in the software delivery lifecycle. It helps teams design secure systems by understanding how data flows, where trust boundaries exist, and what threats may arise.
 
-**Policy objective**: Design secure systems through risk-based threat analysis that integrates naturally into agile development workflows.
+All systems **MUST** include threat modelling as part of their design and delivery process. This applies to **ALL** systems — regardless of size, sensitivity or criticality.
 
-## When to threat model
+Threat modelling supports secure-by-design principles and helps ensure that appropriate controls are in place to protect public health data and maintain service availability.
 
-Teams **MUST** perform threat modelling for:
+## Guidance
 
-- New applications handling health data.
-- Major changes affecting data flows or trust boundaries.
-- Annual reviews of critical systems.
-- Integration with new external partners.
-- Following security incidents.
+### When to do threat modelling
 
-## Requirements
+Teams **MUST** carry out threat modelling:
 
-### Use structured methodology
+- for **ALL** new systems
+- for **ALL** existing systems undergoing significant change
+- when integrating with new external partners or services
+- after a security incident
+- at least once a year for **ALL** systems
 
-Follow the [OWASP Threat Modelling Process](https://owasp.org/www-community/Threat_Modeling_Process):
+### How to do threat modelling
 
-1. **Decompose** --- understand the system.
-1. **Identify threats** --- use STRIDE methodology.
-1. **Mitigate** --- define security controls.
-1. **Validate** --- test controls work.
+Teams **MUST** follow a structured approach such as the [OWASP Threat Modelling Process][3], which includes:
 
-### Core deliverables
+1. **Decompose the system** — understand the architecture, data flows and trust boundaries
+2. **Identify threats** — use the STRIDE model to consider different types of risk
+3. **Mitigate risks** — define and implement appropriate security controls
+4. **Validate controls** — test that mitigations are effective
 
-Teams **MUST** produce:
+Threat modelling **MUST** be integrated into the design phase of the [SDLC][4] and **MUST** inform security testing and backlog planning.
 
-#### 1. System context
+### Required deliverables
 
-- High-level description and data sensitivity.
-- User types and trust boundaries.
-- Links to system architecture documentation.
+Each threat model **MUST** include the following:
 
-#### 2. Data flow diagram
+- **System context** — including data sensitivity, user types and trust boundaries
+- **Data flow diagram** — showing key components, data stores and trust boundaries
+- **STRIDE threat analysis** — identifying threats for each component
+- **Risk assessment** — rating impact and likelihood
+- **Security controls** — mapped to threats, with gaps identified
+- **Security user stories** — added to the backlog with acceptance criteria
+- **Validation plan** — describing how controls will be tested
+- **Documentation** — stored in version control and updated regularly
 
-Simple diagram showing:
+Details of these deliverables are provided in the [Threat Modelling Appendix][5].
 
-- Data stores with classifications (Personal, OFFICIAL, SECRET).
-- External entities and trust relationships.
-- Key processes and data movements.
+All threat models **MUST** be:
 
-Keep this high-level --- focus on trust boundaries, not implementation details.
-
-#### 3. STRIDE threat analysis
-
-For each component, systematically consider:
-
-- **Spoofing**: Compromises authentication by impersonating something or someone else.
-- **Tampering**: Compromises integrity by modifying data or code.
-- **Repudiation**: Compromises identification by claiming to have not performed the action.
-- **Information Disclosure**: Compromises confidentiality by exposing information to someone not authorized to see it.
-- **Denial of Service**: Compromises availability by denying or degrading service to users.
-- **Elevation of Privilege**: Compromises authorisation by gaining capabilities improperly.
-
-#### 4. Risk assessment
-
-- Rate impact (high/medium/low) and likelihood (high/medium/low).
-- Prioritise on high impact or high likelihood threats first.
-- Consider current threat intelligence from [National Cyber Security Centre (NCSC)](https://www.ncsc.gov.uk/section/keep-up-to-date/ncsc-news?q=&defaultTypes=news,information&sort=date%2Bdesc).
-
-#### 5. Security controls
-
-- Map existing controls to threats.
-- Identify gaps requiring new controls.
-- Document accepted risks with rationale.
-
-### Implementation
-
-#### Create actionable work
-
-Transform threat model outputs into:
-
-- Security user stories with clear acceptance criteria, linked to specific threats.
-- Test scenarios for validation.
-
-**Example user story**:
-
-```
-As a GP accessing patient records
-I need to see only the health data for patients under my care
-So that I cannot accidentally access confidential information about other patients
-
-Acceptance criteria:
-- When I search for a patient, I only see results for patients registered to my practice
-- If I try to access a patient record directly (e.g., via URL), I get an access denied message if they're not my patient
-- The system logs any attempt to access patient records outside my authorised list
-- I can see a clear message explaining why access was denied
-```
-
-#### Documentation
-
-- Store in version control alongside code.
-- Update in line with system changes or within 30 days of new information emerging.
-- Keep documentation lightweight --- diagrams and bullet points, not essays.
-
-### Quality assurance
-
-#### Reviews required
-
-- **Peer review** for all threat models.
-- **Security Architecture review** for systems handling personal health data or supporting critical functions.
-
-#### Validation
-
-- Test security controls against identified threats.
-- Update threat models based on incident learnings.
-- Annual review for critical systems.
-
-## Team collaboration
-
-### Shared resources
-
-- Share threat models for reusable components.
-- Contribute learnings to community of practice.
-
-### Integration with SDLC
-
-- Complete during design phase.
-- Inform security testing strategy.
-- Update as part of system changes.
-
-## Tools
-
-- **OWASP Threat Dragon** (recommended) --- free, browser-based, supporting STRIDE methodology with diagram creation and threat tracking.
-- **Confluence diagrams plug-in** (draw.io): For creating and maintaining data flow diagrams.
-- **UKHSA enterprise GitHub**: All threat models **SHOULD** be stored in version control systems alongside code repositories.
+- Peer-reviewed within the delivery team
+- Reviewed and approved by a **Security Architect**
+- Updated within 30 days of any significant system change or new threat intelligence
 
 ## Measurement
 
-| ID   | Indicator                        | GREEN                                          | AMBER                        | RED                           |
-| :--- | :------------------------------- | :--------------------------------------------- | :--------------------------- | :---------------------------- |
-| TM-1 | Threat model coverage            | 100% of components                             | >80% coverage                | <80% coverage                 |
-| TM-2 | Threat model currency            | Updated as part of system changes              | Updated within 30 days       | >30 days out of date          |
-| TM-3 | Security controls implementation | All high-risk threats addressed                | Some medium-risk gaps        | High-risk threats unaddressed |
-| TM-4 | Documentation quality            | Complete, accessible, peer-reviewed            | Minor gaps or limited review | Incomplete or not reviewed    |
-| TM-5 | Integration with development     | Security stories in backlog, tests implemented | Some integration gaps        | Poor integration              |
+Use these indicators to assess the quality and effectiveness of threat modelling:
+
+| ID   | Indicator                       | GREEN                                                | AMBER                                    | RED                            |
+| ---- | ------------------------------- | ---------------------------------------------------- | ---------------------------------------- | ------------------------------ |
+| TM-1 | Threat model currency           | Updated within 30 days of changes or new threats     | Updated within 60 days                   | Outdated or not maintained     |
+| TM-2 | Required deliverables completed | **ALL** required deliverables present and complete   | Some deliverables missing or incomplete  | Deliverables missing or absent |
+| TM-3 | Review and assurance            | Reviewed by **Security Architect** and peer-reviewed | Peer-reviewed only                       | Not reviewed                   |
+| TM-4 | Integration with development    | Security stories in backlog and controls validated   | Some stories or validation steps missing | No integration with delivery   |
 
 ## References
 
-- [OWASP Threat Modelling Process](https://owasp.org/www-community/Threat_Modeling_Process)
-- [UKHSA Secure Development Lifecycle](./secure-development-lifecycle.md)
-- [Government Security Classifications](https://www.gov.uk/government/publications/government-security-classifications)
+- [Government Security Classifications][1]
+- [NCSC Threat Intelligence][2]
+- [OWASP Threat Modelling Process][3]
+- [Software Development Lifecycle][4]
+- [Threat Modelling Appendix][5]
+
+[1]: https://www.gov.uk/government/publications/government-security-classifications
+[2]: https://www.ncsc.gov.uk/collection/building-a-security-operations-centre/threat-intelligence
+[3]: https://owasp.org/www-community/Threat_Modeling_Process
+[4]: ../dev-standards/sdlc.md
+[5]: ../dev-standards/appendix/threat-modelling-deliverables.md
