@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "prepare": "husky && git config commit.template .gitmessage",
-    "build": "tsc && npx copy-legacy",
+    "build": "tsc && npm run copy-legacy",
     "copy-legacy": "cpx \"src/functions/legacy/*.js\" dist/functions",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
     "test:watch": "jest --watch"
