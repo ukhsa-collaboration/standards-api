@@ -17,6 +17,14 @@ Teams **MUST**:
 - scope penetration testing based on system risk and data sensitivity
 - ensure tests are conducted by qualified, independent testers
 
+Teams **SHOULD**:
+
+- integrate automated penetration testing tools into CI/CD pipelines to detect common vulnerabilities earlier in the delivery process
+- use test environments that closely mirror production to improve the accuracy of findings
+- include penetration testing in incident response exercises to validate detection and response capabilities
+- review and update test scopes regularly to reflect changes in architecture, threat landscape or data sensitivity
+- collaborate with testers during scoping to ensure coverage of high-risk areas and known weak points
+
 ## Measurement
 
 | ID   | Indicator                          | Green                                               | Amber                           | Red                        |
