@@ -48,7 +48,7 @@ The API **MUST** validate the JWT `signature`, `expiry time`, `issuer`, `audienc
 - **Audience** (`aud`): Ensure that the token was issued for your specific API or service by checking the `aud` claim.
 - **Expiration Time** (`exp`)/**Not Before Time** (`nbf`): Ensure that the token has not expired by checking the `exp` and `nbf` claims, which are Unix timestamps.
 - **Subject** (`sub`): Check the `sub` claim to ensure the token belongs to the expected user.
-- **Custom Claims**: If the token includes any custom claims (e.g., roles, permissions), verify them according to your application's logic.
+- **Custom Claims**: If the token includes any custom claims (e.g., `roles`, `permissions`), verify them according to your application's logic.
 
 **MUST NOT** put secret information inside the JWT token that uses the JWS standard.
 
@@ -81,39 +81,159 @@ APIs **SHOULD NOT** use the "[Resource Owner Password Credentials Grant](https:/
 
 ### OAuth 2.0 Authorization Code Grant Type
 
+- **MUST** use `Authorization Code` grant + `PKCE` with non-confidential (public) clients (e.g. single page web or mobile applications). Note that mobile applications can be reverse engineered to extract client secrets.
 - **SHOULD** use OAuth 2.0 `Authorization Code` grant type for interactive authorisation where the authentication of a user is required.
 - **SHOULD** use `PKCE` extension for enhanced security with confidential clients (e.g. backend service).
-**MAY** use refresh tokens with `Authorization Code` grant type.
-- **MUST** use `Authorization Code` grant + `PKCE` with non-confidential (public) clients (e.g. single page web or mobile applications). Note that mobile applications can be reverse engineered to extract client secrets.
+- **SHOULD** define access control using [OAuth 2.0 Scopes](#oauth-20-scopes).
+- **MAY** use refresh tokens with `Authorization Code` grant type.
+
+#### OAuth 2.0 Scopes
+
+[OAuth 2.0 scopes](https://datatracker.ietf.org/doc/html/rfc6749#section-3.3) are used to specify the permissions that a client application is requesting from a resource owner (API) on behalf of a user. Scopes allow for granular access control and help protect sensitive data by limiting the access granted to applications. The application isn't able to access anything the signed in user couldn't access.
+
+The client application is only able access the resources that the user can personally access, typically the user's resources or resources related to the user.
+
+As with many things in software development defining scopes is a trade-off between flexibility and complexity. Scopes can be defined at different levels of granularity, from broad permissions to very specific actions.
+
+See [Defining Scopes](https://www.oauth.com/oauth2-servers/scope/defining-scopes/) for insight into defining OAuth 2.0 scopes.
+
+##### Common Scope Patterns
+
+A common scope naming convention is `resource.operation.constraint`.
+
+- `{resource}.Read.All`: Read-only access to a resource
+- `{resource}.Write.All`: Write access to a resource
+- `{resource}.ReadWrite.All`: Both read and write access
+
+If your API exposes Employee Resources then example scope might look like this `Employees.Read.All` for read access and `Employees.Write.All` for write access.
+
+> [!NOTE]
+> When using the Entra ID (previously Azure AD) identity platform, review [Microsoft Developer Glossary](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary) for its [Scope definition](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary#scopes) and [Microsoft Graph API Permission Scopes](https://learn.microsoft.com/en-us/graph/permissions-reference) for scope examples.
 
 ### Client Credentials Grant Type
 
 - **SHOULD** use OAuth 2.0 `Client Credentials` grant type for non-interactive (machine-to-machine) authorisation outside of the context of a user.
-
-- **SHOULD** define permissions using OAuth 2.0 scopes.
-
+- **SHOULD** consider a mechanism for [Access Control](#access-control) in the absence of scopes.
 - **SHOULD NOT** use refresh tokens with `Client Credentials` grant type.
 
-TODO:
-
-Scopes and permissions using OAuth 2.0 scopes
-
 > [!WARNING]
 >
 > **Security Note**
 > Review the OWASP guidelines on [Broken Function Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa5-broken-function-level-authorization/) and ensure relevant guidance is followed.
 
-## Access Control
+#### Access Control
 
-### Role-Based Access Control (RBAC)
+Access control is the process of determining whether a user or application has permission to access a resource or perform an action.
 
-TODO
+There are 2 scenarios for access control:
 
-> [!WARNING]
+1. **Delegated Access**: This scenario involves a user authenticating (typically using `Authorization Code flow`) and granting permission (consent) to an application to act on their behalf. The application receives a token that includes the user's context and permissions, delegated permissions can also be referred to as [scopes](#oauth-20-scopes).
+
+1. **Application Access**: In this scenario, an application authenticates using its own credentials (`client credentials`) and is granted permissions to access resources without a user context.
+
+For an overview on access control and deciding when to use [Delegated](https://learn.microsoft.com/en-us/entra/identity-platform/delegated-access-primer) and or [Application](https://learn.microsoft.com/en-us/entra/identity-platform/app-only-access-primer) access with Azure Entra ID (previously Azure AD), refer to [Microsoft Entra ID Permissions and Consent Overview](https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview).
+
+#### Role-Based Access Control (RBAC)
+
+- APIs **SHOULD** consider implementing Role-Based Access Control (RBAC) to govern access to protected resources.
+- RBAC **MUST** be implemented at the API level, not just at the UI level. This ensures that all access control decisions are enforced regardless of how the API is accessed.
+- APIs **SHOULD** define a set of roles with clear and distinct permissions that align with business functions.
+- Role information **SHOULD** be included in the JWT token as claims (e.g., `roles` or `groups`).
+
+> [!NOTE]
+> When using the Entra ID (previously Azure AD) identity platform, review [Microsoft Developer Glossary](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary) for its [Roles definition](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary#roles). App Roles can be [defined in the application manifest and assigned to users and groups](https://learn.microsoft.com/en-us/entra/identity-platform/howto-add-app-roles-in-apps).
 >
-> **Security Note**
-> Review the OWASP guidelines on [Broken Function Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa5-broken-function-level-authorization/) and ensure relevant guidance is followed.
+> The Entra ID identity platform app roles utilises the `roles` claim in the JWT token.
+
+- APIs **MUST** validate `role` claims on each request to ensure the caller has appropriate permissions for the requested operation.
+
+- Role assignments **SHOULD** be managed through a centralised identity management system rather than within individual APIs.
+
+For fine-grained access control:
+
+- APIs **SHOULD** implement permission checks at both resource and operation levels.
+- APIs **SHOULD** validate not only that the consumer has the correct role, but also that they have access to the specific resource instance being manipulated.
+- APIs **SHOULD** implement the principle of least privilege, granting only the minimum access necessary.
+
+#### Role Naming Conventions
+
+When defining roles, consider using a naming convention that reflects the business function or operation. This helps in understanding the purpose of each role.
+
+A common pattern is to use a verb-noun format (e.g., `Employee.Read`, `Manager.Create`) to indicate the permitted action and the resource being acted upon.
 
 ## Rate Limiting
 
-TODO
+Rate limiting controls the number of API requests a client can make within a specific time period to protect the API from abuse, denial of service attacks, and to ensure fair usage.
+
+> [!WARNING]
+> **Security Note**
+>
+> Review the OWASP API Security Top 10 guidance on [Lack of Resources & Rate Limiting](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/) and ensure relevant controls are implemented.
+
+APIs **SHOULD** implement rate limiting to:
+
+- Protect against denial-of-service attacks
+- Prevent abusive behaviour from legitimate clients
+- Ensure fair resource allocation among all consumers
+- Maintain service availability during traffic spikes
+
+Rate limits **SHOULD** be clearly documented in the API documentation, including:
+
+- Request limits (e.g., requests per minute/hour/day)
+- How limits are calculated (per API key, IP address, user, etc.)
+- Consequences of exceeding limits
+
+### Rate Limit Headers
+
+When a client makes a request, the API **SHOULD** include the following HTTP headers in responses:
+
+- `X-RateLimit-Limit`: Maximum number of requests allowed in a time window
+- `X-RateLimit-Remaining`: Number of requests remaining in the current time window
+- `X-RateLimit-Reset`: Time (in seconds or timestamp) when the rate limit window resets
+
+### Rate Limit Responses
+
+When a client exceeds the rate limit, the API **MUST** return:
+
+- HTTP status code `429 Too Many Requests`
+- A response body explaining the rate limit was exceeded
+- A `Retry-After` header indicating when the client can retry
+
+#### Example response
+
+```text
+HTTP/1.1 429 Too Many Requests
+Content-Type: application/problem+json
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1609459200
+Retry-After: 60
+
+{
+  "type": "https://datatracker.ietf.org/doc/html/rfc6585#section-4",
+  "title": "Too Many Requests",
+  "status": 429,
+  "detail": "Rate limit is exceeded. Try again in 60 seconds.",
+  "instance": "POST /namespace/product/v1/patients"
+}
+```
+
+### Rate Limiting Strategies
+
+APIs **SHOULD** consider implementing one or more of the following rate limiting strategies:
+
+- **Fixed Window**: Limits requests in fixed time intervals (e.g., 100 requests per hour)
+- **Sliding Window**: Tracks requests over a moving time period for smoother traffic management
+- **Token Bucket**: Allocates tokens that are consumed with each request and replenished over time
+- **Concurrency Limiting**: Restricts the number of concurrent requests rather than the rate
+
+### Tiered Rate Limits
+
+APIs **MAY** implement tiered rate limits based on:
+
+- Client identity or subscription level
+- API endpoint sensitivity (higher limits for low-risk operations)
+- Time of day or expected traffic patterns
+
+> [!NOTE]
+> When using Azure API Management, consider using the [rate-limit policy](https://learn.microsoft.com/en-us/azure/api-management/rate-limit-policy) or [quota policy](https://learn.microsoft.com/en-us/azure/api-management/quota-policy) to implement rate limiting.
