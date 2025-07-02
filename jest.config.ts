@@ -20,7 +20,11 @@ const config: Config = {
       lines: 90,
       statements: 90,
     }
-  }
+  },
+  reporters: [
+    'default',
+    ['jest-junit', { outputDirectory: 'coverage', outputName: 'junit.xml' }],
+  ],
 };
 
 export default config;

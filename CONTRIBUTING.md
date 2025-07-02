@@ -100,7 +100,7 @@ npm run build
 ```
 Or directly with:
 ```
-npx tsc && npm run copy-legacy
+npx tsc && npx copy-legacy
 ```
 This generates `.js` files in the output directory (default: `./dist` or based on tsconfig.json) and copies legacy
 `.js` files into the directory which Spectral is using as the source for functions.
