@@ -17,7 +17,7 @@ Teams **MUST**:
 
 Teams **SHOULD**:
 
-- use tools such as [SonarCloud][1], [Snyk][2], and [detect-secrets][3] to automate scanning
+- use tools such as [SonarCloud][1], [Snyk][2], [CodeQL][5], and [detect-secrets][3] to automate scanning
 - keep CI/CD jobs short and isolated to reduce feedback time
 - run long-running scans asynchronously if they impact pipeline performance
 
@@ -32,12 +32,13 @@ The tools listed below help teams automate secure coding practices and reduce ma
 
 Teams **SHOULD** choose tools that suit their technology stack and delivery context, and **MUST** ensure they are properly configured and maintained.
 
-| Area                  | Tool                | Purpose                                          |
-| --------------------- | ------------------- | ------------------------------------------------ |
-| Code quality          | [SonarQube][1]      | Detects bugs, code smells and vulnerabilities    |
-| Security scanning     | [Snyk][2]           | Identifies known vulnerabilities in dependencies |
-| Secrets detection     | [detect-secrets][3] | Prevents secrets from being committed            |
-| Dependency management | [Dependabot][4]     | Automates updates to vulnerable dependencies     |
+| Area                  | Tool                | Purpose                                                            |
+| --------------------- | ------------------- | ------------------------------------------------------------------ |
+| Code quality          | [SonarQube][1]      | Detects bugs, code smells and vulnerabilities                      |
+| Dependency management | [Dependabot][4]     | Automates updates to vulnerable dependencies                       |
+| Secrets detection     | [detect-secrets][3] | Prevents secrets from being committed                              |
+| Security scanning     | [CodeQL][5]         | Performs semantic code analysis to detect security vulnerabilities |
+| Security scanning     | [Snyk][2]           | Identifies known vulnerabilities in dependencies                   |
 
 ## Measurement
 
@@ -53,6 +54,7 @@ Use these indicators to assess adoption and effectiveness of secure coding and t
 
 ## References
 
+- [CodeQL][5]
 - [Dependabot][4]
 - [detect-secrets][3]
 - [Snyk][2]
@@ -62,3 +64,4 @@ Use these indicators to assess adoption and effectiveness of secure coding and t
 [2]: https://snyk.io
 [3]: https://github.com/Yelp/detect-secrets
 [4]: https://github.com/dependabot
+[5]: https://codeql.github.com
