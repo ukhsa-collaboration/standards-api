@@ -41,7 +41,7 @@ All commits **SHOULD** be [signed][5] to verify authorship and integrity. Signed
 
 ### Branching strategy
 
-Teams **SHOULD** follow a GitHub Flow-style branching model.
+Teams **SHOULD** follow a [GitHub Flow][8]-style branching model.
 
 The default branch **SHOULD** be the only long-lived branch. Feature branches **MUST** be short-lived — ideally hours or days, and no more than two weeks.
 
@@ -106,6 +106,7 @@ Use these indicators to assess how well source control practices are being follo
 - [Conventional commits][4]
 - [Git hosting decision tree][3]
 - [GitHub commit signature verification][5]
+- [GitHub flow][8]
 - [Semantic versioning][6]
 
 [1]: https://github.com/UKHSA-Internal
@@ -115,3 +116,4 @@ Use these indicators to assess how well source control practices are being follo
 [5]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
 [6]: https://semver.org
 [7]: ../dev-standards/appendix/branch-protection-rules.md
+[8]: https://docs.github.com/en/get-started/using-github/github-flow
