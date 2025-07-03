@@ -35,9 +35,9 @@ Commits **MUST** be:
 - clearly described
 - linked to a work item (e.g. Jira ID)
 
-Commit messages **MAY** follow the [Conventional Commits][4] format.
-
 All commits **SHOULD** be [signed][5] to verify authorship and integrity. Signed commits help ensure that code changes come from trusted contributors and have not been tampered with.
+
+Commit messages **MAY** follow the [Conventional Commits][4] format.
 
 ### Branching strategy
 
