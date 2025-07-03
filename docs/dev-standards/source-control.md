@@ -1,68 +1,117 @@
 # Source control
 
-## Git
+## Introduction
 
-- All code **MUST** be version controlled using git.
-- Code **SHOULD** wherever possible be stored in GitHub, in either [UKHSA-Internal](https://github.com/UKHSA-Internal) or [ukhsa-collaboration](https://github.com/ukhsa-collaboration), as appropriate.
+Version control is essential for collaboration, traceability, and quality assurance. All teams **MUST** use Git to manage source code.
 
-## Commits
+This guidance explains how to use Git and approved hosting platforms consistently and securely across all projects. It supports good engineering practice, protects code integrity, and ensures compliance with internal governance.
 
-- Commits **MUST** be small and cohesive.
-- Commit messages **MUST** be brief, clear and accurate.
-  - They **SHOULD** include a work-item reference, typically a Jira ID.
-  - They **MAY** follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
-- All commits **SHOULD** be signed.
+## Guidance
 
-## GitHub Flow
+### Where to store code
 
-- The default branch in each repository **MUST** be `main` (preferred) or `master`.
-- Changes **MUST** ONLY be merged to this default branch if they are ready to deploy.
-- [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow) **SHOULD** be used.
-- This default branch **SHOULD** be the only long-lived branch in the repository.
-- Each change **SHOULD** be developed on its own "feature" branch (though see below for an extended set of short-lived branch types). These branches **MUST** be short-lived, ideally hours or days, at most a couple of weeks.
-- Branch names **SHOULD** include a prefix that indicates the nature of the change, as follows:
-  - `feature/`: functional changes that deliver user or business value, including documentation changes. **SHOULD** be kept up to date with `main` HEAD.
-  - `bugfix/`: changes that fix a bug. **SHOULD** be kept up to date with `main` HEAD.
-  - `spike/`: experimental changes that **SHOULD NOT** be merged to `main`.
-  - `hotfix/`: emergency changes to fix a problem in a version of the software deployed in production. Typically created from a [release tag](#tags).
+All source code **MUST** be stored in one of the following:
 
-## Tags
+- the `UKHSA-Internal` [GitHub organisation][1]
+- the `ukhsa-collaboration` [GitHub organisation][2]
+- the internal GitLab server (see [Git hosting decision tree][3])
 
-- When changes are deployed to Production, a tag **SHOULD** be added to the deployed commit. If the deployed component is versioned (e.g. using semantic versioning) the tag **SHOULD** indicate the version.
+Each repository **MUST** include:
 
-## GitHub pull requests:
+- a `README.md` that explains the purpose of the repository
+- a `LICENCE` file if the repository is public
 
-- _Allow merge commits_ **MAY** be enabled.
-- _Allow squash merging_ **SHOULD** be enabled.
-- _Allow rebase merging_ **MAY** be enabled.
-- _Allow auto-merge_ **SHOULD** be enabled.
-- _Automatically delete head branches_ **SHOULD** be enabled.
+Each repository **MAY** include:
 
-## GitHub branch protections
+- a `CONTRIBUTING.md` file to provide contribution guidance
 
-The following applies to the default `main`/`master` branch. The aim is to strongly protect this branch and enforce the associated quality processes. Either a new style Ruleset (preferred) or an old style branch protection rule **MUST** be configured for this default branch.
+The default branch **MUST** be named `main` (preferred) or `master`.
 
-### (New style) Ruleset --- preferred
+### Commit practices
 
-- There **MUST NOT** be any roles, teams configured in the _bypass list_.
-- _Restrict deletions_ **MUST** be enabled.
-- _Require signed commits_ **SHOULD** be enabled.
-- _Require a pull request before merging_ **MUST** be enabled.
-- _Require status checks to pass_ **MUST** be enabled.
-- _Block force pushes_ **MUST** be enabled.
+Commits **MUST** be:
 
-### (Old style) Branch protection rule
+- small and focused
+- clearly described
+- linked to a work item (e.g. Jira ID)
 
-- _Require a pull request before merging_ **MUST** be enabled.
-- _Require approvals_ **MUST** be enabled with at least one approval required.
-- _Dismiss stale pull request approvals when new commits are pushed_ **MUST** be enabled.
-- _Require review from Code Owners_ **MAY** be enabled when required.
-- _Allow specified actors to bypass required pull requests_ **MUST NOT** be enabled.
-- _Require approval of the most recent reviewable push_ **MUST** be enabled.
-- _Require status checks to pass before merging_ **MUST** be enabled.
-- _Require branches to be up to date before merging_ **MUST** be enabled.
-- _Require conversation resolution before merging_ **MUST** be enabled.
-- _Require signed commits_ **SHOULD** be enabled.
-- _Do not allow bypassing the above settings_ **MUST** be enabled.
-- _Allow force pushes_ **MUST NOT** be enabled.
-- _Allow deletions_ **MUST NOT** be enabled.
+Commit messages **MAY** follow the [Conventional Commits][4] format.
+
+All commits **SHOULD** be [signed][5] to verify authorship and integrity. Signed commits help ensure that code changes come from trusted contributors and have not been tampered with.
+
+### Branching strategy
+
+Teams **SHOULD** follow a GitHub Flow-style branching model.
+
+The default branch **SHOULD** be the only long-lived branch. Feature branches **MUST** be short-lived — ideally hours or days, and no more than two weeks.
+
+Branch names **SHOULD** use a prefix to indicate purpose:
+
+- `feature/` — functional changes
+- `bugfix/` — defect fixes
+- `spike/` — experimental work (not merged)
+- `hotfix/` — urgent fixes to production
+
+### Tags and releases
+
+When deploying to production, a Git tag **SHOULD** be added to the deployed commit.
+
+If versioning is used, tags **SHOULD** follow [Semantic Versioning][6].
+
+### Pull requests and merge process
+
+All changes **MUST** be merged via a pull request (GitHub) or merge request (GitLab). These **MUST**:
+
+- be peer reviewed
+- pass all required checks before merging
+
+Teams **SHOULD** enable:
+
+- automatic deletion of merged branches
+
+Teams **MAY** enable:
+
+- auto-merge
+- rebase merging
+- squash merging
+
+### Branch protection
+
+Teams **MUST** configure protection for the default branch to prevent accidental or unauthorised changes. This **MUST** include:
+
+- requiring pull or merge requests before merging
+- requiring status checks to pass
+- blocking force pushes and deletions
+
+Platform-specific configuration (e.g. GitHub rulesets) is described in the [branch protection appendix][7].
+
+---
+
+## Measurement
+
+Use these indicators to assess how well source control practices are being followed:
+
+| ID   | Indicator                    | GREEN                                        | AMBER                            | RED                              |
+| ---- | ---------------------------- | -------------------------------------------- | -------------------------------- | -------------------------------- |
+| SC-1 | Branch protection configured | All required settings enforced               | Some settings missing            | No protection in place           |
+| SC-2 | Commit hygiene               | Small, signed, well-described commits        | Inconsistent practices           | Large or unclear commits         |
+| SC-3 | Pull request process         | All changes via PR/MR with review and checks | Some bypasses or missing reviews | Direct commits to main           |
+| SC-4 | Branching strategy           | Short-lived branches with clear naming       | Mixed practices                  | Long-lived or unmanaged branches |
+
+---
+
+## References
+
+- [Branch protection appendix][7]
+- [Conventional commits][4]
+- [Git hosting decision tree][3]
+- [GitHub commit signature verification][5]
+- [Semantic versioning][6]
+
+[1]: https://github.com/UKHSA-Internal
+[2]: https://github.com/ukhsa-collaboration
+[3]: https://ukhsa.atlassian.net/wiki/spaces/IDT/pages/164926907/UKHSA+Git+Hosting+-+Policy+Documentation#UKHSAGitHosting-PolicyDocumentation-GitHostingDecisionTree
+[4]: https://www.conventionalcommits.org
+[5]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
+[6]: https://semver.org
+[7]: ../dev-standards/appendix/branch-protection-rules.md
