@@ -1,5 +1,6 @@
 name: Publish Guidelines
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'docs/**'
@@ -11,7 +12,7 @@ on:
 jobs:
   build-documentation:
     name: Build Documentation
-
+    if: github.ref == 'refs/heads/main'
     # Grant GITHUB_TOKEN the permissions required to make get git provenance when building docs
     permissions:
       contents: read    # to read git committers
