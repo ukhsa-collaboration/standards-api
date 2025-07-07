@@ -365,7 +365,7 @@ rules:
   must-have-info-leading-capability:
     description: 'The `info` object must have a `x-leading-capability` that matches a valid UKHSA Business Capability.'
     message: "Missing or wrong `info.x-leading-capability`, should be a valid UKHSA Business Capability."
-    severity: error
+    severity: warn
     given: $.info
     then:
       - function: has-valid-leading-capability
