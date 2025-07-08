@@ -15,17 +15,6 @@ info:
   x-contains-sensitive-data: true
 ```
 
-## Invalid Example
-
-```yaml
-info:
-  title: Clinical Records API
-  version: 1.2.0
-  # Missing x-contains-sensitive-data
-```
-
 ## Guidance
 
 Use `true` if any operations in the API may expose or accept sensitive data. Otherwise, set it explicitly to `false`.
-
-[Security and Privacy Metadata](../../api-design-guidelines/api-design.md#security-and-privacy-metadata)
