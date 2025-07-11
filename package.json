@@ -41,6 +41,7 @@
     "remark-preset-lint-recommended": "^7.0.1",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.9.2",
     "unist-util-visit": "^5.0.0"
   }

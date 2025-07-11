@@ -1,0 +1,10 @@
+extends: []
+rules:
+  should-have-info-x-contains-sensitive-data:
+    description: Info object must include `x-contains-sensitive-data`.
+    message: '`info.x-contains-sensitive-data` must be present and truthy.'
+    severity: error
+    given: $.info
+    then:
+      field: x-contains-sensitive-data
+      function: truthy
