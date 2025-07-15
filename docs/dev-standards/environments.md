@@ -1,212 +1,124 @@
 # Environments
 
-This page provides guidance and policy regarding environments such as development, QA, and production, including the quality assurance activities and types of data appropriate to each. See also [SDLC](sdlc.md).
+## Introduction
 
-## Overview
+Environments are isolated, purpose-specific spaces used to build, test, and operate software throughout the software delivery lifecycle. They help teams manage risk, validate changes, and ensure that systems are secure, reliable, and compliant before reaching users.
 
-Changes are developed in a [local development environment](#dev-environment) and committed to a feature branch. When the feature is complete, a Pull Request (PR) is created.
+This guidance defines the environments we use, the data allowed in each, the required quality checks, and the responsibilities for managing them. It supports consistent, auditable delivery practices and aligns with security and governance expectations.
 
-```mermaid
-flowchart LR
-    L[Local<br>dev env] -->|commit/<br>push| FB([Feature<br>branch])
-    click L "#local-environment"
-    FB -->|create| PR([Pull<br>request])
-```
+## Guidance
 
-The PR triggers the [CI build](#ci-environment). Peer approval **MUST** be given and the CI build **MUST** pass for code to be merged to `main`.
+### Environment principles
 
-```mermaid
-flowchart LR
-    PR([Pull<br>request]) -->|trigger| CI([CI]) -->|build in| CIE[CI env]
-    click CIE "#ci-environment"
-    CI -.->|"(optional)<br>deploy"| PRE[Pull Request<br>environment] --- A@{ shape: comment, label: "Ephemeral<br>environment<br>for each PR" }
-    click PRE "#pull-request-environment"
-    PR -->|approval| Me([Merge])
-    CI -->|pass| Me
-    Me -->|commit/<br>push| M([main])
-```
+To ensure consistency and control across delivery teams, environments must be defined and managed according to a set of shared principles. These principles support secure-by-design practices and enable traceability, reproducibility, and compliance.
 
-Once changes are merged to `main`, a build is performed and changes are deployment to the QA environment. Changes are progressed through environments once quality checks have passed in each.
+Teams **MUST**:
 
-```mermaid
-flowchart LR
-    M([main]) -->|deploy| Dev[Dev<br>env]
-    Dev -->|deploy| QA[QA<br>env]
-    click Dev "#dev-environment"
-    QA -->|deploy| PP[Preprod<br>environment]
-    click QA "#qa-environment"
-    PP -->|deploy| Pr[Production<br>environment]
-    click PP "#preprod-environment"
-    Pr -->|deploy| Tr[Training<br>environment]
-    click Pr "#production-environment"
-    click Tr "#training-environment"
-```
+- define all environments in code using Infrastructure as Code (IaC)
+- use only approved data types in each environment
+- apply the required quality checks before promoting changes
+- ensure environments are reproducible and consistent
+- document promotion and deployment processes
+- define responsibilities for testing, validation, and deployment
 
-## DORA metrics
+### Environment sizing
 
-The DORA metrics are an important tool in measuring and optimising the fast and safe flow of value from code commit to production. See [DORA metrics](dora.md).
+Environment sizing helps teams choose the right scale for the right purpose. Lightweight environments are fast and cost-effective, while full-scale environments replicate production conditions for high-assurance testing.
 
-## Environments
+- **Lightweight**: Fast to provision, low-cost, not production-scale. Used for development, testing, and training.
+- **Full-scale**: Mirrors production scale and configuration. Used for staging and live operation.
 
-### Terminology
+### Environment types
 
-#### Size
+Each environment has a defined purpose, size, and data classification. The table below summarises the key characteristics:
 
-- **Small**: smaller than production scale.
-- **Large**: production scale.
+| Environment            | Size        | Data allowed            | Purpose                     | Who uses it              |
+| ---------------------- | ----------- | ----------------------- | --------------------------- | ------------------------ |
+| Local development      | Lightweight | Synthetic only          | Feature development         | Engineers                |
+| Continuous integration | Lightweight | Synthetic only          | Automated validation        | CI/CD pipeline           |
+| Pull request           | Lightweight | Synthetic only          | Branch-specific testing     | Engineers, testers       |
+| Development            | Lightweight | Synthetic only          | Integrated testing          | Engineers, testers       |
+| Quality assurance      | Lightweight | Synthetic only          | Formal testing              | QA, product owners       |
+| Pre-production         | Full-scale  | Synthetic or anonymised | Final staging               | QA, security, operations |
+| Production             | Full-scale  | Live (including PII)    | Live service                | Users, operations        |
+| Training               | Lightweight | Synthetic only          | Training and demonstrations | Trainers, stakeholders   |
 
-#### Quality checks
+#### Local development
 
-The listed checks **MUST** or **SHOULD** be run and pass before changes are promoted to the next environment, as indicated.
+Local development environments are used by individual engineers to build and test features before sharing them with the team. These environments are fast, isolated, and ideal for early validation.
 
-#### Data
+- **MUST** use only synthetic test data
+- **MUST** run unit tests before committing code
+- **MUST** perform exploratory testing
+- **SHOULD** run linting, static analysis and dependency checks
 
-- **Test data only**: This **SHOULD** be synthetic data, created with scripts. As an alternative, this COULD be anonymised live data but this requires care to ensure GDPR compliance. Test data **MUST NOT** contain [Personal Information (PI)](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/personal-information-what-is-it/what-is-personal-information-a-guide/).
-- **Live**: Live data, possibly including PI.
+#### Continuous integration (CI)
 
-### All environments
+CI environments are ephemeral and automatically provisioned to validate changes on every pull request. They help catch issues early and enforce baseline quality standards.
 
-All environments **MUST** be defined in code so that they can be created/re-created and brought to a known state automatically.
+- **MUST** run on every pull request
+- **MUST** include unit tests, linting, static analysis and dependency checks
+- **MUST** block merge if any required checks fail
+- **SHOULD** include automated accessibility testing
 
-### Local environment
+#### Pull request (PR)
 
-**Description**:
+PR environments are optional, short-lived environments used to test specific branches before merging. They support exploratory testing and stakeholder review.
 
-- Environment used for local development of features.
-- Typically runs on a developer's personal machine or cloud-hosted development environment.
-- Every developer **MUST** use their own local development environment and perform at a minimum the quality checks indicated as **MUST** below.
-- Components other than that under development **MAY** be stubbed or mocked.
+- **MUST** be automatically destroyed after the PR is merged or closed
+- **MUST** support exploratory testing by a tester or product owner
 
-**Size**: Small
+#### Development
 
-**Quality checks**
+The development environment is shared by the team and used for integrated testing after code is merged to `main`. It helps validate that components work together as expected.
 
-1. Exploratory testing by developer **MUST** be done to perform basic validation of changes.
-1. Unit tests **MUST** be run and pass.
-1. Linting **SHOULD** be run and pass.
-1. [Static code analysis](static-analysis.md) **SHOULD** be run and pass.
-1. Dependency checks **SHOULD** be run and pass.
+- **MUST** deploy all team-owned components
+- **MUST** support exploratory testing if no PR environment exists
+- **SHOULD** stub or mock external dependencies
 
-**Data**: Test data only
+#### Quality assurance (QA)
 
-**What next**: When feature is complete and testing all passes, create a Pull Request.
+QA environments are stable and used for formal testing, including regression and user acceptance testing. They provide a controlled space for validating system behaviour.
 
-### CI environment
+- **MUST** be deployed manually
+- **MUST** run full system regression tests
+- **MUST** deploy all team-owned components
+- **SHOULD** include user acceptance testing (UAT)
+- **SHOULD** stub or mock external dependencies
 
-**Description**:
+#### Pre-production
 
-- All changes **MUST** be validated in a Continuous Integration (CI) environment before merging to `main`.
-- This is an environment within the CI system, and is typically ephemeral (using containers) or hosted on dedicated VMs.
+Pre-production environments replicate production scale and configuration. They are used for final staging, performance testing, and security validation before go-live.
 
-**Size**: Small
+- **MUST** mirror production configuration
+- **MUST** include all integrations
+- **MUST** run functional sanity checks
+- **MUST** perform penetration and performance testing at agreed intervals
+- **SHOULD** use non-production instances of external services
 
-**Quality checks**
+#### Production
 
-1. Unit tests **MUST** be run and pass.
-1. Linting **MUST** be run and pass.
-1. [Static code analysis](static-analysis.md) **MUST** be run and pass.
-1. Dependency checks **MUST** be run and pass.
-1. Automated accessibility testing **SHOULD** be run and pass.
+The production environment serves real users and handles live data. It must be fully monitored, resilient, and secure.
 
-**Data**: Test data only
+- **MUST** include all production components
+- **MUST** run smoke tests after deployment
+- **MUST** trigger alerts on failure
 
-**What next**: When all checks pass and approval is granted then automatically deploy to [Dev](#dev-environment).
+#### Training
 
-### Pull Request environment
+Training environments are used for demonstrations and onboarding. They replicate production configuration but use only synthetic data.
 
-**Description**:
+- **MUST** match production configuration
+- **MUST** use only test data
 
-- This environment is optional.
-- If present, this is an ephemeral environment to which the changes on a single branch are deployed when an associated PR is created.
-- This environment will usually be cloud hosted and **MUST** be automatically destroyed when the PR is merged or cancelled.
+## Measurement
 
-**Size**: Small
+Measurement indicators help teams assess how well environments are defined, managed, and used. These indicators support continuous improvement and audit readiness.
 
-**Quality checks**: Exploratory testing **MUST** be performed to provide validation of the changes. This is usually done by a specialist tester or Product Owner.
-
-**Data**: Test data only
-
-**What next**: When testing is completed successfully, approve the PR.
-
-### Dev environment
-
-**Description**:
-
-- Typically long-lived environment which is generally unstable because every merge to `main` will trigger a deployment to this environment.
-- In contrast to the [Local](#local-environment) environment, all components that the team is responsible for **MUST** be deployed in this environment, though external dependencies **MAY** be stubbed or mocked.
-
-**Size**: Small
-
-**Quality checks**: If there is no Pull Request environment, then exploratory testing **MUST** be performed to provide validation of the changes. This is usually done by a specialist tester or Product Owner.
-
-**Data**: Test data only
-
-**What next**: Manually trigger deployment to [QA](#qa-environment), timed to avoid disrupting quality assurance activities being performed in that environment.
-
-### QA environment
-
-**Description**:
-
-- Typically long-lived environment which is generally stable because changes are deployed to this environment in a controlled manner to avoid disrupting tests while they are being performed.
-- Deployments to this environment **MUST** be triggered by a manual approval step.
-- Like the [Dev](#dev-environment) environment, all components that the team is responsible for **MUST** be deployed in this environment, though external dependencies **MAY** be stubbed or mocked.
-
-**Size**: Small
-
-**Quality checks**
-
-1. User acceptance testing (UAT) **SHOULD** be performed and pass.
-1. Full system regression tests **MUST** be run and pass. Regression tests **SHOULD** be fully automated.
-
-**Data**: Test data only
-
-**What next**: Manually trigger deployment to [Preprod](#preprod-environment).
-
-### Preprod environment
-
-**Description**:
-
-- Typically long-lived environment which is generally stable because changes are deployed to this environment in a controlled manner to avoid disrupting tests while they are being performed.
-- Deployments to this environment **MUST** be triggered by a manual approval step.
-- Unlike earlier environments, all components that the team is responsible for **MUST** be deployed in this environment, and integrations with external dependencies **MUST** be in place.
-- Non-production instances of external dependencies **SHOULD** be used where practical.
-
-**Size**: Large (Replica of Production)
-
-**Quality checks**
-
-1. Functional sanity testing **MUST** be done and pass for every deployment.
-1. Performance and load testing **SHOULD** be done and pass (not on every deployment but at some agreed maximum interval).
-1. Penetration testing **MUST** be done and pass (not on every deployment but at some agreed maximum interval).
-
-**Data**: Test data only
-
-**What next**: If all in-scope checks pass, automatically trigger deployment to [Production](#production-environment).
-
-### Production environment
-
-**Description**:
-
-- Stable environment consisting of all production components.
-
-**Size**: Large
-
-**Quality checks**: Functional smoke tests **MUST** be done and pass. Failure **MUST** trigger alerts and **MAY** trigger automatic rollback.
-
-**Data**: Live
-
-**What next**: Automatically trigger deployment to [Training](#training-environment).
-
-### Training environment
-
-**Description**:
-
-- Generally stable environment used for training requirements.
-- Consists of all components deployed to production.
-- This environment is optional.
-
-**Size**: Small
-
-**Quality checks**: None
-
-**Data**: Test data only
+| ID    | Indicator                    | GREEN                        | AMBER                         | RED                    |
+| ----- | ---------------------------- | ---------------------------- | ----------------------------- | ---------------------- |
+| ENV-1 | Environments defined in code | All environments IaC-managed | Some environments IaC-managed | Not reproducible       |
+| ENV-2 | Responsibilities defined     | Clear ownership for each     | Partial or informal ownership | No ownership defined   |
+| ENV-3 | Data usage                   | Correct data type in each    | Occasional misuse             | Live data in non-prod  |
+| ENV-4 | Quality checks applied       | All checks run and pass      | Some checks missing           | No checks applied      |
+| ENV-5 | Promotion process            | Manual or gated promotion    | Ad hoc promotion              | Uncontrolled promotion |
