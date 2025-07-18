@@ -120,3 +120,31 @@ jobs:
         if: always()
         with:
           files: coverage/junit.xml
+
+  test-spectral-rules:
+    name: Test Spectral Rules
+    needs: changes
+    if: ${{ needs.changes.outputs.run_ci == 'true' }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      actions: write
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Spectral rule tests
+        run: npm run test:rules -- --coverage
