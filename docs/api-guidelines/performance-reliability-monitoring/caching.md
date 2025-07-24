@@ -1,5 +1,7 @@
 # Caching
 
+## Overview
+
 Caching plays a crucial role in API performance, reducing latency and server load while improving response times.
 
 APIs **SHOULD** leverage appropriate caching mechanisms.
@@ -184,94 +186,93 @@ The diagrams below illustrates an example of multi-layered caching that provides
 > [!NOTE]
 > This is a generalised example and some of these layers might not be applicable for your application.
 
-=== "Flowchart Diagram"
+### Flowchart Diagram
 
-    ``` mermaid
-    flowchart TD
-        Client[Client] --> BrowserCache[Browser Cache]
-        
-        BrowserCache -->|Cache Miss| CDN[Content Delivery Network]
-        BrowserCache -->|Cache Hit| Client
-        
-        CDN -->|Cache Miss| APIGateway[API Gateway Cache]
-        CDN -->|Cache Hit| BrowserCache
-        
-        APIGateway -->|Cache Miss| AppServer[Application Server]
-        APIGateway -->|Cache Hit| CDN
-        
-        AppServer --> AppCache[Application Cache<br>Redis/Memcached]
-        
-        AppCache -->|Cache Miss| DBCache[Database Cache<br>Query Cache]
-        AppCache -->|Cache Hit| AppServer
-        
-        DBCache -->|Cache Miss| Database[(Database)]
-        DBCache -->|Cache Hit| AppServer
-        
-        Database --> DBCache
-        
-        %% Return paths for storing in caches
-        Database -.->|Store| DBCache
-        DBCache -.->|Store| AppCache
-        AppCache -.->|Store| APIGateway
-        APIGateway -.->|Store| CDN
-        CDN -.->|Store| BrowserCache
-    ```
+```mermaid
+flowchart TD
+    Client[Client] --> BrowserCache[Browser Cache]
+    
+    BrowserCache -->|Cache Miss| CDN[Content Delivery Network]
+    BrowserCache -->|Cache Hit| Client
+    
+    CDN -->|Cache Miss| APIGateway[API Gateway Cache]
+    CDN -->|Cache Hit| BrowserCache
+    
+    APIGateway -->|Cache Miss| AppServer[Application Server]
+    APIGateway -->|Cache Hit| CDN
+    
+    AppServer --> AppCache[Application Cache<br>Redis/Memcached]
+    
+    AppCache -->|Cache Miss| DBCache[Database Cache<br>Query Cache]
+    AppCache -->|Cache Hit| AppServer
+    
+    DBCache -->|Cache Miss| Database[(Database)]
+    DBCache -->|Cache Hit| AppServer
+    
+    Database --> DBCache
+    
+    %% Return paths for storing in caches
+    Database -.->|Store| DBCache
+    DBCache -.->|Store| AppCache
+    AppCache -.->|Store| APIGateway
+    APIGateway -.->|Store| CDN
+    CDN -.->|Store| BrowserCache
+```
 
-=== "Sequence Diagram"
+### Sequence Diagram
 
-    ``` mermaid
-    sequenceDiagram
-        participant Client
-        participant BrowserCache as Browser Cache
-        participant CDN as Content Delivery Network
-        participant APIGateway as API Gateway
-        participant AppCache as Application Cache<br>Redis/Memcached
-        participant AppServer as Application Server
-        participant DBCache as Database Cache<br>Query Cache
-        participant Database
-
-        Client->>BrowserCache: Request data
-        alt Browser Cache Hit
+```mermaid
+sequenceDiagram
+    participant Client
+    participant BrowserCache as Browser Cache
+    participant CDN as Content Delivery Network
+    participant APIGateway as API Gateway
+    participant AppCache as Application Cache<br>Redis/Memcached
+    participant AppServer as Application Server
+    participant DBCache as Database Cache<br>Query Cache
+    participant Database
+    Client->>BrowserCache: Request data
+    alt Browser Cache Hit
+        BrowserCache-->>Client: Return cached data
+    else Browser Cache Miss
+        BrowserCache->>CDN: Forward request
+        alt CDN Cache Hit
+            CDN-->>BrowserCache: Return cached data
             BrowserCache-->>Client: Return cached data
-        else Browser Cache Miss
-            BrowserCache->>CDN: Forward request
-            alt CDN Cache Hit
-                CDN-->>BrowserCache: Return cached data
-                BrowserCache-->>Client: Return cached data
-            else CDN Cache Miss
-                CDN->>APIGateway: Forward request
-                alt API Gateway Cache Hit
-                    APIGateway-->>CDN: Return cached data
-                    CDN-->>BrowserCache: Return & store cached data
-                    BrowserCache-->>Client: Return & store cached data
-                else API Gateway Cache Miss
-                    APIGateway->>AppServer: Forward request
-                    AppServer->>AppCache: Check app cache
-                    alt Application Cache Hit
-                        AppCache-->>AppServer: Return cached data
-                        AppServer-->>APIGateway: Return response
-                        APIGateway-->>CDN: Return & store response
-                        CDN-->>BrowserCache: Return & store response
-                        BrowserCache-->>Client: Return & store response
-                    else Application Cache Miss
-                        AppServer->>DBCache: Query data
-                        alt DB Cache Hit
-                            DBCache-->>AppServer: Return cached data
-                        else DB Cache Miss
-                            DBCache->>Database: Query database
-                            Database-->>DBCache: Return & cache results
-                            DBCache-->>AppServer: Return results
-                        end
-                        AppServer-->>AppCache: Store in app cache
-                        AppServer-->>APIGateway: Return response
-                        APIGateway-->>CDN: Store & return response
-                        CDN-->>BrowserCache: Store & return response
-                        BrowserCache-->>Client: Store & return response
+        else CDN Cache Miss
+            CDN->>APIGateway: Forward request
+            alt API Gateway Cache Hit
+                APIGateway-->>CDN: Return cached data
+                CDN-->>BrowserCache: Return & store cached data
+                BrowserCache-->>Client: Return & store cached data
+            else API Gateway Cache Miss
+                APIGateway->>AppServer: Forward request
+                AppServer->>AppCache: Check app cache
+                alt Application Cache Hit
+                    AppCache-->>AppServer: Return cached data
+                    AppServer-->>APIGateway: Return response
+                    APIGateway-->>CDN: Return & store response
+                    CDN-->>BrowserCache: Return & store response
+                    BrowserCache-->>Client: Return & store response
+                else Application Cache Miss
+                    AppServer->>DBCache: Query data
+                    alt DB Cache Hit
+                        DBCache-->>AppServer: Return cached data
+                    else DB Cache Miss
+                        DBCache->>Database: Query database
+                        Database-->>DBCache: Return & cache results
+                        DBCache-->>AppServer: Return results
                     end
+                    AppServer-->>AppCache: Store in app cache
+                    AppServer-->>APIGateway: Return response
+                    APIGateway-->>CDN: Store & return response
+                    CDN-->>BrowserCache: Store & return response
+                    BrowserCache-->>Client: Store & return response
                 end
             end
         end
-    ```
+    end
+```
 
 ### Benefits of Each Caching Layer
 

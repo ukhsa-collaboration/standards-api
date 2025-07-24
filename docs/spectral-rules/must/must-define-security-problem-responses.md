@@ -1,4 +1,4 @@
-# MUST define 401 and 403 for secured operations
+# **MUST** define 401 and 403 for secured operations
 
 Operations that define their **own non-empty `security` block**  
 **MUST** define responses for:

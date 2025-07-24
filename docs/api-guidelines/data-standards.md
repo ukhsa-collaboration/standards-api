@@ -1,3 +1,6 @@
+---
+order: 12
+---
 # Data Standards
 
 Data standards provide a common language for representing information, enabling different systems to understand and process data without ambiguity.

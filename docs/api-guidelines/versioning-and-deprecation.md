@@ -1,3 +1,6 @@
+---
+order: 7
+---
 # Versioning and Deprecation
 
 ## URI versioning
@@ -10,19 +13,13 @@ The version number **MUST** be placed consistently at the base of the api path.
 
 Version numbers **MUST NOT** be passed as parameters.
 
-Use:
-
-> [!TIP]
->
+> [!TIP] Use
 > ``` text
 > /product/v1/users
 > /product/v2/users
 > ```
 
-Avoid:
-
-> [!CAUTION]
->
+> [!CAUTION] Avoid
 > ``` text
 > /product/users/v2
 > /product/users?v=1
@@ -48,7 +45,7 @@ The semantic version represents the build version of the application.
 
 Use:
 
-> [!TIP]
+> [!TIP] Use
 >
 > ``` text
 > /product/v1/users
@@ -56,7 +53,7 @@ Use:
 
 Avoid:
 
-> [!CAUTION]
+> [!CAUTION] Avoid
 >
 > ``` text
 > /product/v1.0.1/users

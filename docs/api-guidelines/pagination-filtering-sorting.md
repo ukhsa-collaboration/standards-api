@@ -1,3 +1,6 @@
+---
+order: 8
+---
 # Pagination, Filtering & Sorting
 
 ## Pagination

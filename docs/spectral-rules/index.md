@@ -1,4 +1,8 @@
-# UKHSA Spectral Rules
+---
+eleventyNavigation:
+  parent: api-design-guidelines
+---
+# Spectral Rules
 
 ## Overview
 

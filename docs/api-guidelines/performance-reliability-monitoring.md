@@ -1,4 +1,9 @@
-# Performance, Reliability, and Monitoring
+---
+order: 10
+eleventyNavigation:
+  key: performance-reliability-monitoring
+---
+# Performance, Reliability and Monitoring
 
 ## Overview
 

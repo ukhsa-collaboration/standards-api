@@ -1,3 +1,6 @@
+---
+order: 2
+---
 # Organisational Data Models
 
 APIs **SHOULD** be built and categorised according to the business capabilities they support.

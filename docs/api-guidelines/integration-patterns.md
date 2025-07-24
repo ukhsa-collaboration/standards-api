@@ -1,3 +1,6 @@
+---
+order: 14
+---
 # Integration Patterns
 
 **SHOULD** use standard API integration patterns.

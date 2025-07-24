@@ -1,5 +1,7 @@
 # Monitoring & Observability
 
+## Overview
+
 Effective monitoring and observability **MUST** be integrated into all APIs to ensure performance, reliability, continuous improvement, and meet any Service Level Agreements (SLAs) and compliance requirements. This section provides guidance on best practices, including the use of [OpenTelemetry](https://opentelemetry.io/) and [key metrics](#recommended-metrics) to track.
 
 ## Monitoring vs. Observability

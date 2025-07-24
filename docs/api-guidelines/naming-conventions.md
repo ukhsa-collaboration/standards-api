@@ -1,3 +1,6 @@
+---
+order: 4
+---
 # Naming Conventions
 
 ## URI Structure
@@ -47,16 +50,14 @@ https://azgw.api.ukhsa.gov.uk/prevent/vaccine-management/v1/..
 
 APIs **MUST** use **lowercase plural nouns** to represent collections (e.g., /orders, /customers, /products) not verbs.
 
-Use:
-> [!TIP]
+> [!TIP] Use
 >
 > ``` text
 > /product/v1/orders
 > /product/v1/orders/{orderId}/cancel
 > ```
 
-Avoid:
-> [!CAUTION]
+> [!CAUTION] Avoid
 >
 > ``` text
 > /product/v1/order
@@ -67,15 +68,13 @@ Avoid:
 
 APIs **MUST** use **kebab-case** for path segments.
 
-Use:
-> [!TIP]
+> [!TIP] Use
 >
 > ``` text
 > /product/v1/user-accounts
 > ```
 
-Avoid:
-> [!CAUTION]
+> [!CAUTION] Avoid
 >
 > ``` text
 > /product/v1/userAccounts
@@ -86,15 +85,13 @@ Avoid:
 
 APIs **MUST** use lower camel case for query parameter names.
 
-Use:
-> [!TIP]
+> [!TIP] Use
 >
 > ``` text
 > /product/v1/users?maxResults=10&startIndex=20
 > ```
 
-Not:
-> [!CAUTION]
+> [!CAUTION] Not
 >
 > ``` text
 > /product/v1/users?max_results=10&start_index=20
@@ -106,7 +103,7 @@ APIs **MUST** use consistent names for query parameters having the same function
 
 Example:
 
-> [!CAUTION]
+> [!CAUTION] Avoid
 >
 > ``` text
 > /product/v1/orders?limit=10&offset=20
@@ -119,8 +116,7 @@ APIs **MUST** use lower camel case for properties.
 
 Example:
 
-Use:
-> [!TIP]
+> [!TIP] Use
 >
 > ``` json
 > {
@@ -129,8 +125,7 @@ Use:
 > }
 > ```
 
-Not:
-> [!CAUTION]
+> [!CAUTION] Not
 >
 > ``` json
 > {
@@ -145,7 +140,7 @@ Use consistent terminology across the API and in documentation. For instance, if
 
 Example query string:
 
-> [!CAUTION]
+> [!CAUTION] Avoid
 >
 > ``` text
 > /product/v1/orders?customerId=123
@@ -153,7 +148,7 @@ Example query string:
 > ```
 
 Example request/response model:
-> [!CAUTION]
+> [!CAUTION] Avoid
 >
 > ``` json
 > # order

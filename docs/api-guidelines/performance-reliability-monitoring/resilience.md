@@ -1,5 +1,7 @@
 # Resilience Patterns
 
+## Overview
+
 Resilience patterns are essential for building robust APIs that can gracefully handle unexpected failures or delays in dependent systems. This section provides guidelines for implementing retries, timeouts, circuit breakers, bulkheads, and fallbacks in API design. These patterns **SHOULD** be applied where appropriate to ensure reliability, scalability, and user experience.
 
 ## Retries
@@ -156,83 +158,84 @@ Circuit breakers protect systems from cascading failures by halting requests to 
 - When a circuit breaker is open, the API **MUST** provide a meaningful [error response](./error-handling.md) or [fallback mechanism](#fallbacks).
 - Circuit breakers **MUST NOT** be used for internal components that are highly reliable and tightly coupled, as they introduce unnecessary complexity.
 
-=== "Flowchart Diagram"
+### Flowchart Diagram
 
-    ``` mermaid
-    flowchart TD
-        CLOSED((CLOSED)) -->|Failure threshold exceeded| OPEN((OPEN))
-        OPEN -->|Delay| HALF((HALF OPEN))
-        HALF -->|Success| CLOSED
-        HALF -->|Failure| OPEN
-        
-        classDef closed fill:#59b259,stroke:#004d00,color:#fff
-        classDef open fill:#ff6666,stroke:#800000,color:#fff
-        classDef half fill:#ffcc00,stroke:#cc8800,color:#000
-        
-        class CLOSED closed
-        class OPEN open
-        class HALF half
-    ```
-=== "Sequence Diagram"
+``` mermaid
+flowchart TD
+    CLOSED((CLOSED)) -->|Failure threshold exceeded| OPEN((OPEN))
+    OPEN -->|Delay| HALF((HALF OPEN))
+    HALF -->|Success| CLOSED
+    HALF -->|Failure| OPEN
+    
+    classDef closed fill:#59b259,stroke:#004d00,color:#fff
+    classDef open fill:#ff6666,stroke:#800000,color:#fff
+    classDef half fill:#ffcc00,stroke:#cc8800,color:#000
+    
+    class CLOSED closed
+    class OPEN open
+    class HALF half
+```
 
-    ``` mermaid
-    sequenceDiagram
-        participant Client
-        participant API with Circuit Breaker
-        participant Dependency
-        
-        Note over API with Circuit Breaker: Circuit State: CLOSED
-        
-        Client->>API with Circuit Breaker: Request 1
-        activate API with Circuit Breaker
-        API with Circuit Breaker->>Dependency: Forward Request
-        activate Dependency
-        Dependency-->>API with Circuit Breaker: Success Response
-        deactivate Dependency
-        API with Circuit Breaker-->>Client: Response
-        deactivate API with Circuit Breaker
-        
-        Client->>API with Circuit Breaker: Request 2
-        activate API with Circuit Breaker
-        API with Circuit Breaker->>Dependency: Forward Request
-        activate Dependency
-        Dependency--xAPI with Circuit Breaker: Failure
-        deactivate Dependency
-        API with Circuit Breaker-->>Client: Error Response
-        deactivate API with Circuit Breaker
-        
-        Client->>API with Circuit Breaker: Request 3
-        activate API with Circuit Breaker
-        API with Circuit Breaker->>Dependency: Forward Request
-        activate Dependency
-        Dependency--xAPI with Circuit Breaker: Failure
-        deactivate Dependency
-        API with Circuit Breaker-->>Client: Error Response
-        deactivate API with Circuit Breaker
-        
-        Note over API with Circuit Breaker: Failure threshold exceeded
-        Note over API with Circuit Breaker: Circuit State: OPEN
-        
-        Client->>API with Circuit Breaker: Request 4
-        activate API with Circuit Breaker
-        Note over API with Circuit Breaker: Request rejected without calling dependency
-        API with Circuit Breaker-->>Client: Circuit Open Error
-        deactivate API with Circuit Breaker
-        
-        Note over API with Circuit Breaker: After timeout period
-        Note over API with Circuit Breaker: Circuit State: HALF-OPEN
-        
-        Client->>API with Circuit Breaker: Request 5
-        activate API with Circuit Breaker
-        API with Circuit Breaker->>Dependency: Test Request
-        activate Dependency
-        Dependency-->>API with Circuit Breaker: Success Response
-        deactivate Dependency
-        API with Circuit Breaker-->>Client: Response
-        deactivate API with Circuit Breaker
-        
-        Note over API with Circuit Breaker: Circuit State: CLOSED
-    ```
+### Sequence Diagram
+
+``` mermaid
+sequenceDiagram
+    participant Client
+    participant API with Circuit Breaker
+    participant Dependency
+    
+    Note over API with Circuit Breaker: Circuit State: CLOSED
+    
+    Client->>API with Circuit Breaker: Request 1
+    activate API with Circuit Breaker
+    API with Circuit Breaker->>Dependency: Forward Request
+    activate Dependency
+    Dependency-->>API with Circuit Breaker: Success Response
+    deactivate Dependency
+    API with Circuit Breaker-->>Client: Response
+    deactivate API with Circuit Breaker
+    
+    Client->>API with Circuit Breaker: Request 2
+    activate API with Circuit Breaker
+    API with Circuit Breaker->>Dependency: Forward Request
+    activate Dependency
+    Dependency--xAPI with Circuit Breaker: Failure
+    deactivate Dependency
+    API with Circuit Breaker-->>Client: Error Response
+    deactivate API with Circuit Breaker
+    
+    Client->>API with Circuit Breaker: Request 3
+    activate API with Circuit Breaker
+    API with Circuit Breaker->>Dependency: Forward Request
+    activate Dependency
+    Dependency--xAPI with Circuit Breaker: Failure
+    deactivate Dependency
+    API with Circuit Breaker-->>Client: Error Response
+    deactivate API with Circuit Breaker
+    
+    Note over API with Circuit Breaker: Failure threshold exceeded
+    Note over API with Circuit Breaker: Circuit State: OPEN
+    
+    Client->>API with Circuit Breaker: Request 4
+    activate API with Circuit Breaker
+    Note over API with Circuit Breaker: Request rejected without calling dependency
+    API with Circuit Breaker-->>Client: Circuit Open Error
+    deactivate API with Circuit Breaker
+    
+    Note over API with Circuit Breaker: After timeout period
+    Note over API with Circuit Breaker: Circuit State: HALF-OPEN
+    
+    Client->>API with Circuit Breaker: Request 5
+    activate API with Circuit Breaker
+    API with Circuit Breaker->>Dependency: Test Request
+    activate Dependency
+    Dependency-->>API with Circuit Breaker: Success Response
+    deactivate Dependency
+    API with Circuit Breaker-->>Client: Response
+    deactivate API with Circuit Breaker
+    
+    Note over API with Circuit Breaker: Circuit State: CLOSED
+```
 
 ### Example
 

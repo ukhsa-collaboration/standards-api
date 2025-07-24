@@ -1,3 +1,6 @@
+---
+order: 6
+---
 # Error Handling
 
 ## Problem Details
@@ -14,7 +17,7 @@ You **MUST** include all the base Problem Details members: `status`, `title`, `d
 
 ## Required Error Responses
 
-> [!WARNING]
+> [!NOTE] Warning
 > The requirements in this section are **MUST**s as per the guidelines. However, the current Spectral rule severity is set to *warning* rather than *error*, so existing APIs are not forced to implement these changes immediately, as doing so may constitute a breaking change.
 
 Operations in the OpenAPI specification **MUST** include the following standard Problem Details responses:
@@ -99,7 +102,6 @@ components:
 ```
 
 > [!NOTE]
->
 > Refer to [RFC-9547](https://www.rfc-editor.org/rfc/rfc9457.html) standard for additional information.
 
 ## Example Responses
