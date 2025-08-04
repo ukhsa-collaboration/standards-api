@@ -1,5 +1,5 @@
 {
   "sectionKey": "spectral-rules",
   "layout": "sub-navigation",
-  "includeInBreadcrumbs": true
+  "caption": "MUST"
 }

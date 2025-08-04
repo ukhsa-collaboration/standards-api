@@ -1,4 +1,6 @@
 ---
+caption: API Design Guidelines
+includeInBreadcrumbs: true
 eleventyNavigation:
   parent: api-design-guidelines
 order: 1

@@ -1,9 +1,10 @@
 ---
 order: 10
+includeInBreadcrumbs: true
 eleventyNavigation:
   key: performance-reliability-monitoring
 ---
-# Performance, Reliability and Monitoring
+# Performance, Reliability & Monitoring
 
 ## Overview
 
