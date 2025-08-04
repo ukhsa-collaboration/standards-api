@@ -75,8 +75,8 @@ jobs:
 
       - name: Lint example OpenAPI
         run: |
-          spectral --version
-          spectral lint "./example/*.{json,yml,yaml}" -f github-actions
+          npx spectral --version
+          npx spectral lint "./example/*.{json,yml,yaml}" -f github-actions
 
   run-typescript-tests:
     name: Run TypeScript Tests
