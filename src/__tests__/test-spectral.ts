@@ -38,7 +38,7 @@ const showCoverage = process.argv.includes('--coverage');
  * @returns An array of `SpectralResult` representing violations.
  */
 function lint(filePath: string, rulesetPath: string): SpectralResult[] {
-  const command = `spectral lint -f json --quiet -r ${rulesetPath} ${filePath}`;
+  const command = `npx spectral lint -f json --quiet -r ${rulesetPath} ${filePath}`;
   try {
     const output = execSync(command, { encoding: 'utf8' }).trim();
     const jsonStart = output.indexOf('[');

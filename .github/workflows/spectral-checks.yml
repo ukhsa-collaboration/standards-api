@@ -73,9 +73,6 @@ jobs:
       - name: Build ruleset (TS + legacy JS)
         run: npm run build
 
-      - name: Install Spectral
-        run: curl -L https://raw.github.com/stoplightio/spectral/master/scripts/install.sh | sh
-
       - name: Lint example OpenAPI
         run: |
           spectral --version
