@@ -408,6 +408,39 @@ Resolves issue #123"
 
 - Verify that rules produce the expected results for both valid and invalid API definitions.
 
+- Add automated tests for your Spectral rule:
+
+  For each rule (e.g. `should-have-info-x-contains-sensitive-data`), add the following:
+
+  - A ruleset file in:
+
+    ```
+    src/__tests__/rulesets/your-rule-name.yaml
+    ```
+
+  - A test case folder:
+
+    ```
+    src/__tests__/testdata/your-rule-name/
+    ```
+
+    Inside this folder, include:
+
+    - `valid.yaml` — must **not** trigger the rule
+    - `invalid.yaml` — must **trigger** the rule
+
+- Run the rule tests
+
+  ```bash
+  npm run test:rules
+  ```
+
+  For more detailed output (like pass/fail percentages per rule):
+
+  ```bash
+  npm run test:rules -- --coverage
+  ```
+
 - For documentation, serve the site locally (see [Viewing the Guidelines Locally][26])
 
 ## Viewing the Guidelines Locally
