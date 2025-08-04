@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
@@ -38,9 +38,9 @@ const showCoverage = process.argv.includes('--coverage');
  * @returns An array of `SpectralResult` representing violations.
  */
 function lint(filePath: string, rulesetPath: string): SpectralResult[] {
-  const command = `npx spectral lint -f json --quiet -r ${rulesetPath} ${filePath}`;
+  const args = ['spectral', 'lint', '-f', 'json', '--quiet', '-r', rulesetPath, filePath];
   try {
-    const output = execSync(command, { encoding: 'utf8' }).trim();
+    const output = execFileSync('npx', args, { encoding: 'utf8' }).trim();
     const jsonStart = output.indexOf('[');
     const jsonEnd = output.lastIndexOf(']') + 1;
     const jsonClean = output.slice(jsonStart, jsonEnd);
