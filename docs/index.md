@@ -10,7 +10,6 @@ eleventyNavigation:
 ---
 <div class="govuk-grid-row">
   <section class="govuk-grid-column-one-third-from-desktop">
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <h2 class="govuk-heading-m govuk-!-margin-bottom-2">
       <a class="govuk-link govuk-link--no-visited-state" href="./api-guidelines-summary/">
         API Guidance Summary
@@ -21,7 +20,6 @@ eleventyNavigation:
     </p>
   </section>
     <section class="govuk-grid-column-one-third-from-desktop">
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <h2 class="govuk-heading-m govuk-!-margin-bottom-2">
       <a class="govuk-link govuk-link--no-visited-state" href="./api-guidelines/">
         API Design Guidelines
@@ -32,7 +30,6 @@ eleventyNavigation:
     </p>
   </section>
   <section class="govuk-grid-column-one-third-from-desktop">
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <h2 class="govuk-heading-m govuk-!-margin-bottom-2">
       <a class="govuk-link govuk-link--no-visited-state" href="./spectral-rules/">
         Spectral Rules
