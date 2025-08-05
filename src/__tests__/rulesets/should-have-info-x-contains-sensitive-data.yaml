@@ -1,10 +1,16 @@
 extends: []
 rules:
   should-have-info-x-contains-sensitive-data:
-    description: Info object must include `x-contains-sensitive-data`.
-    message: '`info.x-contains-sensitive-data` must be present and truthy.'
-    severity: error
     given: $.info
+    severity: warn
     then:
-      field: x-contains-sensitive-data
-      function: truthy
+      - function: defined
+        field: x-contains-sensitive-data
+      - function: schema
+        field: x-contains-sensitive-data
+        functionOptions:
+          schema:
+            type: boolean
+    recommended: true
+    description: 'The `info` object SHOULD contain `x-contains-sensitive-data` to indicate presence of sensitive data such as PII or PHI.'
+    message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'."
