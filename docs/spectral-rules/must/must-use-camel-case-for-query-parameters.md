@@ -18,4 +18,4 @@ Query parameters **MUST** use [camel-case](https://en.wikipedia.org/wiki/Camel_c
 /product/v1/users?maxResults=10&startIndex=20
 ```
 
-[UKHSA Guidelines Parameter Names](../../api-design-guidelines/naming-conventions.md/#parameter-names)
+[UKHSA Guidelines Parameter Names](../../api-guidelines/naming-conventions.md/#parameter-names)

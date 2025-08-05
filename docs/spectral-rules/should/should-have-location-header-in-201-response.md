@@ -32,4 +32,4 @@ paths:
       ...
 ```
 
-[UKHSA Guidlelines API Design](../../api-design-guidelines/api-design.md#rest-http-response-codes)
+[UKHSA Guidlelines API Design](../../api-guidelines/api-design.md#rest-http-response-codes)

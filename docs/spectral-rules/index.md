@@ -8,7 +8,7 @@ eleventyNavigation:
 
 ## Overview
 
-A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines](../api-design-guidelines/index.md), ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA.
+A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines](../api-guidelines/index.md), ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA.
 
 As well as the rules described herein, the UKHSA ruleset includes the [recommended](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all) built in spectral [OpenAPI Rules](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules) and the [Spectral Documentation Ruleset](https://github.com/stoplightio/spectral-documentation); These are common sense rules that ensure an OpenAPI definition adheres to the [OpenAPI specification](https://swagger.io/specification/), as well as encourage high quality, rich documentation which is especially important for providing the best possible APIM Developer Portal experience.
 

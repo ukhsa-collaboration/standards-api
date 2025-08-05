@@ -22,4 +22,4 @@ salesOrderNumber
 billingAddress
 ```
 
-[UKHSA Guidelines Property Names](../../api-design-guidelines/naming-conventions.md/#property-names)
+[UKHSA Guidelines Property Names](../../api-guidelines/naming-conventions.md/#property-names)

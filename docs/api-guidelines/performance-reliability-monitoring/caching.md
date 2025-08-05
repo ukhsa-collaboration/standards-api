@@ -99,7 +99,7 @@ If your API *really* requires supporting `HTTP caching` , please observe the fol
 
 **MAY** responsibly enable `HTTP caching` explicitly for any operations that require it.
 
-**MUST** document all [cacheable](../api-design-guidelines/api-design.md#http-methods-semantics) `GET`, `HEAD`, and `POST` endpoints by declaring the support of [`Cache-Control`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.2), [`Vary`](https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5), and [`ETag`](https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3) headers in response.
+**MUST** document all [cacheable](../api-design.md#http-methods-semantics) `GET`, `HEAD`, and `POST` endpoints by declaring the support of [`Cache-Control`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.2), [`Vary`](https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5), and [`ETag`](https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3) headers in response.
 
 **MUST NOT** define the [`Expires`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.3) header to prevent redundant and ambiguous definition of cache lifetime.
 

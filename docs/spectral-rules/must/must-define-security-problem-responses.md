@@ -64,4 +64,4 @@ paths:
                   $ref: '#/components/examples/forbidden'
 ```
 
-[UKHSA Guidelines Error Handling](../../api-design-guidelines/error-handling.md#required-error-responses)
+[UKHSA Guidelines Error Handling](../../api-guidelines/error-handling.md#required-error-responses)

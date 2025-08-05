@@ -22,4 +22,4 @@ components:
             tests:write: submit test results
 ```
 
-[UKHSA Guidelines Security](../../api-design-guidelines/security.md#authentication)
+[UKHSA Guidelines Security](../../api-guidelines/security.md#authentication)

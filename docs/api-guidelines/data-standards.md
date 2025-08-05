@@ -102,7 +102,7 @@ As per the [GDS Guidence][gds-guidence] you **SHOULD** design your APIs to follo
    language-independent data interchange format.
 - **GeoJSON** ([RFC7946][geo-json]) is a geospatial data interchange format based on JavaScript Object Notation (JSON).
 
-See [Common Data Types](../api-design-guidelines/common-data-types.md) for additional standards.
+See [Common Data Types](./common-data-types.md) for additional standards.
 
 [fhir]:https://hl7.org/fhir/
 [fhir-restful]:https://hl7.org/fhir/http.html

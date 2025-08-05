@@ -24,4 +24,4 @@ paths:
           $ref: '#/components/responses/UnexpectedError'
 ```
 
-[UKHSA Guidelines Versioning](../../api-design-guidelines/versioning-and-deprecation.md#api-root-endpoint)
+[UKHSA Guidelines Versioning](../../api-guidelines/versioning-and-deprecation.md#api-root-endpoint)

@@ -2,6 +2,7 @@
 order: 10
 includeInBreadcrumbs: true
 eleventyNavigation:
+  parent: api-guidelines
   key: performance-reliability-monitoring
 ---
 # Performance, Reliability & Monitoring
