@@ -1,6 +1,7 @@
 ---
 order: 7
 ---
+
 # Versioning and Deprecation
 
 ## URI versioning
@@ -14,13 +15,15 @@ The version number **MUST** be placed consistently at the base of the api path.
 Version numbers **MUST NOT** be passed as parameters.
 
 > [!TIP] Use
-> ``` text
+>
+> ```text
 > /product/v1/users
 > /product/v2/users
 > ```
 
 > [!CAUTION] Avoid
-> ``` text
+>
+> ```text
 > /product/users/v2
 > /product/users?v=1
 > ```
@@ -29,7 +32,7 @@ Version numbers **MUST NOT** be passed as parameters.
 
 **MUST** use semantic versioning:
 
-``` text
+```text
 version = {MAJOR}.{MINOR}.{PATCH}
 ```
 
@@ -47,7 +50,7 @@ Use:
 
 > [!TIP] Use
 >
-> ``` text
+> ```text
 > /product/v1/users
 > ```
 
@@ -55,7 +58,7 @@ Avoid:
 
 > [!CAUTION] Avoid
 >
-> ``` text
+> ```text
 > /product/v1.0.1/users
 > ```
 
@@ -65,7 +68,7 @@ Avoid:
 
 There **SHOULD** be an endpoint to return version metadata (typically the APIs root `/` endpoint) that is also documented in the OpenAPI definition, not only will this provide useful API metadata but will help API consumers know they're looking at the right place instead of getting a `404` or random `500` error as is common in some APIs.
 
-``` text
+```text
 GET /namespace/product/v1
 
 {

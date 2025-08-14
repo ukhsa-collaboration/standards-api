@@ -1,6 +1,7 @@
 ---
 order: 3
 ---
+
 # API Design
 
 ## API-First
@@ -39,30 +40,30 @@ APIs **MUST** use the appropriate HTTP method to perform operations on resources
 
 APIs **SHOULD** observe standard method semantics:
 
-- [Safe methods](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.1) have no side affects (i.e. using the method does not alter data).
-- [Idempotent methods](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.2) can be be executed multiple times with the same result as executing once.
-- [Cacheable methods](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.3) indicate responses can be cached / stored for future reuse.
+- [Safe methods][1] have no side affects (i.e. using the method does not alter data).
+- [Idempotent methods][2] can be be executed multiple times with the same result as executing once.
+- [Cacheable methods][3] indicate responses can be cached / stored for future reuse.
 
-Method implementations must fulfill the following basic properties according to [RFC9110 Section 9.2](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2):
+Method implementations must fulfill the following basic properties according to [RFC9110 Section 9.2][4]:
 
-| Method    | Safe? | Is idempotent? | Is cacheable? |
-|-----------|-------|----------------|---------------|
-| `GET`     | Yes   | Yes            | Optional      |
-| `HEAD`    | Yes   | Yes            | Optional      |
-| `POST`    | No    | No             | No            |
-| `PUT`     | No    | Yes            | No            |
-| `PATCH`   | No    | No             | No            |
-| `DELETE`  | No    | Yes            | No            |
-| `OPTIONS` | Yes   | Yes            | No            |
-| `TRACE`   | Yes   | Yes            | No            |
+| Method | Safe? | Is idempotent? | Is cacheable? |
+| - | - | - | - |
+| `GET` | Yes | Yes | Optional |
+| `HEAD` | Yes | Yes | Optional |
+| `POST` | No | No | No |
+| `PUT` | No | Yes | No |
+| `PATCH` | No | No | No |
+| `DELETE` | No | Yes | No |
+| `OPTIONS` | Yes | Yes | No |
+| `TRACE` | Yes | Yes | No |
 
 ## Response Format
 
-APIs **SHOULD** accept and return valid [JSON](https://datatracker.ietf.org/doc/html/rfc8259) as the standard default data interchange format.
+APIs **SHOULD** accept and return valid [JSON][5] as the standard default data interchange format.
 
-APIs **MAY** use the [json.api](https://jsonapi.org/) specification.
+APIs **MAY** use the [json.api][6] specification.
 
-APIs **MAY** use standard representations defined in specifications such as [FHIR UK Core](https://digital.nhs.uk/services/fhir-uk-core) where required but **SHOULD** use the JSON formats where they are defined.
+APIs **MAY** use standard representations defined in specifications such as [FHIR UK Core][7] where required but **SHOULD** use the JSON formats where they are defined.
 
 APIs **SHOULD** return JSON objects as top-level data structures and not return JSON arrays at the top level.
 
@@ -82,7 +83,7 @@ Supported content types **MUST** be documented in the OpenAPI specification.
 
 APIs **MUST** use standard HTTP response codes
 
-Use [standard HTTP status codes](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml) to indicate the result of the operation. For example:
+Use [standard HTTP status codes][8] to indicate the result of the operation. For example:
 
 - **200 OK**, for a successful `GET` or `PUT` request.
 - **201 Created**, for a successful `POST` request that results in resource creation.
@@ -91,6 +92,17 @@ Use [standard HTTP status codes](https://www.iana.org/assignments/http-status-co
 - **404 Not Found**, if the resource does not exist.
 - **500 Internal Server Error**, for server-side issues.
 
-`201 Created` responses to `POST` methods **SHOULD** have a `Location` header identifying the location of the newly created resource according to [RFC9110 Section 10.2.2](https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.2).
+`201 Created` responses to `POST` methods **SHOULD** have a `Location` header identifying the location of the newly created resource according to [RFC9110 Section 10.2.2][9].
 
-For detailed requirements on standardised error responses (e.g., 401, 403, 500) using Problem Details (RFC-9457), see [UKHSA Guidelines Error Handling](./error-handling.md).
+For detailed requirements on standardised error responses (e.g., 401, 403, 500) using Problem Details (RFC-9457), see [UKHSA Guidelines Error Handling][10].
+
+[1]: https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.1
+[2]: https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.2
+[3]: https://datatracker.ietf.org/doc/html/rfc9110#section-9.2.3
+[4]: https://datatracker.ietf.org/doc/html/rfc9110#section-9.2
+[5]: https://datatracker.ietf.org/doc/html/rfc8259
+[6]: https://jsonapi.org/
+[7]: https://digital.nhs.uk/services/fhir-uk-core
+[8]: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+[9]: https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.2
+[10]: ./error-handling.md

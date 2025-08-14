@@ -4,7 +4,7 @@ Response content **SHOULD** use a standard media type `application/json` or `app
 
 ## Invalid Example
 
-``` yaml
+```yaml
 '204':
   description: No Content
   content:
@@ -21,7 +21,7 @@ Response content **SHOULD** use a standard media type `application/json` or `app
 
 ## Valid Example
 
-``` yaml
+```yaml
 '204':
   description: No Conten
   content:
@@ -36,4 +36,6 @@ Response content **SHOULD** use a standard media type `application/json` or `app
             format: uri-reference
 ```
 
-[Zalando Guideline 172](https://opensource.zalando.com/restful-api-guidelines/#172)
+[Zalando Guideline 172][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#172

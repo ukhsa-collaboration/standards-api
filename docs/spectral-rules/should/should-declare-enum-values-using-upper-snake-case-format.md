@@ -1,10 +1,10 @@
 # **SHOULD** declare enum values using upper snake case format
 
-`enum` and `x-extensible-enum` values **SHOULD** be in UPPER_SNAKE_CASE format.
+`enum` and `x-extensible-enum` values **SHOULD** be in UPPER\_SNAKE\_CASE format.
 
 ## Invalid Example
 
-``` yaml
+```yaml
 schema:
   measurement:
    type: string
@@ -17,7 +17,7 @@ schema:
 
 ## Valid Example
 
-``` yaml
+```yaml
 schema:
   measurement:
    type: string
@@ -28,4 +28,6 @@ schema:
        - NON_STANDARD
 ```
 
-[Zalando Guideline 240](https://opensource.zalando.com/restful-api-guidelines/#240)
+[Zalando Guideline 240][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#240

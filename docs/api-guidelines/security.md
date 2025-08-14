@@ -1,6 +1,7 @@
 ---
 order: 5
 ---
+
 # Security
 
 ## Data Protection
@@ -19,22 +20,22 @@ Authentication **MUST** be handled with each request by providing a token along 
 
 APIs **MUST NOT** use HTTP Basic Authentication.
 
-**SHOULD** use [JWT (JSON Web Tokens)](https://jwt.io/introduction), passed in the [Authorization](https://datatracker.ietf.org/doc/html/rfc7235#section-4.2) header using the Bearer scheme to convey authentication data.
+**SHOULD** use [JWT (JSON Web Tokens)][1], passed in the [Authorization][2] header using the Bearer scheme to convey authentication data.
 
 > [!NOTE]
 > **OpenAPI Definition**
 >
-> Refer to OpenAPI documentation for the [bearer scheme](https://swagger.io/docs/specification/authentication/bearer-authentication/) when designing the API.
+> Refer to OpenAPI documentation for the [bearer scheme][3] when designing the API.
 
 When using JWTs as Bearer tokens, they **MUST** be included in the Authorization header as follows:
 
-``` text
+```text
 Authorization: Bearer <Base64 URL Encoded JWT content>
 ```
 
 ### OpenID Connect
 
-APIs **SHOULD** use [OpenID Connect](https://openid.net/developers/how-connect-works/) (OIDC) as the identity layer on top of OAuth 2.0 when authentication of end users is required.
+APIs **SHOULD** use [OpenID Connect][4] (OIDC) as the identity layer on top of OAuth 2.0 when authentication of end users is required.
 
 ### JWT Validation
 
@@ -43,7 +44,7 @@ JWTs **MUST** be signed based on the JSON Web Signature (JWS) standard.
 > [!NOTE]
 >
 > **JWT Validation**
-> JWT validation is a [policy](https://learn.microsoft.com/en-us/azure/api-management/validate-jwt-policy) configurable on the APIM Platform that will perform some validation. However, APIs **MUST** still validate the JWT as specified below.
+> JWT validation is a [policy][5] configurable on the APIM Platform that will perform some validation. However, APIs **MUST** still validate the JWT as specified below.
 
 The API **MUST** validate the JWT `signature`, `expiry time`, `issuer`, `audience`, `subject` and `claims` in order to determine whether to grant access.
 
@@ -60,45 +61,45 @@ JWT expiration for interactive end-user applications **SHOULD** be between 1 and
 > [!WARNING]
 > **Security Note**
 >
-> Review the OWASP API guidelines on [Broken Authentication](https://owasp.org/API-Security/editions/2023/en/0xa2-broken-authentication/) and ensure relevant guidance is followed.
+> Review the OWASP API guidelines on [Broken Authentication][6] and ensure relevant guidance is followed.
 
 ## Authorisation
 
-[OAuth 2.0](https://oauth.net/2/) provides authorisation of a client application via an access token. In end user use cases, authorisation is delegated from the user, whereas in system-to-system use cases client are authorised on their own behalf.
+[OAuth 2.0][7] provides authorisation of a client application via an access token. In end user use cases, authorisation is delegated from the user, whereas in system-to-system use cases client are authorised on their own behalf.
 
 Authorisation **MUST** be handled with each request by providing a token along with the request.
 
 APIs **SHOULD** use OAuth 2.0 for authorisation. Using OAuth 2.0 will provide the greatest compatibility with API consumers as it is a widely adopted standard. The following authorisation use cases are supported:
 
-| Use Case                       |                                                                                                                                                           | Grant Type          | Extensions    |
-|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|---------------|
-| End User (confidential client) | For interactive authorisation where the authentication of a user is required and the client secret can be kept confidential within the backend service.   | [Authorization Code](https://oauth.net/2/grant-types/authorization-code/)<br><br>[Refresh Token](https://oauth.net/2/grant-types/refresh-token/) (**MAY**) | PKCE (**SHOULD**) |
-| End User (public client)       | For interactive authorisation where the authentication of a user is required and the client secret CANNOT be kept confidential in the client application. | [Authorization Code](https://oauth.net/2/grant-types/authorization-code/)<br><br>[Refresh Token](https://oauth.net/2/grant-types/refresh-token/) (**MAY**) | PKCE (**MUST**)   |
-| System-to-System               | For non-interactive authorisation outside of the context of a user                                                                                        | [Client Credentials](https://oauth.net/2/grant-types/client-credentials/) | |
+| Use Case | | Grant Type | Extensions |
+| - | - | - | - |
+| End User (confidential client) | For interactive authorisation where the authentication of a user is required and the client secret can be kept confidential within the backend service. | [Authorization Code][8]<br><br>[Refresh Token][9] (**MAY**) | PKCE (**SHOULD**) |
+| End User (public client) | For interactive authorisation where the authentication of a user is required and the client secret CANNOT be kept confidential in the client application. | [Authorization Code][8]<br><br>[Refresh Token][9] (**MAY**) | PKCE (**MUST**) |
+| System-to-System | For non-interactive authorisation outside of the context of a user | [Client Credentials][10] | |
 
-APIs **SHOULD NOT** use the "[Resource Owner Password Credentials Grant](https://oauth.net/2/grant-types/password/)" or "[Implicit Grant](https://oauth.net/2/grant-types/implicit/)", which are considered legacy and have been deprecated from OAuth 2.1 as they are considered weak from a security standpoint.
+APIs **SHOULD NOT** use the "[Resource Owner Password Credentials Grant][11]" or "[Implicit Grant][12]", which are considered legacy and have been deprecated from OAuth 2.1 as they are considered weak from a security standpoint.
 
 > [!NOTE]
 >
-> Refer to OpenAPI documentation for [OAuth 2.0](https://swagger.io/docs/specification/authentication/oauth2/) when designing the API.
+> Refer to OpenAPI documentation for [OAuth 2.0][13] when designing the API.
 
 ### OAuth 2.0 Authorization Code Grant Type
 
 - **MUST** use `Authorization Code` grant + `PKCE` with non-confidential (public) clients (e.g. single page web or mobile applications). Note that mobile applications can be reverse engineered to extract client secrets.
 - **SHOULD** use OAuth 2.0 `Authorization Code` grant type for interactive authorisation where the authentication of a user is required.
 - **SHOULD** use `PKCE` extension for enhanced security with confidential clients (e.g. backend service).
-- **SHOULD** define access control using [OAuth 2.0 Scopes](#oauth-20-scopes).
+- **SHOULD** define access control using [OAuth 2.0 Scopes][14].
 - **MAY** use refresh tokens with `Authorization Code` grant type.
 
 #### OAuth 2.0 Scopes
 
-[OAuth 2.0 scopes](https://datatracker.ietf.org/doc/html/rfc6749#section-3.3) are used to specify the permissions that a client application is requesting from a resource owner (API) on behalf of a user. Scopes allow for granular access control and help protect sensitive data by limiting the access granted to applications. The application isn't able to access anything the signed in user couldn't access.
+[OAuth 2.0 scopes][15] are used to specify the permissions that a client application is requesting from a resource owner (API) on behalf of a user. Scopes allow for granular access control and help protect sensitive data by limiting the access granted to applications. The application isn't able to access anything the signed in user couldn't access.
 
 The client application is only able access the resources that the user can personally access, typically the user's resources or resources related to the user.
 
 As with many things in software development defining scopes is a trade-off between flexibility and complexity. Scopes can be defined at different levels of granularity, from broad permissions to very specific actions.
 
-See [Defining Scopes](https://www.oauth.com/oauth2-servers/scope/defining-scopes/) for insight into defining OAuth 2.0 scopes.
+See [Defining Scopes][16] for insight into defining OAuth 2.0 scopes.
 
 ##### Common Scope Patterns
 
@@ -111,18 +112,18 @@ A common scope naming convention is `resource.operation.constraint`.
 If your API exposes Employee Resources then example scope might look like this `Employees.Read.All` for read access and `Employees.Write.All` for write access.
 
 > [!NOTE]
-> When using the Entra ID (previously Azure AD) identity platform, review [Microsoft Developer Glossary](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary) for its [Scope definition](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary#scopes) and [Microsoft Graph API Permission Scopes](https://learn.microsoft.com/en-us/graph/permissions-reference) for scope examples.
+> When using the Entra ID (previously Azure AD) identity platform, review [Microsoft Developer Glossary][17] for its [Scope definition][18] and [Microsoft Graph API Permission Scopes][19] for scope examples.
 
 ### Client Credentials Grant Type
 
 - **SHOULD** use OAuth 2.0 `Client Credentials` grant type for non-interactive (machine-to-machine) authorisation outside of the context of a user.
-- **SHOULD** consider a mechanism for [Access Control](#access-control) in the absence of scopes.
+- **SHOULD** consider a mechanism for [Access Control][20] in the absence of scopes.
 - **SHOULD NOT** use refresh tokens with `Client Credentials` grant type.
 
 > [!WARNING]
 >
 > **Security Note**
-> Review the OWASP guidelines on [Broken Function Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa5-broken-function-level-authorization/) and ensure relevant guidance is followed.
+> Review the OWASP guidelines on [Broken Function Level Authorization][21] and ensure relevant guidance is followed.
 
 #### Access Control
 
@@ -130,11 +131,11 @@ Access control is the process of determining whether a user or application has p
 
 There are 2 scenarios for access control:
 
-1. **Delegated Access**: This scenario involves a user authenticating (typically using `Authorization Code flow`) and granting permission (consent) to an application to act on their behalf. The application receives a token that includes the user's context and permissions, delegated permissions can also be referred to as [scopes](#oauth-20-scopes).
+1. **Delegated Access**: This scenario involves a user authenticating (typically using `Authorization Code flow`) and granting permission (consent) to an application to act on their behalf. The application receives a token that includes the user's context and permissions, delegated permissions can also be referred to as [scopes][14].
 
 1. **Application Access**: In this scenario, an application authenticates using its own credentials (`client credentials`) and is granted permissions to access resources without a user context.
 
-For an overview on access control and deciding when to use [Delegated](https://learn.microsoft.com/en-us/entra/identity-platform/delegated-access-primer) and or [Application](https://learn.microsoft.com/en-us/entra/identity-platform/app-only-access-primer) access with Azure Entra ID (previously Azure AD), refer to [Microsoft Entra ID Permissions and Consent Overview](https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview).
+For an overview on access control and deciding when to use [Delegated][22] and or [Application][23] access with Azure Entra ID (previously Azure AD), refer to [Microsoft Entra ID Permissions and Consent Overview][24].
 
 #### Role-Based Access Control (RBAC)
 
@@ -144,7 +145,7 @@ For an overview on access control and deciding when to use [Delegated](https://l
 - Role information **SHOULD** be included in the JWT token as claims (e.g., `roles` or `groups`).
 
 > [!NOTE]
-> When using the Entra ID (previously Azure AD) identity platform, review [Microsoft Developer Glossary](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary) for its [Roles definition](https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary#roles). App Roles can be [defined in the application manifest and assigned to users and groups](https://learn.microsoft.com/en-us/entra/identity-platform/howto-add-app-roles-in-apps).
+> When using the Entra ID (previously Azure AD) identity platform, review [Microsoft Developer Glossary][17] for its [Roles definition][25]. App Roles can be [defined in the application manifest and assigned to users and groups][26].
 >
 > The Entra ID identity platform app roles utilises the `roles` claim in the JWT token.
 
@@ -171,7 +172,7 @@ Rate limiting controls the number of API requests a client can make within a spe
 > [!WARNING]
 > **Security Note**
 >
-> Review the OWASP API Security Top 10 guidance on [Lack of Resources & Rate Limiting](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/) and ensure relevant controls are implemented.
+> Review the OWASP API Security Top 10 guidance on [Lack of Resources & Rate Limiting][27] and ensure relevant controls are implemented.
 
 APIs **SHOULD** implement rate limiting to:
 
@@ -239,4 +240,34 @@ APIs **MAY** implement tiered rate limits based on:
 - Time of day or expected traffic patterns
 
 > [!NOTE]
-> When using Azure API Management, consider using the [rate-limit policy](https://learn.microsoft.com/en-us/azure/api-management/rate-limit-policy) or [quota policy](https://learn.microsoft.com/en-us/azure/api-management/quota-policy) to implement rate limiting.
+> When using Azure API Management, consider using the [rate-limit policy][28] or [quota policy][29] to implement rate limiting.
+
+[1]: https://jwt.io/introduction
+[2]: https://datatracker.ietf.org/doc/html/rfc7235#section-4.2
+[3]: https://swagger.io/docs/specification/authentication/bearer-authentication/
+[4]: https://openid.net/developers/how-connect-works/
+[5]: https://learn.microsoft.com/en-us/azure/api-management/validate-jwt-policy
+[6]: https://owasp.org/API-Security/editions/2023/en/0xa2-broken-authentication/
+[7]: https://oauth.net/2/
+[8]: https://oauth.net/2/grant-types/authorization-code/
+[9]: https://oauth.net/2/grant-types/refresh-token/
+[10]: https://oauth.net/2/grant-types/client-credentials/
+[11]: https://oauth.net/2/grant-types/password/
+[12]: https://oauth.net/2/grant-types/implicit/
+[13]: https://swagger.io/docs/specification/authentication/oauth2/
+[14]: #oauth-20-scopes
+[15]: https://datatracker.ietf.org/doc/html/rfc6749#section-3.3
+[16]: https://www.oauth.com/oauth2-servers/scope/defining-scopes/
+[17]: https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary
+[18]: https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary#scopes
+[19]: https://learn.microsoft.com/en-us/graph/permissions-reference
+[20]: #access-control
+[21]: https://owasp.org/API-Security/editions/2023/en/0xa5-broken-function-level-authorization/
+[22]: https://learn.microsoft.com/en-us/entra/identity-platform/delegated-access-primer
+[23]: https://learn.microsoft.com/en-us/entra/identity-platform/app-only-access-primer
+[24]: https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview
+[25]: https://learn.microsoft.com/en-us/entra/identity-platform/developer-glossary#roles
+[26]: https://learn.microsoft.com/en-us/entra/identity-platform/howto-add-app-roles-in-apps
+[27]: https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/
+[28]: https://learn.microsoft.com/en-us/azure/api-management/rate-limit-policy
+[29]: https://learn.microsoft.com/en-us/azure/api-management/quota-policy

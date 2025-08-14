@@ -6,7 +6,7 @@ Defining a request body on a `HTTP` `GET` is frowned upon due to the confusion t
 
 ## Invalid Example
 
-``` yaml
+```yaml
 paths:
   /results/{resultId}:
     get:

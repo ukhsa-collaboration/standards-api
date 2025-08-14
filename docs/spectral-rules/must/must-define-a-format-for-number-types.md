@@ -4,7 +4,7 @@
 
 ## Invalid Example
 
-``` yaml
+```yaml
 requestBody:
     content:
       application/json:
@@ -17,7 +17,7 @@ requestBody:
 
 ## Valid Example
 
-``` yaml
+```yaml
 requestBody:
   content:
     application/json:
@@ -29,4 +29,6 @@ requestBody:
             format: float
 ```
 
-[Zalando Guideline 171](https://opensource.zalando.com/restful-api-guidelines/#171)
+[Zalando Guideline 171][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#171

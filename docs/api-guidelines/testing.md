@@ -1,11 +1,12 @@
 ---
 order: 9
 ---
+
 # Testing
 
 ## Validation / Linting
 
-**MUST** validate the OpenAPI definition against the OpenAPI Specification and the [UKSHA spectral ruleset](../spectral-rules/index.md).
+**MUST** validate the OpenAPI definition against the OpenAPI Specification and the [UKSHA spectral ruleset][1].
 
 ## Unit Testing
 
@@ -20,7 +21,7 @@ order: 9
 **SHOULD** perform **End-to-End Testing** to ensure that all the components of the API work seamlessly together as a complete system.
 
 | | Contract Testing | End-to-End Testing |
-| - | --- | --- |
+| - | - | - |
 | **Purpose** | To ensure that services communicate correctly by validating API contracts. | To verify that all the components of the API work seamlessly together as a complete system. |
 | **When to use** | When microservices or APIs are involved, especially in a distributed system. | When you need to test workflows which might involve multiple API calls, integrations, and the overall system functionality. |
 | **How it's done** | By verifying the API implementation is communicating as defined in the APIs OpenAPI definition. | By simulating real user scenarios and executing tests through the application's UI or API. |
@@ -32,7 +33,7 @@ order: 9
 - **SHOULD** perform **Stress Testing** to understand the behaviour the API under extreme conditions and identify breaking points by simulating extreme levels of traffic to your API.
 
 | | Load Testing | Stress testing |
-| - | --- | --- |
+| - | - | - |
 | **Purpose** | Ensures system can handle normal traffic and data volume | Determines system's breaking point and recovery |
 | **When to use** | Before release or major updates | Before high-stress events or periodically |
 | **How it's done** | Simulate normal to high levels of traffic | Simulate extreme levels of traffic |
@@ -45,19 +46,28 @@ order: 9
 **SHOULD** conduct **Penetration Testing** manual and or automated, to identify security weaknesses in your API.
 
 | | Vulnerability Scanning | Penetration Testing |
-| - | --- | --- |
-| **Purpose**             | To identify known vulnerabilities in an API or software application. | To simulate an attack on the API to exploit vulnerabilities and assess security measures. |
-| **When to use**         | During the development lifecycle or regularly to ensure ongoing security. | After significant changes to the API or before a major release to evaluate security posture. |
-| **How it's done**       | By using automated tools to scan code, configuration, and network settings for vulnerabilities. | Reconnaissance, vulnerability scanning, attempting to exploit vulnerabilities, and finally providing a detailed report. Typically performed by a security specialist/professional. |
-| **What it reveals**     | A list of known vulnerabilities, misconfigurations, and weaknesses in the API. | Specific vulnerabilities that can be exploited, their impact, and recommendations for remediation. |
+| - | - | - |
+| **Purpose** | To identify known vulnerabilities in an API or software application. | To simulate an attack on the API to exploit vulnerabilities and assess security measures. |
+| **When to use** | During the development lifecycle or regularly to ensure ongoing security. | After significant changes to the API or before a major release to evaluate security posture. |
+| **How it's done** | By using automated tools to scan code, configuration, and network settings for vulnerabilities. | Reconnaissance, vulnerability scanning, attempting to exploit vulnerabilities, and finally providing a detailed report. Typically performed by a security specialist/professional. |
+| **What it reveals** | A list of known vulnerabilities, misconfigurations, and weaknesses in the API. | Specific vulnerabilities that can be exploited, their impact, and recommendations for remediation. |
 
 ## Recommended Testing Tools
 
 | Tool | Useful For | Open Source Licence |
-| -- | -- | -- |
-| **[Spectral CLI](https://docs.stoplight.io/docs/spectral)** | Validating your OpenAPI definitions against the OpenAPI Specification and the [UKSHA spectral ruleset](../spectral-rules/index.md). | [Apache 2.0](https://opensource.org/license/apache-2-0) |
-| **[Prism](https://stoplight.io/open-source/prism)** | API Mock Servers from OpenAPI definition<br>Contract Testing for API consumers and developers. | [Apache 2.0](https://opensource.org/license/apache-2-0) |
-| **[Pact](https://docs.pact.io/)** | Consumer-Driven Contract Testing to ensure that your API meets the expectations of its consumers. | [MIT](https://opensource.org/license/mit) |
-| **[Zed Attack Proxy (ZAP)](https://www.zaproxy.org/)** | Web application vulnerability scanner. | [Apache 2.0](https://opensource.org/license/apache-2-0) |
+| - | - | - |
+| **[Spectral CLI][2]** | Validating your OpenAPI definitions against the OpenAPI Specification and the [UKSHA spectral ruleset][1]. | [Apache 2.0][3] |
+| **[Prism][4]** | API Mock Servers from OpenAPI definition<br>Contract Testing for API consumers and developers. | [Apache 2.0][3] |
+| **[Pact][5]** | Consumer-Driven Contract Testing to ensure that your API meets the expectations of its consumers. | [MIT][6] |
+| **[Zed Attack Proxy (ZAP)][7]** | Web application vulnerability scanner. | [Apache 2.0][3] |
 
-There is also a catalog of [OpenAPI Tooling](https://tools.openapis.org/) to support API development and validation.
+There is also a catalog of [OpenAPI Tooling][8] to support API development and validation.
+
+[1]: ../spectral-rules/index.md
+[2]: https://docs.stoplight.io/docs/spectral
+[3]: https://opensource.org/license/apache-2-0
+[4]: https://stoplight.io/open-source/prism
+[5]: https://docs.pact.io/
+[6]: https://opensource.org/license/mit
+[7]: https://www.zaproxy.org/
+[8]: https://tools.openapis.org/

@@ -6,7 +6,7 @@
 
 `Error-500` is not a valid HTTP status code.
 
-``` yaml
+```yaml
 /weather:
   get:
     responses:
@@ -18,7 +18,7 @@
 
 `500` is a valid HTTP status code.
 
-``` yaml
+```yaml
 /weather:
   get:
     responses:
@@ -26,4 +26,6 @@
         description: Internal Server Error
 ```
 
-[Zalando Guideline 150](https://opensource.zalando.com/restful-api-guidelines/#150)
+[Zalando Guideline 150][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#150

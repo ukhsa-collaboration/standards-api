@@ -6,7 +6,7 @@ If an API doesn't have a security scheme defined, it means the entire API is ope
 
 ## Valid Example
 
-``` yaml
+```yaml
 components:
   securitySchemes:
     oAuth:
@@ -22,4 +22,6 @@ components:
             tests:write: submit test results
 ```
 
-[UKHSA Guidelines Security](../../api-guidelines/security.md#authentication)
+[UKHSA Guidelines Security][1]
+
+[1]: ../../api-guidelines/security.md#authentication

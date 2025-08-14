@@ -2,11 +2,11 @@
 
 ## Overview
 
-Effective monitoring and observability **MUST** be integrated into all APIs to ensure performance, reliability, continuous improvement, and meet any Service Level Agreements (SLAs) and compliance requirements. This section provides guidance on best practices, including the use of [OpenTelemetry](https://opentelemetry.io/) and [key metrics](#recommended-metrics) to track.
+Effective monitoring and observability **MUST** be integrated into all APIs to ensure performance, reliability, continuous improvement, and meet any Service Level Agreements (SLAs) and compliance requirements. This section provides guidance on best practices, including the use of [OpenTelemetry][1] and [key metrics][2] to track.
 
 ## Monitoring vs. Observability
 
-While often used interchangeably, monitoring and observability serve distinct purposes in API management. **Monitoring** focuses on tracking predefined metrics and known system states, typically answering "_is the system working as expected?_" through dashboards and alerts. **Observability**, on the other hand, provides the capability to understand unknown system states and answer new questions without deploying additional instrumentation. It combines `metrics`, `logs`, and `traces` to give comprehensive insights into system behaviour.
+While often used interchangeably, monitoring and observability serve distinct purposes in API management. **Monitoring** focuses on tracking predefined metrics and known system states, typically answering "*is the system working as expected?*" through dashboards and alerts. **Observability**, on the other hand, provides the capability to understand unknown system states and answer new questions without deploying additional instrumentation. It combines `metrics`, `logs`, and `traces` to give comprehensive insights into system behaviour.
 
 Effective API management requires both, monitoring for known issues and observability for debugging complex, unforeseen problems that may emerge in distributed systems.
 
@@ -14,11 +14,11 @@ Effective API management requires both, monitoring for known issues and observab
 
 - **MUST** implement monitoring to gain visibility into API performance and health.
 - Monitoring **SHOULD** be designed to provide actionable insights for troubleshooting and optimisation.
-- APIs **SHOULD** adopt the observability standard [OpenTelemetry](https://opentelemetry.io/) for distributed tracing, metrics, and logs and ensure consistency across all APIs regardless of language / frameworks.
+- APIs **SHOULD** adopt the observability standard [OpenTelemetry][1] for distributed tracing, metrics, and logs and ensure consistency across all APIs regardless of language / frameworks.
 - APIs **MUST NOT** rely on ad-hoc monitoring solutions that lack consistency and integration.
 - Monitoring **MUST NOT** introduce significant performance overhead that degrades the API's functionality.
 - APIs in development or testing environments **SHOULD** use monitoring to identify issues early but **MUST NOT** rely on it as a substitute for proper testing.
-- Monitoring systems **MUST** integrate with alerting tools such as [Prometheus](https://prometheus.io/) to notify teams of critical issues.
+- Monitoring systems **MUST** integrate with alerting tools such as [Prometheus][3] to notify teams of critical issues.
 - **SHOULD** implement health checks to regularly verify the availability of API endpoints.
 - **SHOULD** establish a centralised logging system to aggregate logs from all API services for easier analysis.
 - **MUST NOT** neglect documentation of monitoring setups, as this **MUST** be accessible to all relevant teams.
@@ -54,7 +54,7 @@ APIs **SHOULD** be tracking the following key metrics to ensure comprehensive mo
 
 ## DORA Metrics
 
-To align with industry best practices, API teams **SHOULD** implement the [four key metrics](https://dora.dev/guides/dora-metrics-four-keys/) of [DORA](https://dora.dev/) (DevOps Research and Assessment)  to measure development and operational performance:
+To align with industry best practices, API teams **SHOULD** implement the [four key metrics][4] of [DORA][5] (DevOps Research and Assessment)  to measure development and operational performance:
 
 ### Throughput
 
@@ -69,9 +69,18 @@ To align with industry best practices, API teams **SHOULD** implement the [four 
 ## Tools and Standards
 
 | Tool/Standard | Description |
-|----------------|-------------|
-| [OpenTelemetry](https://opentelemetry.io/) | A vendor-neutral framework for collecting and exporting telemetry data, allowing teams to choose their preferred backend for analysis and visualisation. It supports various [programming languages and platforms](https://opentelemetry.io/), making it a versatile choice for API observability. |
-| [Grafana](https://grafana.com/oss/grafana/) | A powerful open-source analytics and monitoring platform that integrates with various data sources, including [Prometheus](https://prometheus.io/). It provides rich visualisations and dashboards for real-time monitoring and analysis of API performance metrics. |
-| [Grafana Loki](https://grafana.com/oss/loki/) | A log aggregation system designed to work seamlessly with Grafana. It allows for the collection, storage, and querying of logs, making it easier to correlate logs with metrics and traces for comprehensive observability. |
-| [Prometheus](https://prometheus.io/) | An open-source monitoring and alerting toolkit designed for reliability and scalability, particularly suited for dynamic cloud environments. It collects metrics from configured targets at specified intervals, evaluates rule expressions, and can trigger alerts based on those evaluations. |
-| [ELK Stack (Elasticsearch, Logstash, Kibana)](https://www.elastic.co/elastic-stack) | A popular open-source stack for log management and analysis. Elasticsearch stores and indexes logs, Logstash processes and ingests logs from various sources, and Kibana provides a web interface for visualising and exploring log data. |
+| - | - |
+| [OpenTelemetry][1] | A vendor-neutral framework for collecting and exporting telemetry data, allowing teams to choose their preferred backend for analysis and visualisation. It supports various [programming languages and platforms][1], making it a versatile choice for API observability. |
+| [Grafana][6] | A powerful open-source analytics and monitoring platform that integrates with various data sources, including [Prometheus][3]. It provides rich visualisations and dashboards for real-time monitoring and analysis of API performance metrics. |
+| [Grafana Loki][7] | A log aggregation system designed to work seamlessly with Grafana. It allows for the collection, storage, and querying of logs, making it easier to correlate logs with metrics and traces for comprehensive observability. |
+| [Prometheus][3] | An open-source monitoring and alerting toolkit designed for reliability and scalability, particularly suited for dynamic cloud environments. It collects metrics from configured targets at specified intervals, evaluates rule expressions, and can trigger alerts based on those evaluations. |
+| [ELK Stack (Elasticsearch, Logstash, Kibana)][8] | A popular open-source stack for log management and analysis. Elasticsearch stores and indexes logs, Logstash processes and ingests logs from various sources, and Kibana provides a web interface for visualising and exploring log data. |
+
+[1]: https://opentelemetry.io/
+[2]: #recommended-metrics
+[3]: https://prometheus.io/
+[4]: https://dora.dev/guides/dora-metrics-four-keys/
+[5]: https://dora.dev/
+[6]: https://grafana.com/oss/grafana/
+[7]: https://grafana.com/oss/loki/
+[8]: https://www.elastic.co/elastic-stack

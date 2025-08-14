@@ -6,7 +6,7 @@ Each `operation` **MUST** include a default error response that combines multipl
 
 The example below contains only a `200` response.
 
-``` yaml
+```yaml
 responses:
    ...
 get:
@@ -21,7 +21,7 @@ get:
 
 The example below contains a `200` response and a `default` response that references the `Problem` errors file.
 
-``` yaml
+```yaml
 responses:
    ...
 get:
@@ -38,4 +38,6 @@ get:
              $ref: ../models/Problem.yaml
 ```
 
-[Zalando Guideline 151](https://opensource.zalando.com/restful-api-guidelines/#151)
+[Zalando Guideline 151][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#151

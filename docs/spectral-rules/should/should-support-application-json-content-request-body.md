@@ -4,7 +4,7 @@ Every request **SHOULD** support at least `application/json` media type.
 
 ## Valid Example
 
-``` yaml
+```yaml
 paths:
   /results:
     ...

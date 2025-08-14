@@ -3,12 +3,12 @@
 Header parameters **SHOULD** use hyphenated Pascal case.
 
 | Name | Description |
-|---------|-------------|
-| hyphenated pascal | Each word **MUST** begin with a capital letter, and be separated by a hyphen.|
+| - | - |
+| hyphenated pascal | Each word **MUST** begin with a capital letter, and be separated by a hyphen. |
 
 ## Invalid Example
 
-``` yaml
+```yaml
 
 parameters:
 - schema:
@@ -28,4 +28,6 @@ parameters:
     name: Pascal-Case-Header
 ```
 
-[Zalando Guideline 132](https://opensource.zalando.com/restful-api-guidelines/#132)
+[Zalando Guideline 132][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#132

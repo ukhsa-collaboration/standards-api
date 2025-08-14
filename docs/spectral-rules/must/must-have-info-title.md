@@ -4,10 +4,12 @@ The `info` object must have a `title` property defined.
 
 ## Valid Example
 
-``` Yaml
+```Yaml
 info:
   title: Payments API
   ...
 ```
 
-[Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
+[Zalando Guideline 218][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#218

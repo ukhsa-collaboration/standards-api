@@ -1,6 +1,7 @@
 ---
 order: 8
 ---
+
 # Pagination, Filtering & Sorting
 
 ## Pagination
@@ -16,7 +17,7 @@ Offset-based pagination uses `limit` and `offset` query parameters to specify th
 - `limit`: The maximum number of items to return.
 - `offset`: The number of items to skip before starting to collect the result set.
 
-``` text
+```text
 GET /product/v1/orders?offset=10&limit=10
 ```
 
@@ -35,7 +36,7 @@ Cursor-based pagination uses a “cursor” that points to a specific item in th
 - `cursor`: The pointer to the position in the dataset to start the next page.
 - `limit`: The maximum number of items to return.
 
-``` text
+```text
 GET /product/v1/orders?cursor=eyJvcmRlcklkIjoxMjN9&limit=10
 ```
 
@@ -53,7 +54,7 @@ The body of responses containing lists of results **SHOULD** contain pagination 
 - `offset` or `cursor`: Information about the current result set, `offset`, or `cursor` position.
 - `limit`: The maximum number of items returned.
 
-``` json
+```json
 {
   "results": [
     {"id": 101, "item": "Item 1"},
@@ -76,11 +77,11 @@ The body of responses containing lists of results **SHOULD** contain pagination 
 
 ### Example
 
-``` text
+```text
 GET /product/v1/results?type=Lateral%20Flow%20Test&result=POSITIVE
 ```
 
-``` yaml
+```yaml
 paths:
   /results:
     get:
@@ -123,36 +124,36 @@ paths:
 
 Available RHS operators include:
 
-| Operator | Description                                             |
-| :------: | ------------------------------------------------------- |
-| `eq`     | Equal to (default if no operator specified).            |
-| `ne`     | Not equal to.                                           |
-| `gt`     | Greater than.                                           |
-| `gte`    | Greater than or equal to.                               |
-| `lt`     | Less than.                                              |
-| `lte`    | Less than or equal to.                                  |
-| `in`     | Matches any value in a comma-separated list.            |
-| `nin`    | Does not match any value in a comma-separated list.     |
-| `like`   | Pattern matching with wildcards (`*`).                  |
-| `ilike`  | Case-insensitive pattern matching with wildcards (`*`). |
+| Operator | Description |
+| :-: | - |
+| `eq` | Equal to (default if no operator specified). |
+| `ne` | Not equal to. |
+| `gt` | Greater than. |
+| `gte` | Greater than or equal to. |
+| `lt` | Less than. |
+| `lte` | Less than or equal to. |
+| `in` | Matches any value in a comma-separated list. |
+| `nin` | Does not match any value in a comma-separated list. |
+| `like` | Pattern matching with wildcards (`*`). |
+| `ilike` | Case-insensitive pattern matching with wildcards (`*`). |
 
 ### Examples
 
-``` text
+```text
 GET /product/v1/results?type=Lateral%20Flow%20Test&result=in:POSITIVE,NEGATIVE
 ```
 
-``` text
+```text
 GET /product/v1/results?nhsNumber=like:485777*
 ```
 
-``` text
+```text
 GET /products?category=electronics&price=gte:100
 ```
 
 You can combine multiple filters using the same URL by separating them with ampersands (&).
 
-``` text
+```text
 GET /products?category=electronics&price=gte:100&price=lte:500
 ```
 
@@ -160,11 +161,11 @@ GET /products?category=electronics&price=gte:100&price=lte:500
 
 If there is a particularly common query parameter you **SHOULD** consider providing a new operation where the search parameter is embedded in the path as a path variable, but only where it makes sense from an API design perspective and aligns with RESTful resource / nested resources.
 
-``` text
+```text
 GET /product/v1/patients/4857773456/results?type=Lateral%20Flow%20Test
 ```
 
-``` yaml
+```yaml
 paths:
   /patients/{nhsNumber}/results:
     get:
@@ -210,11 +211,11 @@ If a explicit sort order is desired, the query parameter `sort` **SHOULD** be us
 
 ### Example
 
-``` text
+```text
 GET /product/v1/results?sort=nhsNumber|asc,type|desc
 ```
 
-``` yaml
+```yaml
 components:
   parameters:
     sortParam:

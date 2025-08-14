@@ -11,7 +11,7 @@ The `info` object **MUST** have an `x-value-chain` that matches at least one of 
 
 ## Valid Example
 
-``` yaml
+```yaml
 info:
   title: Test Results Api
   x-value-chain: detect

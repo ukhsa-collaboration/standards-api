@@ -4,7 +4,7 @@
 
 ## Valid Example
 
-``` yaml
+```yaml
 components:
   schema:
     ...

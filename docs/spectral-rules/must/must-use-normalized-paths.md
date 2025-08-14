@@ -4,7 +4,7 @@ Path **MUST** start with a slash and **MUST NOT** end with a slash (except root 
 
 ## Invalid Example
 
-``` yaml
+```yaml
 paths:
   /patient/:
     ...
@@ -13,7 +13,7 @@ paths:
 
 ## Valid Example
 
-``` yaml
+```yaml
 paths:
   /:
     ...
@@ -22,4 +22,6 @@ paths:
   /patient/{patientId}/results:
 ```
 
-[Zalando Guideline 136](https://opensource.zalando.com/restful-api-guidelines/#136)
+[Zalando Guideline 136][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#136

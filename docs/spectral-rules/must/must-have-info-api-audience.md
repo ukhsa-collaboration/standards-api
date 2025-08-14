@@ -3,7 +3,7 @@
 The `info` object **MUST** have an `x-audience` that matches at least one of these values:
 
 | audience | Use case |
-| -------- | -------- |
+| - | - |
 | `company-internal` | for internal use only with UKHSA |
 | `partner-external` | for UKHSA partners under a service agreement |
 | `premium-external` | for publicly available but commercial/monetised APIs behind a paywall |
@@ -11,7 +11,7 @@ The `info` object **MUST** have an `x-audience` that matches at least one of the
 
 ## Valid Example
 
-``` yaml
+```yaml
 info:
   title: Test Results Api
   x-audience: public-external

@@ -1,11 +1,12 @@
 ---
 order: 6
 ---
+
 # Error Handling
 
 ## Problem Details
 
-APIs **MUST** conform to the [RFC-9457](https://www.rfc-editor.org/rfc/rfc9457.html) standard "Problem Details for HTTP APIs" which defines a structured way for expressing error details in HTTP APIs.
+APIs **MUST** conform to the [RFC-9457][1] standard "Problem Details for HTTP APIs" which defines a structured way for expressing error details in HTTP APIs.
 
 APIs **MUST** use the appropriate content type `application/problem+json` or `application/problem+xml` (depending on the format bring returned) when returning the Problem Details response object.
 
@@ -29,36 +30,37 @@ Operations in the OpenAPI specification **MUST** include the following standard 
 Each response **MUST** include at least one example.
 
 If an operation inherits or has its **own non-empty `security` block**, it **MUST** define:
-  - `401 Unauthorized`
-  - `403 Forbidden`
+
+- `401 Unauthorized`
+- `403 Forbidden`
 
 ### Extended Details
 
-As per the [RFC-9457](https://www.rfc-editor.org/rfc/rfc9457.html) you **MAY** extend the Problem Details object to include additional context/information that are specific to the problem type.
+As per the [RFC-9457][1] you **MAY** extend the Problem Details object to include additional context/information that are specific to the problem type.
 
 There are some common extension members such as `traceId`, `errors` and `code` which are useful and so you should consider including them.
 
-| Extension Member               | Include | Detail                                                                                                                      |
-|----------------------|:-------:|-----------------------------------------------------------------------------------------------------------------------------|
-| `traceId` | **MAY**     | Can be used to find any [distributed traces and logs](https://aws.amazon.com/what-is/distributed-tracing/) for the current request.                                                                            |
-| `errors` | **MAY**     | When you want to respresent multiple validation errors from a single request.                                               |
-| `code` | **MAY**     | An API specific error code aiding the provider team understand the error based on their own potential taxonomy or registry. |
+| Extension Member | Include | Detail |
+| - | :-: | - |
+| `traceId` | **MAY** | Can be used to find any [distributed traces and logs][2] for the current request. |
+| `errors` | **MAY** | When you want to respresent multiple validation errors from a single request. |
+| `code` | **MAY** | An API specific error code aiding the provider team understand the error based on their own potential taxonomy or registry. |
 
 If an API extends their Problem Details object to include API specific error codes i.e. adding `code` as an extension, then the API specific error codes **MUST** be documented in the OpenAPI definition.
 
-The [MOT history API](https://documentation.history.mot.api.gov.uk/mot-history-api/error-codes/) and [NHS Spine Core API Framework](https://digital.nhs.uk/services/gp-connect/develop-gp-connect-services/development/error-handling#top) provides a useful example for standardising API specific error codes. While UKHSA's context may differ, a similar approach can be adopted while still adhering to [RFC-9457](https://www.rfc-editor.org/rfc/rfc9457.html).
+The [MOT history API][3] and [NHS Spine Core API Framework][4] provides a useful example for standardising API specific error codes. While UKHSA's context may differ, a similar approach can be adopted while still adhering to [RFC-9457][1].
 
 ## Common Problems Registry
 
-[RFC-9457](https://www.rfc-editor.org/rfc/rfc9457.html) has the concept of a [registry](https://www.rfc-editor.org/rfc/rfc9457.html#registry) for common problems, given that the intended use for these API Design Guidelines is for an APIM Platform, a **single** shared registry of Problem Details **MAY** be created or an existing registry adopted (as long as there aren't multiple registries) for common responses.
+[RFC-9457][1] has the concept of a [registry][5] for common problems, given that the intended use for these API Design Guidelines is for an APIM Platform, a **single** shared registry of Problem Details **MAY** be created or an existing registry adopted (as long as there aren't multiple registries) for common responses.
 
 This should prevent redefining the same common responses for each new API and encourage consistency which is especially helpful for consumers of multiple APIs on the platform.
 
-An example Problem Details registry with usage examples can be found [here](https://problems-registry.smartbear.com/) and the corresponding OpenAPI components file [here](https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0); This can be achieved in OpenAPI through the use of the [`$ref`](https://swagger.io/docs/specification/v3_0/using-ref/) keyword and referencing a URL which contains the shared OpenAPI components.
+An example Problem Details registry with usage examples can be found [here][6] and the corresponding OpenAPI components file [here][7]; This can be achieved in OpenAPI through the use of the [`$ref`][8] keyword and referencing a URL which contains the shared OpenAPI components.
 
 ### `$ref` usage example
 
-``` yaml
+```yaml
 paths:
   /namespace/product/v1/patients:
     get:
@@ -78,7 +80,7 @@ paths:
           $ref: 'https://developer.ukhsa.gov.uk/openApi/common#/#/components/responses/UnexpectedError'
 ```
 
-``` yaml
+```yaml
 # https://developer.ukhsa.gov.uk/openApi/common contents
 ...
 components:
@@ -102,13 +104,13 @@ components:
 ```
 
 > [!NOTE]
-> Refer to [RFC-9547](https://www.rfc-editor.org/rfc/rfc9457.html) standard for additional information.
+> Refer to [RFC-9547][1] standard for additional information.
 
 ## Example Responses
 
 ### 400 Bad Request - Single Error
 
-``` text
+```text
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
  
@@ -124,7 +126,7 @@ Content-Type: application/problem+json
 
 ### 400 Bad Request - Multiple Errors
 
-``` text
+```text
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
  
@@ -148,7 +150,7 @@ Content-Type: application/problem+json
 
 ### 401 Unauthorized
 
-``` text
+```text
 HTTP/1.1 401 Unauthorized
 Content-Type: application/problem+json
  
@@ -164,7 +166,7 @@ Content-Type: application/problem+json
 
 ### 403 Forbidden
 
-``` text
+```text
 HTTP/1.1 403 Forbidden
 Content-Type: application/problem+json
  
@@ -180,7 +182,7 @@ Content-Type: application/problem+json
 
 ### 404 Not Found
 
-``` text
+```text
 HTTP/1.1 404 Not Found
 Content-Type: application/problem+json
  
@@ -196,7 +198,7 @@ Content-Type: application/problem+json
 
 ### 500 Internal Server Error
 
-``` text
+```text
 HTTP/1.1 500 Internal Server Error
 Content-Type: application/problem+json
  
@@ -208,3 +210,12 @@ Content-Type: application/problem+json
   "traceId": "00-63d4af1807586b0d98901ae47944192d-9a8635facb90bf76-01"
 }
 ```
+
+[1]: https://www.rfc-editor.org/rfc/rfc9457.html
+[2]: https://aws.amazon.com/what-is/distributed-tracing/
+[3]: https://documentation.history.mot.api.gov.uk/mot-history-api/error-codes/
+[4]: https://digital.nhs.uk/services/gp-connect/develop-gp-connect-services/development/error-handling#top
+[5]: https://www.rfc-editor.org/rfc/rfc9457.html#registry
+[6]: https://problems-registry.smartbear.com/
+[7]: https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0
+[8]: https://swagger.io/docs/specification/v3_0/using-ref/

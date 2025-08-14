@@ -8,12 +8,12 @@ Resilience patterns are essential for building robust APIs that can gracefully h
 
 Retries allow APIs to recover from transient failures.
 
-- APIs **SHOULD** implement retries for [idempotent operations](./api-design.md#http-methods--semantics) (e.g., `GET`, `PUT`, `DELETE`) where a transient failure is likely to succeed on subsequent attempts.
-- Retries **SHOULD NOT** be used for [non-idempotent operations](./api-design.md#http-methods--semantics) (e.g., `POST`) unless specifically designed for retry safety.
-- A backoff strategy (e.g., [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) with [jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)) **SHOULD** be used to prevent cascading failures.
+- APIs **SHOULD** implement retries for [idempotent operations][1] (e.g., `GET`, `PUT`, `DELETE`) where a transient failure is likely to succeed on subsequent attempts.
+- Retries **SHOULD NOT** be used for [non-idempotent operations][1] (e.g., `POST`) unless specifically designed for retry safety.
+- A backoff strategy (e.g., [exponential backoff][2] with [jitter][3]) **SHOULD** be used to prevent cascading failures.
 - Retries **MUST** be capped with a maximum retry count to avoid infinite loops or unnecessary resource consumption.
 
-``` mermaid
+```mermaid
 sequenceDiagram
     participant Client
     participant API
@@ -49,9 +49,9 @@ sequenceDiagram
 
 ### Example
 
-In the following python example, we show data retrieval from a distributed database service that occasionally experiences network issues and use the [Tenacity](https://tenacity.readthedocs.io/en/latest/) library to handle retries with exponential backoff and jitter. The `@retry` decorator configures the retry behaviour to attempt up to 3 times for transient exceptions only, with exponential backoff starting at 100ms and built-in jitter.
+In the following python example, we show data retrieval from a distributed database service that occasionally experiences network issues and use the [Tenacity][4] library to handle retries with exponential backoff and jitter. The `@retry` decorator configures the retry behaviour to attempt up to 3 times for transient exceptions only, with exponential backoff starting at 100ms and built-in jitter.
 
-``` python
+```python
 import logging
 from tenacity import (
     retry,
@@ -103,9 +103,9 @@ Timeouts prevent operations from hanging indefinitely.
 - APIs **SHOULD** define timeouts for all external calls to dependent systems or services.
 - Timeout values **SHOULD** be carefully chosen based on the performance characteristics of the dependent system and the API's SLA requirements.
 - APIs **SHOULD NOT** rely on default or unspecified timeout settings, as these can vary widely across libraries and tools.
-- A timeout **SHOULD** trigger a [fallback](#fallbacks) mechanism or propagate an appropriate [error](./error-handling.md) to the client.
+- A timeout **SHOULD** trigger a [fallback][5] mechanism or propagate an appropriate [error][6] to the client.
 
-``` mermaid
+```mermaid
 sequenceDiagram
     participant Client
     participant API
@@ -133,9 +133,9 @@ sequenceDiagram
 
 ### Example
 
-In this python example, we set a 5-second timeout for the request to an external API using the [Requests](https://requests.readthedocs.io/en/latest/user/quickstart/#timeouts) library. If the request takes longer than this, a `Timeout` exception is raised, allowing us to handle it gracefully with a [fallback](#fallbacks) mechanism or propagate an appropriate [error](./error-handling.md) to the client.
+In this python example, we set a 5-second timeout for the request to an external API using the [Requests][7] library. If the request takes longer than this, a `Timeout` exception is raised, allowing us to handle it gracefully with a [fallback][5] mechanism or propagate an appropriate [error][6] to the client.
 
-``` python
+```python
 import requests
 from requests.exceptions import Timeout, RequestException
 
@@ -155,12 +155,12 @@ Circuit breakers protect systems from cascading failures by halting requests to 
 
 - Circuit breakers **SHOULD** be implemented for calls to external systems that are critical to the API's operation.
 - APIs **SHOULD** configure circuit breakers with thresholds for failure rates and recovery intervals.
-- When a circuit breaker is open, the API **MUST** provide a meaningful [error response](./error-handling.md) or [fallback mechanism](#fallbacks).
+- When a circuit breaker is open, the API **MUST** provide a meaningful [error response][6] or [fallback mechanism][5].
 - Circuit breakers **MUST NOT** be used for internal components that are highly reliable and tightly coupled, as they introduce unnecessary complexity.
 
 ### Flowchart Diagram
 
-``` mermaid
+```mermaid
 flowchart TD
     CLOSED((CLOSED)) -->|Failure threshold exceeded| OPEN((OPEN))
     OPEN -->|Delay| HALF((HALF OPEN))
@@ -178,7 +178,7 @@ flowchart TD
 
 ### Sequence Diagram
 
-``` mermaid
+```mermaid
 sequenceDiagram
     participant Client
     participant API with Circuit Breaker
@@ -239,9 +239,9 @@ sequenceDiagram
 
 ### Example
 
-In this python example, we use the [circuitbreaker](https://pypi.org/project/circuitbreaker/) library to protect calls to a recommendation service. The circuit breaker is configured to open after 3 failures out of 5 attempts (60% failure rate) and will stay open for 30 seconds before allowing a test request. When the circuit is open, we [fallback](#fallbacks) to a cache of popular products instead of personalised recommendations.
+In this python example, we use the [circuitbreaker][8] library to protect calls to a recommendation service. The circuit breaker is configured to open after 3 failures out of 5 attempts (60% failure rate) and will stay open for 30 seconds before allowing a test request. When the circuit is open, we [fallback][5] to a cache of popular products instead of personalised recommendations.
 
-``` python
+```python
 import logging
 from circuitbreaker import circuit, CircuitBreakerError
 
@@ -304,7 +304,7 @@ In an e-commerce platform, the payment service, user service, and search service
 
 When `Search` service fails, it consumes all available resources in the shared pool, causing `Payment` and `User` services to suffer as well.
 
-``` mermaid
+```mermaid
 graph TD
     Client[Client Requests] --> API[API Gateway]
     
@@ -334,7 +334,7 @@ graph TD
 
 Even though `Search` service has failed, `Payment` and `User` services continue to function, because resources are isolated with bulkheads.
 
-``` mermaid
+```mermaid
 graph TD
     Client[Client Requests] --> API[API Gateway]
     
@@ -368,7 +368,7 @@ graph TD
 
 In this Python example, we implement the bulkhead pattern using `ThreadPoolExecutor` from the `concurrent.futures` module. The code creates separate thread pools for critical and non-critical operations, preventing failures in one service from consuming resources needed by others.
 
-``` python
+```python
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
@@ -401,7 +401,7 @@ class ServiceExecutors:
 
 Usage example:
 
-``` python
+```python
 executors = ServiceExecutors()
 
 # Payment processing - uses the critical pool (4 threads max)
@@ -430,13 +430,13 @@ Fallbacks provide alternative behaviour when a dependency fails.
 - APIs **MUST** implement fallbacks for critical operations where failure would significantly impact the user experience.
 - Fallbacks **SHOULD** provide meaningful degraded functionality (e.g., cached data, placeholder values) rather than returning generic errors.
 - APIs **MUST NOT** use fallbacks that violate business logic, security, or data integrity requirements.
-- Where fallbacks are implemented, the API **SHOULD** log the use of fallback mechanisms for [monitoring](./monitoring.md) and debugging purposes.
+- Where fallbacks are implemented, the API **SHOULD** log the use of fallback mechanisms for [monitoring][9] and debugging purposes.
 
 ### Example
 
 If a weather API fails, the fallback could provide cached weather data from the last successful response. For a stock price API, a fallback might return the last known price or a default value.
 
-``` python
+```python
 import requests
 
 # Simulate a cache (in a real app, this would be persistent storage)
@@ -475,5 +475,15 @@ print(f"Weather: {weather['temperature']}°C, {weather['condition']}")
 
 - Resilience patterns **MUST** be chosen based on the specific context and requirements of the API.
 - Combinations of patterns **SHOULD** be used to address complex failure scenarios (e.g., retries with timeouts and circuit breakers).
-- APIs **MUST** log and [monitor](./monitoring.md) resilience events (e.g., retries, circuit breaker state changes) to enable proactive troubleshooting and optimisation.
+- APIs **MUST** log and [monitor][9] resilience events (e.g., retries, circuit breaker state changes) to enable proactive troubleshooting and optimisation.
 - Overuse or misuse of resilience patterns **MUST NOT** degrade overall performance or introduce unnecessary latency.
+
+[1]: ./api-design.md#http-methods--semantics
+[2]: https://en.wikipedia.org/wiki/Exponential_backoff
+[3]: https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
+[4]: https://tenacity.readthedocs.io/en/latest/
+[5]: #fallbacks
+[6]: ./error-handling.md
+[7]: https://requests.readthedocs.io/en/latest/user/quickstart/#timeouts
+[8]: https://pypi.org/project/circuitbreaker/
+[9]: ./monitoring.md

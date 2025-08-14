@@ -1,10 +1,10 @@
 # **MUST** have info version
 
-The `info` object **MUST** have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html) to distinguish API versions.
+The `info` object **MUST** have a `version` property that follows [semantic rules][1] to distinguish API versions.
 
 ## Invalid Example
 
-``` yaml
+```yaml
 info:
   title: ...
   description: ...
@@ -14,7 +14,7 @@ info:
 
 ## Valid Example
 
-``` yaml
+```yaml
 info:
   title: ...
   description: ...
@@ -22,4 +22,8 @@ info:
   ...
 ```
 
-[Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218) and [Zalando Guideline 116](https://opensource.zalando.com/restful-api-guidelines/#116)
+[Zalando Guideline 218][2] and [Zalando Guideline 116][3]
+
+[1]: http://semver.org/spec/v2.0.0.html
+[2]: https://opensource.zalando.com/restful-api-guidelines/#218
+[3]: https://opensource.zalando.com/restful-api-guidelines/#116

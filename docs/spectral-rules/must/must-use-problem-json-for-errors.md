@@ -6,7 +6,7 @@ The content type for `4xx` and `5xx` status codes **MUST** be `application/probl
 
 The content type for the `503` response in this example incorrectly uses the `application/json` content type.
 
-``` yaml
+```yaml
 responses:
    '503':
      description: ...
@@ -20,7 +20,7 @@ responses:
 
 The content type for the `503` response in this example correctly uses the `application/problem+json` content type.
 
-``` yaml
+```yaml
 responses:
    '503':
      description: ...
@@ -30,4 +30,6 @@ responses:
            $ref: ../models/Problem.yaml
 ```
 
-[Zalando Guideline 176](https://opensource.zalando.com/restful-api-guidelines/#176)
+[Zalando Guideline 176][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#176

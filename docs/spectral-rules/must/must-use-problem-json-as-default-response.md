@@ -6,7 +6,7 @@ The content type for the default response **MUST** be `application/problem+json`
 
 The default response in this example incorrectly uses `application/json` as the content type.
 
-``` yaml
+```yaml
 responses:
    ...
 get:
@@ -26,7 +26,7 @@ get:
 
 The default response in this example correctly uses `application/problem+json` as the content type.
 
-``` yaml
+```yaml
 responses:
    ...
 get:
@@ -42,4 +42,6 @@ get:
              $ref: ../models/Problem.yaml
 ```
 
-[Zalando Guideline 151](https://opensource.zalando.com/restful-api-guidelines/#151)
+[Zalando Guideline 151][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#151

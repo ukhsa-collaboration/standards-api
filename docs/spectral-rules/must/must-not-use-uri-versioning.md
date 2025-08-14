@@ -4,14 +4,16 @@ Path **MUST** not contain versions.
 
 ## Invalid Example
 
-``` yaml
+```yaml
 /user/v2:
 ```
 
 ## Valid Example
 
-``` yaml
+```yaml
 /user:
 ```
 
-[Zalando Guideline 115](https://opensource.zalando.com/restful-api-guidelines/#115)
+[Zalando Guideline 115][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#115

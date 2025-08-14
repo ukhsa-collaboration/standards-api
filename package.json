@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "prepare": "husky && git config commit.template .gitmessage",
+    "md:format": "remark . --ext .md --output",
     "build": "tsc && npm run copy-legacy",
     "copy-legacy": "cpx \"src/functions/legacy/*.js\" dist/functions",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
@@ -30,8 +31,13 @@
     "husky": "^9.1.7",
     "jest": "^30.0.5",
     "jest-junit": "^16.0.0",
+    "remark-cli": "^12.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-renumber-references": "^2.0.0",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "unist-util-visit": "^5.0.0"
   }
 }

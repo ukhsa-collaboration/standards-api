@@ -5,6 +5,7 @@ eleventyNavigation:
   parent: api-design-guidelines
 order: 1
 ---
+
 # API Guidelines
 
 ## Overview
@@ -39,7 +40,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 this document are to be interpreted as described in RFC2119.
 ```
 
-Refer to [RFC2119](https://datatracker.ietf.org/doc/html/rfc2119) for details.
+Refer to [RFC2119][1] for details.
 
 ### How to use these guidelines
 
@@ -51,3 +52,5 @@ Review the sections on API design, naming conventions, versioning and error hand
 Determine your security requirements and apply the recommended authorisation, authentication and security patterns, such as OAuth 2.0, JWTs, and Role-Based Access Control (RBAC).
 Ensure your API is well-documented including error scenarios and example responses within the OpenAPI definition.
 Use the recommended tools for linting, validating and testing your OpenAPI definition and other aspects of your API.
+
+[1]: https://datatracker.ietf.org/doc/html/rfc2119

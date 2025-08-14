@@ -1,6 +1,6 @@
 # **MUST** define 401 and 403 for secured operations
 
-Operations that define their **own non-empty `security` block**  
+Operations that define their **own non-empty `security` block**\
 **MUST** define responses for:
 
 - `401 Unauthorized`
@@ -64,4 +64,6 @@ paths:
                   $ref: '#/components/examples/forbidden'
 ```
 
-[UKHSA Guidelines Error Handling](../../api-guidelines/error-handling.md#required-error-responses)
+[UKHSA Guidelines Error Handling][1]
+
+[1]: ../../api-guidelines/error-handling.md#required-error-responses

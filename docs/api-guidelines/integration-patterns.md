@@ -1,6 +1,7 @@
 ---
 order: 14
 ---
+
 # Integration Patterns
 
 **SHOULD** use standard API integration patterns.
@@ -26,7 +27,7 @@ Translate `SOAP` calls to `REST` calls.
 
 ### Examples
 
-``` text
+```text
 POST /namespace/product/v1/tasks/123/start
 Response: 202 Accepted
 
@@ -38,7 +39,7 @@ Response: 202 Accepted
 
 Poll for status:
 
-``` text
+```text
 GET /namespace/product/v1/tasks/123/status
 Response: 200 OK
 
@@ -50,7 +51,7 @@ Response: 200 OK
 
 Typical polling flow
 
-``` mermaid
+```mermaid
 sequenceDiagram
     Client->>+API Endpoint: POST
     API Endpoint->>+Client: HTTP 202

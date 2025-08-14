@@ -4,7 +4,7 @@
 
 ## Invalid Example
 
-``` yaml
+```yaml
 deliveryMethods:
   type: string
   enum:
@@ -15,7 +15,7 @@ deliveryMethods:
 
 ## Valid Example
 
-``` yaml
+```yaml
 deliveryMethods:
   type: string
   x-extensible-enum:
@@ -24,4 +24,6 @@ deliveryMethods:
     - EMAIL
 ```
 
-[Zalando Guideline 112](https://opensource.zalando.com/restful-api-guidelines/#112)
+[Zalando Guideline 112][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#112

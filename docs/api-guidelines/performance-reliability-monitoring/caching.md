@@ -6,7 +6,7 @@ Caching plays a crucial role in API performance, reducing latency and server loa
 
 APIs **SHOULD** leverage appropriate caching mechanisms.
 
-APIs **SHOULD** use a [multi-layered caching strategy](#multi-layered-caching-strategy) i.e. implement caching at various layers (e.g., API Gateway / CDN, application layer, database/persistence layer) to optimise performance.
+APIs **SHOULD** use a [multi-layered caching strategy][1] i.e. implement caching at various layers (e.g., API Gateway / CDN, application layer, database/persistence layer) to optimise performance.
 
 APIs **SHOULD** use distributed caching
 
@@ -22,11 +22,11 @@ APIs **SHOULD** implement caching when:
 
 APIs **SHOULD NOT** implement caching when:
 
-- Serving volatile data that chances frequently, *unless* you have a strategy for [cache invalidation](#cache-invalidation-strategies).
+- Serving volatile data that chances frequently, *unless* you have a strategy for [cache invalidation][2].
 
 Use the following flowchart to help you decide:
 
-``` mermaid
+```mermaid
 flowchart LR
     A[Is the data frequently accessed?] -->|Yes| B[Is the data rarely changing?]
     A -->|No| F[Do Not Cache]
@@ -44,7 +44,7 @@ flowchart LR
 
 APIs **SHOULD** implement server-side response caching and **SHOULD** avoid implementing client-side caching except where there are specific requirements that necessitate it. This approach provides greater control, security, and consistency.
 
-The HTTP caching specification [RFC9111](https://datatracker.ietf.org/doc/html/rfc9111) is complex and often inconsistently implemented by clients, RESTful APIs frequently have nuanced caching requirements which may include handling data with mixed sensitivity levels that require careful cache management which generic client implementations might not handle correctly, furthermore client-side caching can lead to sensitive data being stored in *uncontrolled* environments.
+The HTTP caching specification [RFC9111][3] is complex and often inconsistently implemented by clients, RESTful APIs frequently have nuanced caching requirements which may include handling data with mixed sensitivity levels that require careful cache management which generic client implementations might not handle correctly, furthermore client-side caching can lead to sensitive data being stored in *uncontrolled* environments.
 
 Server-side caching reduces the risk of cached data leakage across different client contexts, ensures that caching policies are correctly applied regardless of client capabilities and that all clients receive consistent data.
 
@@ -52,7 +52,7 @@ In addition server-side caching provides greater control over what data is cache
 
 As such APIs **SHOULD** follow the best practice of defaulting the `Cache-Control` response header to the following value to prevent any default client caching behaviors.
 
-``` text
+```text
 Cache-Control: no-cache, no-store, must-revalidate, max-age=0
 ```
 
@@ -62,9 +62,9 @@ Whilst this may seem inefficient, there are actually a good reasons for doing so
 
 APIs **SHOULD** implement server-controlled response caching that is independent of client-specified caching headers.
 
-APIs **SHOULD** utilise their respective development ecosystem and take advantage of the available caching tools/libraries to support server-side response caching, for example if you are building your API with dotnet there is an [output caching](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/output) middleware specifically for sever controlled caching, and for python there is a framework agnostic caching library called [cachews](https://github.com/Krukov/cashews).
+APIs **SHOULD** utilise their respective development ecosystem and take advantage of the available caching tools/libraries to support server-side response caching, for example if you are building your API with dotnet there is an [output caching][4] middleware specifically for sever controlled caching, and for python there is a framework agnostic caching library called [cachews][5].
 
-When utilising an API gateway, APIs **SHOULD** make use of any response caching functionality, as this helps to reduces the load on the backend API; Azure Api Management (APIM) provides this functionality [through the use of policies](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-cache).
+When utilising an API gateway, APIs **SHOULD** make use of any response caching functionality, as this helps to reduces the load on the backend API; Azure Api Management (APIM) provides this functionality [through the use of policies][6].
 
 ### Implementation Approaches
 
@@ -73,11 +73,11 @@ When utilising an API gateway, APIs **SHOULD** make use of any response caching 
 The general pattern for implementing server-side response caching is:
 
 1. Check if request can be served from cache.
-2. If cached, return cached response.
-3. If not cached, generate response and store in cache.
-4. Return fresh response.
+1. If cached, return cached response.
+1. If not cached, generate response and store in cache.
+1. Return fresh response.
 
-``` mermaid
+```mermaid
 flowchart LR
     Request[Request Arrives] --> Lookup[Cache Key Lookup]
     Lookup --> Hit{Cache Hit?}
@@ -89,26 +89,26 @@ flowchart LR
 
 ## Client-Side Caching
 
-Client-side caching **SHOULD** be avoided. However in addition to [server-side response caching](#server-side-response-caching), there are cases where client-side caching **MAY** be appropriate:
+Client-side caching **SHOULD** be avoided. However in addition to [server-side response caching][7], there are cases where client-side caching **MAY** be appropriate:
 
 1. When offline capability is required (e.g., mobile applications)
-2. For static resources that rarely change (e.g., images, stylesheets)
-3. To reduce network traffic in bandwidth-constrained environments
+1. For static resources that rarely change (e.g., images, stylesheets)
+1. To reduce network traffic in bandwidth-constrained environments
 
 If your API *really* requires supporting `HTTP caching` , please observe the following rules:
 
 **MAY** responsibly enable `HTTP caching` explicitly for any operations that require it.
 
-**MUST** document all [cacheable](../api-design.md#http-methods-semantics) `GET`, `HEAD`, and `POST` endpoints by declaring the support of [`Cache-Control`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.2), [`Vary`](https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5), and [`ETag`](https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3) headers in response.
+**MUST** document all [cacheable][8] `GET`, `HEAD`, and `POST` endpoints by declaring the support of [`Cache-Control`][9], [`Vary`][10], and [`ETag`][11] headers in response.
 
-**MUST NOT** define the [`Expires`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.3) header to prevent redundant and ambiguous definition of cache lifetime.
+**MUST NOT** define the [`Expires`][12] header to prevent redundant and ambiguous definition of cache lifetime.
 
-**MUST** take care to specify the ability to support caching by defining the right caching boundaries, i.e. time-to-live and cache constraints, by providing sensible values for [`Cache-Control`](https://datatracker.ietf.org/doc/html/rfc9111#section-5.2) and [`Vary`](https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5) in your service.
+**MUST** take care to specify the ability to support caching by defining the right caching boundaries, i.e. time-to-live and cache constraints, by providing sensible values for [`Cache-Control`][9] and [`Vary`][10] in your service.
 
 APIs **SHOULD** use appropriate Cache-Control directives:
 
 | Directive | Purpose | Example |
-|-----------|---------|---------|
+| - | - | - |
 | `max-age` | How long the response can be cached (in seconds) | `Cache-Control: max-age=3600` |
 | `no-cache` | Must revalidate before using cached content | `Cache-Control: no-cache` |
 | `no-store` | Don't cache the response at all | `Cache-Control: no-store` |
@@ -117,7 +117,7 @@ APIs **SHOULD** use appropriate Cache-Control directives:
 
 Operations which require the use of the `Authorization` Header i.e. OAuth protected endpoints, **SHOULD** also contain the `private` directive.
 
-``` text
+```text
 Cache-Control: private, must-revalidate, max-age=60
 ```
 
@@ -125,25 +125,25 @@ Cache-Control: private, must-revalidate, max-age=60
 
 #### Read-Only Reference Data
 
-``` text
+```text
 Cache-Control: public, max-age=86400
 ```
 
 #### User-Specific Data (Non-Sensitive)
 
-``` text
+```text
 Cache-Control: private, max-age=300
 ```
 
 #### Time-Sensitive Data
 
-``` text
+```text
 Cache-Control: public, max-age=60
 ```
 
 #### Sensitive Data
 
-``` text
+```text
 Cache-Control: no-store
 ```
 
@@ -153,7 +153,7 @@ Cache-Control: no-store
 
 Paginated responses **SHOULD** use cache control headers that decrease in duration for later pages:
 
-``` text
+```text
 # First page might be cached longer
 Cache-Control: public, max-age=3600
 
@@ -165,7 +165,7 @@ Cache-Control: public, max-age=600
 
 Search endpoints **MAY** cache results for popular queries but **SHOULD** use shorter cache durations:
 
-``` text
+```text
 Cache-Control: public, max-age=300
 ```
 
@@ -173,7 +173,7 @@ Cache-Control: public, max-age=300
 
 Versioned API endpoints **MAY** use longer cache durations since their responses are stable by definition:
 
-``` text
+```text
 Cache-Control: public, max-age=604800
 ```
 
@@ -452,7 +452,7 @@ sequenceDiagram
 ### When to Use Each Strategy
 
 | Strategy | When to Use | When to Avoid |
-|----------|-------------|---------------|
+| - | - | - |
 | **Time-Based Expiration** | **MUST** use for all cacheable resources as a baseline strategy | **SHOULD NOT** rely solely on for critical, frequently changing data |
 | **Event-Based Invalidation** | **SHOULD** use for dynamic data with unpredictable update patterns | **SHOULD NOT** use if update events cannot be reliably captured or propagated |
 | **Resource Versioning** | **SHOULD** use for static assets and rarely changing resources | **SHOULD NOT** use as the only strategy for frequently updated resources |
@@ -547,13 +547,13 @@ APIs **SHOULD** aim for a cache hit rate of at least 80% for cacheable resources
 
 APIs **MAY** consider adding headers to help with debugging and monitoring:
 
-``` text
+```text
 X-Cache: HIT
 X-Cache-TTL-Remaining: 286
 X-Cache-Key: products:fec65fb3-1e5e-4ff2-a6e0-a423f77f0000
 ```
 
-``` text
+```text
 X-Cache: HIT
 X-Cache-TTL-Remaining: 286
 X-Cache-Key: products:list:limit=10:offset=0:sort=name|asc
@@ -561,9 +561,9 @@ X-Cache-Key: products:list:limit=10:offset=0:sort=name|asc
 
 ### Example metrics capture
 
-The below pseudo python example shows how you could manually log caching statistics, however there might libraries that could collect this telemetry for you with OpenTelemetry instrumentation such as [opentelemetry-instrumentation-fastapi](https://opentelemetry-python-contrib.readthedocs.io/en/latest/instrumentation/fastapi/fastapi.html).
+The below pseudo python example shows how you could manually log caching statistics, however there might libraries that could collect this telemetry for you with OpenTelemetry instrumentation such as [opentelemetry-instrumentation-fastapi][13].
 
-``` python
+```python
 # Python example of cache monitoring
 def get_cached_response(cache_key):
     start_time = time.time()
@@ -579,3 +579,17 @@ def get_cached_response(cache_key):
         metrics.increment('cache.miss')
         return None
 ```
+
+[1]: #multi-layered-caching-strategy
+[2]: #cache-invalidation-strategies
+[3]: https://datatracker.ietf.org/doc/html/rfc9111
+[4]: https://learn.microsoft.com/en-us/aspnet/core/performance/caching/output
+[5]: https://github.com/Krukov/cashews
+[6]: https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-cache
+[7]: #server-side-response-caching
+[8]: ../api-design.md#http-methods-semantics
+[9]: https://datatracker.ietf.org/doc/html/rfc9111#section-5.2
+[10]: https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5
+[11]: https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3
+[12]: https://datatracker.ietf.org/doc/html/rfc9111#section-5.3
+[13]: https://opentelemetry-python-contrib.readthedocs.io/en/latest/instrumentation/fastapi/fastapi.html

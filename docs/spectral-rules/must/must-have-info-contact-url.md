@@ -4,7 +4,7 @@ The `info` object **MUST** have a `contact:url` property that contains a valid U
 
 ## Valid Example
 
-``` yaml
+```yaml
 info:
   ...
   ...
@@ -14,4 +14,6 @@ info:
     ...
 ```
 
-[Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
+[Zalando Guideline 218][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#218

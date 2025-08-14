@@ -2,11 +2,11 @@
 
 `201 Created` responses to `POST` methods **SHOULD** have a `Location` header identifying the location of the newly created resource.
 
-See [RFC9110 Section 10.2.2](https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.2) for more information on the `Location` header.
+See [RFC9110 Section 10.2.2][1] for more information on the `Location` header.
 
 ## Valid Example
 
-``` yaml
+```yaml
 paths:
   /results:
     get:
@@ -32,4 +32,7 @@ paths:
       ...
 ```
 
-[UKHSA Guidlelines API Design](../../api-guidelines/api-design.md#rest-http-response-codes)
+[UKHSA Guidlelines API Design][2]
+
+[1]: https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.2
+[2]: ../../api-guidelines/api-design.md#rest-http-response-codes

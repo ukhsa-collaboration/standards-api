@@ -4,7 +4,7 @@ The top-level data structure for a `request body` or `response body` **SHOULD** 
 
 ## Invalid Example
 
-``` yaml
+```yaml
 requestBody:
   content:
     application/json:
@@ -16,7 +16,7 @@ requestBody:
 
 ## Valid Example
 
-``` yaml
+```yaml
 requestBody:
   content:
     application/json:
@@ -29,6 +29,9 @@ requestBody:
           type: string
 ```
 
-[UKHSA Guidelines API Design](../../api-guidelines/api-design.md#response-format)
+[UKHSA Guidelines API Design][1]
 
-[Zalando Guideline 210](https://opensource.zalando.com/restful-api-guidelines/#210)
+[Zalando Guideline 210][2]
+
+[1]: ../../api-guidelines/api-design.md#response-format
+[2]: https://opensource.zalando.com/restful-api-guidelines/#210

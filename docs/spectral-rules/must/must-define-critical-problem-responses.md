@@ -2,7 +2,7 @@
 
 Every operation **MUST** define 400, 404, and 500 responses and include at least one example.
 This ensures proper client error handling
-as per [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html).
+as per [RFC 9457][1].
 
 ## Invalid Example
 
@@ -16,7 +16,7 @@ responses:
 
 ## Valid Example
 
-``` yaml
+```yaml
 responses:
   '400':
     description: Bad request
@@ -37,4 +37,7 @@ responses:
     $ref: '#/components/responses/UnexpectedError'
 ```
 
-[UKHSA Guidelines Error Handling](../../api-guidelines/error-handling.md#required-error-responses)
+[UKHSA Guidelines Error Handling][2]
+
+[1]: https://www.rfc-editor.org/rfc/rfc9457.html
+[2]: ../../api-guidelines/error-handling.md#required-error-responses

@@ -4,7 +4,7 @@ The `info` object **MUST** have a `contact:name` property that contains a valid 
 
 ## Valid Example
 
-``` yaml
+```yaml
 info:
   ...
   ...
@@ -12,4 +12,6 @@ info:
     name: 'Tequila Mockingbirds'
 ```
 
-[Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218)
+[Zalando Guideline 218][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#218

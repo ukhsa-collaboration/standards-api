@@ -10,7 +10,7 @@ Standardising API design reduces friction, making APIs easier to understand, use
 
 These guidelines will ensure that all APIs follow accepted design, security and governance models, thereby raising the bar on API quality across the organisation.
 
-You will find the documentation in markdown form in the `docs/` directory, you can also view the [documentation site](https://ukhsa-collaboration.github.io/api-guidelines/) for a friendly searchable format.
+You will find the documentation in markdown form in the `docs/` directory, you can also view the [documentation site][1] for a friendly searchable format.
 
 As part of the above this repository provides the spectral rules to help developers align their OpenAPI definition with the standards laid out in these guidelines.
 
@@ -30,24 +30,27 @@ If your product API is based on a different API technology, such as GraphQL or g
 
 ## How to Use the Rules with your API
 
-To see how you use these rules with your project, check out the [How to use the rules](docs/spectral-rules/index.md#how-to-use-the-rules) documentation section.
+To see how you use these rules with your project, check out the [How to use the rules][2] documentation section.
 
 ## Contributing
 
-We welcome contributions to improve these guidelines. Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on how to get involved.
+We welcome contributions to improve these guidelines. Please read our [Contributing Guidelines][3] for details on how to get involved.
 
 ## Licence
 
-Unless stated otherwise, the codebase is released under [the MIT License][mit].
+Unless stated otherwise, the codebase is released under [the MIT License][4].
 This covers both the codebase and any sample code in the documentation.
 
-The documentation is [© Crown copyright][copyright] and available under the terms
-of the [Open Government 3.0][ogl] licence.
+The documentation is [© Crown copyright][5] and available under the terms
+of the [Open Government 3.0][6] licence.
 
 ## Contact
 
 TODO
 
-[mit]: LICENCE
-[copyright]: https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/
-[ogl]: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+[1]: https://ukhsa-collaboration.github.io/api-guidelines/
+[2]: docs/spectral-rules/index.md#how-to-use-the-rules
+[3]: CONTRIBUTING.md
+[4]: LICENCE
+[5]: https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/
+[6]: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/

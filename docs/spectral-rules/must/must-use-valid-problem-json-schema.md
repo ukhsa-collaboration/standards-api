@@ -4,7 +4,7 @@
 
 ## Valid Example
 
-``` yaml
+```yaml
 ProblemDetails:
   type: object
   description: Schema for detailed problem information.
@@ -40,4 +40,6 @@ required:
   - instance
 ```
 
-[Zalando Guideline 176](https://opensource.zalando.com/restful-api-guidelines/#176)
+[Zalando Guideline 176][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#176

@@ -1,6 +1,7 @@
 ---
 order: 4
 ---
+
 # Naming Conventions
 
 ## URI Structure
@@ -30,19 +31,19 @@ APIs **MUST** use lowercase for the entire URI.
 APIs **SHOULD** limit the level of nesting to avoid overly complex URIs. Typically, two to three levels are sufficient.
 
 > [!NOTE]
-> **Environments**  
-> Domain Names for various environments can be found in the [API Management Low Level Design.](https://confluence.collab.test-and-trace.nhs.uk/display/BRP/API+Management+Low+level+Design+-+MVP)
+> **Environments**\
+> Domain Names for various environments can be found in the [API Management Low Level Design.][1]
 
 ### Namespaces
 
-Namespaces and product names **MUST** be based on the [Business Capability Model](https://confluence.collab.test-and-trace.nhs.uk/display/AT/Business+Capability+Model).
+Namespaces and product names **MUST** be based on the [Business Capability Model][2].
 
 > [!NOTE]
-> Where applications supports multiple business capabilities then namespaces and product names should be based on the `Leading` one in [LeanIX](https://phe.leanix.net/phelive).
+> Where applications supports multiple business capabilities then namespaces and product names should be based on the `Leading` one in [LeanIX][3].
 
 For example:
 
-``` text
+```text
 https://azgw.api.ukhsa.gov.uk/prevent/vaccine-management/v1/..
 ```
 
@@ -52,14 +53,14 @@ APIs **MUST** use **lowercase plural nouns** to represent collections (e.g., /or
 
 > [!TIP] Use
 >
-> ``` text
+> ```text
 > /product/v1/orders
 > /product/v1/orders/{orderId}/cancel
 > ```
 
 > [!CAUTION] Avoid
 >
-> ``` text
+> ```text
 > /product/v1/order
 > /product/v1/cancelOrder
 > ```
@@ -70,13 +71,13 @@ APIs **MUST** use **kebab-case** for path segments.
 
 > [!TIP] Use
 >
-> ``` text
+> ```text
 > /product/v1/user-accounts
 > ```
 
 > [!CAUTION] Avoid
 >
-> ``` text
+> ```text
 > /product/v1/userAccounts
 > /product/v1/user_accounts
 > ```
@@ -87,13 +88,13 @@ APIs **MUST** use lower camel case for query parameter names.
 
 > [!TIP] Use
 >
-> ``` text
+> ```text
 > /product/v1/users?maxResults=10&startIndex=20
 > ```
 
 > [!CAUTION] Not
 >
-> ``` text
+> ```text
 > /product/v1/users?max_results=10&start_index=20
 > ```
 
@@ -105,7 +106,7 @@ Example:
 
 > [!CAUTION] Avoid
 >
-> ``` text
+> ```text
 > /product/v1/orders?limit=10&offset=20
 > /product/v1/users?maxResults=10&startIndex=20
 > ```
@@ -118,7 +119,7 @@ Example:
 
 > [!TIP] Use
 >
-> ``` json
+> ```json
 > {
 >     "customerId": "12345",
 >     "userId" : "54321"
@@ -127,7 +128,7 @@ Example:
 
 > [!CAUTION] Not
 >
-> ``` json
+> ```json
 > {
 >     "customer_id": "12345",
 >     "user_id" : "54321"
@@ -142,22 +143,23 @@ Example query string:
 
 > [!CAUTION] Avoid
 >
-> ``` text
+> ```text
 > /product/v1/orders?customerId=123
 > /product/v1/users?clientId=123
 > ```
 
 Example request/response model:
+
 > [!CAUTION] Avoid
 >
-> ``` json
+> ```json
 > # order
 > {
 >     "orderId": "12345",
 >     "customerId" : "54321"
 >     ...
 > }
-> 
+>
 > # user
 > {
 >     "userId": "12345",
@@ -165,3 +167,7 @@ Example request/response model:
 >     ...
 > }
 > ```
+
+[1]: https://confluence.collab.test-and-trace.nhs.uk/display/BRP/API+Management+Low+level+Design+-+MVP
+[2]: https://confluence.collab.test-and-trace.nhs.uk/display/AT/Business+Capability+Model
+[3]: https://phe.leanix.net/phelive

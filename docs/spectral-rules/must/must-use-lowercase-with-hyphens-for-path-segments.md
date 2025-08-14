@@ -4,16 +4,19 @@ Path segments **MUST** use lowercase letters and hyphens to separate words.
 
 ## Invalid Example
 
-``` yaml
+```yaml
 /BeachReport:
 ```
 
 ## Valid Example
 
-``` yaml
+```yaml
 /beach-report:
 ```
 
-[UKHSA Guidelines Path Segments](../../api-guidelines/naming-conventions.md#path-segments)
+[UKHSA Guidelines Path Segments][1]
 
-[Zalando Guideline 129](https://opensource.zalando.com/restful-api-guidelines/#129)
+[Zalando Guideline 129][2]
+
+[1]: ../../api-guidelines/naming-conventions.md#path-segments
+[2]: https://opensource.zalando.com/restful-api-guidelines/#129

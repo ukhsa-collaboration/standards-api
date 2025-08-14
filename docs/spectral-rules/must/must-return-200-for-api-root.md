@@ -4,7 +4,7 @@ Root path **MUST** define a `200` response.
 
 ## Valid Example
 
-``` yaml
+```yaml
 paths:
   /:
     get:
@@ -24,4 +24,6 @@ paths:
           $ref: '#/components/responses/UnexpectedError'
 ```
 
-[UKHSA Guidelines Versioning](../../api-guidelines/versioning-and-deprecation.md#api-root-endpoint)
+[UKHSA Guidelines Versioning][1]
+
+[1]: ../../api-guidelines/versioning-and-deprecation.md#api-root-endpoint

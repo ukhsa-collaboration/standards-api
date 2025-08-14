@@ -4,14 +4,16 @@ Path **SHOULD** contain no more than 3 sub-resources (nested resources with non-
 
 ## Invalid Example
 
-``` yaml
+```yaml
 /users/location/name/address/email:
 ```
 
 ## Valid Example
 
-``` yaml
+```yaml
 /users/{userId}/{name}:
 ```
 
-[Zalando Guideline 147](https://opensource.zalando.com/restful-api-guidelines/#147)
+[Zalando Guideline 147][1]
+
+[1]: https://opensource.zalando.com/restful-api-guidelines/#147
