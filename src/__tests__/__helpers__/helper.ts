@@ -15,6 +15,12 @@ const spectralFns = require('@stoplight/spectral-functions');
 
 const RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.yml');
 
+/**
+ * Loads the Spectral ruleset definition from a local YAML file.
+ *
+ * @throws {Error} If the ruleset file does not exist at the expected path.
+ * @returns {RulesetDefinition} The parsed ruleset definition object.
+ */
 function loadRulesetFromYaml(): RulesetDefinition {
   if (!fs.existsSync(RULESET_PATH)) {
     throw new Error(`Ruleset file not found at ${RULESET_PATH}`);
@@ -36,7 +42,14 @@ type Scenario = ReadonlyArray<
   }>
 >;
 
-/** Replace string function names with actual implementations from spectral-functions */
+/**
+ * Recursively replaces string-based function references in a rule definition
+ * with actual function implementations from `@stoplight/spectral-functions`.
+ *
+ * @param {any} ruleDef - The raw rule definition, possibly with function names as strings.
+ * @throws {Error} If a referenced function name is not found in `spectralFns`.
+ * @returns {any} The rule definition with materialized function references.
+ */
 function materializeFunctions(ruleDef: any): any {
   const clone = JSON.parse(JSON.stringify(ruleDef));
 
@@ -66,7 +79,13 @@ function materializeFunctions(ruleDef: any): any {
   return clone;
 }
 
-/** Create Spectral with only the requested rule(s) */
+/**
+ * Creates a Spectral instance configured to run only the specified rules.
+ *
+ * @param {RuleName[]} rules - Array of rule names to include in the Spectral instance.
+ * @throws {Error} If any requested rule is not found in the loaded ruleset.
+ * @returns {InstanceType<typeof Spectral>} A Spectral instance with the filtered ruleset.
+ */
 export function createWithRules(rules: RuleName[]): InstanceType<typeof Spectral> {
   const s = new Spectral({ resolver: httpAndFileResolver });
 
@@ -84,7 +103,12 @@ export function createWithRules(rules: RuleName[]): InstanceType<typeof Spectral
   return s;
 }
 
-/** Test helper */
+/**
+ * Jest test helper to validate a single Spectral rule against multiple scenarios.
+ *
+ * @param {RuleName} ruleName - The name of the rule to test.
+ * @param {Scenario} tests - Array of test scenarios, each with a document and expected errors.
+ */
 export default function testRule(ruleName: RuleName, tests: Scenario): void {
   describe(`Rule ${String(ruleName)}`, () => {
     for (const t of tests) {
@@ -107,6 +131,11 @@ export default function testRule(ruleName: RuleName, tests: Scenario): void {
   });
 }
 
+/**
+ * Asserts that the ruleset file exists at the expected location.
+ *
+ * @throws {Error} If the ruleset file is missing.
+ */
 export function expectRulesetFileExists(): void {
   if (!fs.existsSync(RULESET_PATH)) {
     throw new Error(`Ruleset file not found at ${RULESET_PATH}`);
