@@ -6,8 +6,28 @@ const config: Config = {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.ts'],
+  testPathIgnorePatterns: ['src/__tests__/__helpers__'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/src/__tests__/__helpers__/',   // <- ignore helper folder
+  ],
   moduleFileExtensions: ['ts', 'js', 'json'],
   extensionsToTreatAsEsm: ['.ts'],
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        useESM: true,
+        tsconfig: {
+          module: 'ESNext',
+          target: 'ES2019',
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+          isolatedModules: true,
+        },
+      },
+    ],
+  },
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
   },
