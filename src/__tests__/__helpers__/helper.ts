@@ -120,7 +120,7 @@ export default function testRule(ruleName: RuleName, tests: Scenario): void {
             ? t.document
             : new Document(t.document, Parsers.Yaml, 'inline.yaml');
 
-        const results = await spectral.run(doc);
+        const results: IRuleResult[] = await spectral.run(doc);
         const got = results.filter(({ code }) => code === ruleName);
 
         expect(got).toEqual(
