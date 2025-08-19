@@ -24,7 +24,7 @@ Where rules been adopted from from existing open source API rulesets a link is s
 Install Spectral globally or as a dev dependency.
 
 ```sh
-npm install -g @stoplight/spectral-cli
+npm install @stoplight/spectral-cli --save-dev
 ```
 
 Read the [official spectral documentation][7] for more installation options.
@@ -33,22 +33,13 @@ Read the [official spectral documentation][7] for more installation options.
 
 Run Spectral against your OpenAPI definition, referencing the spectral ruleset.
 
-You can reference a ruleset hosted via [HTTP server][8].
-
-> You can only reference the raw Github URL if the github repository is public.
+You must install the ruleset as via [npm package][9] and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Installing a GitHub npm package][10].
 
 ```sh
-spectral lint openapi-definition.yml --ruleset https://raw.githubusercontent.com/ukhsa-collaboration/api-guidelines/refs/heads/main/.spectral.yaml
+npm install @ukhsa-collaboration/spectral-rules --save-dev
 ```
 
-You can install the ruleset as via [npm package][9] and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Working with the npm registry][10].
-
-```sh
-npm install @ukhsa-collaboration/spectral-rules
-spectral lint openapi-definition.yml --ruleset ./node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml
-```
-
-or create a local `.spectral.yml` ruleset which extends the one in this repository.
+create a local `.spectral.yml` ruleset which extends the one in this repository.
 
 ```bash
 echo "extends: ['@ukhsa-collaboration/spectral-rules']" > .spectral.yml
@@ -57,7 +48,7 @@ echo "extends: ['@ukhsa-collaboration/spectral-rules']" > .spectral.yml
 then you can just run the following.
 
 ```sh
-spectral lint openapi-definition.yml
+npx spectral lint openapi-definition.yml
 ```
 
 ### Review and fix any reported issues
@@ -83,7 +74,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - uses: actions/setup-node@v4
         with:
@@ -112,9 +103,6 @@ jobs:
 | [VS Code Extension][11] | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
 | [Github Action][12] | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
 
-> [!IMPORTANT]
-> To run the spectral linter in your git hub CI/CD workflow you will need to ensure your repository is [added to the list of repositories allowed to download the npm package][13].
-
 Read the [official spectral documentation][14] for more development workflows.
 
 [1]: ../api-guidelines/index.md
@@ -126,7 +114,7 @@ Read the [official spectral documentation][14] for more development workflows.
 [7]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
 [8]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#http-server
 [9]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm
-[10]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry
+[10]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
 [11]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
 [12]: https://github.com/marketplace/actions/spectral-linting
 [13]: https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#github-actions-access-for-packages-scoped-to-personal-accounts
