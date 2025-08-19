@@ -54,15 +54,15 @@ If you're an external contributor make sure to [fork this project first][34]
 If you are a member of the `ukhsa-collaboration` GitHub organisation, you can clone the repository directly:
 
 ```bash
-git clone https://github.com/ukhsa-collaboration/api-guidelines.git
-cd api-guidelines
+git clone https://github.com/ukhsa-collaboration/standards-api.git
+cd standards-api
 ```
 
 Otherwise, if you are an external contributor, you can clone your fork:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/api-guidelines.git
-cd api-guidelines
+git clone https://github.com/YOUR-USERNAME/standards-api.git
+cd standards-api
 ```
 
 #### 3. Install dependencies
@@ -403,7 +403,7 @@ Resolves issue #123"
 
 ### Spectral Rules Development
 
-- For documentation on how to create custom spectral rules, see \[Write Your First Rule]\([docs/spectral-rules/index.md][57] spectral documentation.
+- For documentation on how to create custom spectral rules, see [Write Your First Rule][57] spectral documentation.
 
 - UKHSA specific spectral rules are defined in the `ukhsa.oas.rules.yml` file.
 
@@ -530,7 +530,7 @@ Thank you for contributing to improving API design and development practices acr
 [36]: https://nodejs.org/en/download/
 [37]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
 [38]: https://www.mkdocs.org/
-[39]: https://github.com/ukhsa-collaboration/api-guidelines/issues
+[39]: https://github.com/ukhsa-collaboration/standards-api/issues
 [40]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
 [41]: https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments
 [42]: https://www.conventionalcommits.org/
@@ -546,7 +546,7 @@ Thank you for contributing to improving API design and development practices acr
 [52]: ./.github/workflows/fast-forward-pr-merge-privileged.md
 [53]: https://github.com/orgs/ukhsa-collaboration/teams/api-standards-team
 [54]: ./.github/workflows/fast-forward-pr-merge-init.md#why-is-this-workflow-needed
-[55]: https://ukhsa-collaboration.github.io/api-guidelines/
+[55]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
 [56]: https://datatracker.ietf.org/doc/html/rfc2119
 [57]: https://docs.stoplight.io/docs/spectral/01baf06bdd05a-create-a-ruleset#write-your-first-rule
 [58]: https://docs.stoplight.io/docs/spectral/9ffa04e052cc1-spectral-cli#error-results

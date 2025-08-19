@@ -26,6 +26,6 @@ Provide example responses in the OpenAPI definition. Examples will allow clients
 
 [1]: https://swagger.io/specification/
 [2]: https://editor.swagger.io/
-[3]: https://github.com/ukhsa-collaboration/api-guidelines/blob/main/example/example.1.0.0.oas.yml
+[3]: https://github.com/ukhsa-collaboration/standards-api/blob/main/example/example.1.0.0.oas.yml
 [4]: https://openapi-generator.tech/
 [5]: https://bitbucket.org/atlassian/swagger-request-validator/src/master/

@@ -14,9 +14,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ukhsa-collaboration/api-guidelines.git"
+    "url": "git+https://github.com/ukhsa-collaboration/standards-api.git"
   },
-  "homepage": "https://ukhsa-collaboration.github.io/api-guidelines/",
+  "homepage": "https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/",
   "keywords": [
     "UKHSA",
     "spectral",
