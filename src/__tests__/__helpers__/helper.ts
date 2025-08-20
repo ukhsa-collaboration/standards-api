@@ -1,19 +1,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createRequire } from 'node:module';
 import yaml from 'js-yaml';
 
+import SpectralCore from '@stoplight/spectral-core';
+import { httpAndFileResolver } from '@stoplight/spectral-ref-resolver';
+import * as spectralFns from '@stoplight/spectral-functions';
 import type { IRuleResult, Ruleset, RulesetDefinition } from '@stoplight/spectral-core';
 
-// Stoplight runtime pkgs via CJS interop (stable under ESM Jest)
-const require = createRequire(import.meta.url);
-const { Spectral, Document } = require('@stoplight/spectral-core');
-const { httpAndFileResolver } = require('@stoplight/spectral-ref-resolver');
-const Parsers = require('@stoplight/spectral-parsers');
-const { oas2, oas3 } = require('@stoplight/spectral-formats');
-const spectralFns = require('@stoplight/spectral-functions');
+const { Spectral, Document } = SpectralCore;
+
+import SpectralParsers from '@stoplight/spectral-parsers';
+const { Yaml } = SpectralParsers;
 
 const RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.yml');
+
+type FnName = keyof typeof spectralFns;
+type SpectralLike = {
+  setRuleset(def: RulesetDefinition): void;
+  run(doc: unknown): Promise<IRuleResult[]>;
+};
 
 /**
  * Loads the Spectral ruleset definition from a local YAML file.
@@ -55,7 +60,7 @@ function materializeFunctions(ruleDef: any): any {
 
   const normalize = (step: any) => {
     if (step && typeof step.function === 'string') {
-      const fnName = step.function;
+      const fnName = step.function as FnName;
       const impl = spectralFns[fnName];
       if (typeof impl !== 'function') {
         throw new Error(
@@ -84,10 +89,11 @@ function materializeFunctions(ruleDef: any): any {
  *
  * @param {RuleName[]} rules - Array of rule names to include in the Spectral instance.
  * @throws {Error} If any requested rule is not found in the loaded ruleset.
- * @returns {InstanceType<typeof Spectral>} A Spectral instance with the filtered ruleset.
+ * @returns {SpectralLike} A Spectral instance with the filtered ruleset.
  */
-export function createWithRules(rules: RuleName[]): InstanceType<typeof Spectral> {
-  const s = new Spectral({ resolver: httpAndFileResolver });
+export function createWithRules(rules: RuleName[]): SpectralLike {
+  const Ctor = Spectral as unknown as new (...args: any[]) => SpectralLike;
+  const s = new Ctor({ resolver: httpAndFileResolver });
 
   const sourceRules: Record<string, any> = (baseRuleset?.rules ?? {}) as Record<string, any>;
   const filtered: Record<string, any> = {};
@@ -98,7 +104,7 @@ export function createWithRules(rules: RuleName[]): InstanceType<typeof Spectral
     filtered[name] = materializeFunctions(raw);
   }
 
-  s.setRuleset({ rules: filtered } as RulesetDefinition, { formats: { oas2, oas3 } });
+  s.setRuleset({ rules: filtered } as RulesetDefinition);
 
   return s;
 }
@@ -118,9 +124,9 @@ export default function testRule(ruleName: RuleName, tests: Scenario): void {
         const doc =
           t.document instanceof Document
             ? t.document
-            : new Document(t.document, Parsers.Yaml, 'inline.yaml');
+            : new Document(t.document, Yaml, 'inline.yaml');
 
-        const results: IRuleResult[] = await spectral.run(doc);
+        const results = await spectral.run(doc);
         const got = results.filter(({ code }) => code === ruleName);
 
         expect(got).toEqual(
