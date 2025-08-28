@@ -1,112 +1,54 @@
-name: Publish Guidelines
+name: Publish Guidelines Dispatch
 on:
   workflow_dispatch:
   push:
     paths:
       - 'docs/**'
-      - 'overrides/**'
-      - mkdocs.yml
     branches:
       - main
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
-  build-documentation:
-    name: Build Documentation
+  dispatch:
     if: github.ref == 'refs/heads/main'
-    # Grant GITHUB_TOKEN the permissions required to make get git provenance when building docs
-    permissions:
-      contents: read    # to read git committers
-
+    name: Dispatch Publish Standards Workflow
     runs-on: ubuntu-latest
     steps:
+      - name: Generate HMAC body + signature
+        id: hmac
+        env:
+          SHARED_HMAC_KEY: ${{ secrets.UKHSA_STANDARDS_PUBLISH_DISPATCH_SHARED_HMAC_KEY }}
+        run: |
+          if [ -z "$SHARED_HMAC_KEY" ]; then
+            echo "Missing SHARED_HMAC_KEY secret"; exit 1
+          fi
+          body="${GITHUB_REPOSITORY}|${GITHUB_SHA}|$(date -u +%s)"
+          sig=$(printf "%s" "$body" | openssl dgst -sha256 -hmac "$SHARED_HMAC_KEY" | sed 's/^.* //')
+          echo "body=$body" >> "$GITHUB_OUTPUT"
+          echo "sig=$sig" >> "$GITHUB_OUTPUT"
 
-    - name: Checkout code
-      uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
+      - name: Create GitHub App token (scoped to standards-org)
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.UKHSA_STANDARDS_PUBLISH_DISPATCH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.UKHSA_STANDARDS_PUBLISH_DISPATCH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: standards-org
+          permission-actions: write
 
-    - name: Configure Git Credentials
-      run: |
-        git config user.name github-actions[bot]
-        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-
-    - uses: actions/setup-python@v5
-      with:
-        python-version: 3.x
-
-    - run: |
-        pip install --upgrade pip
-
-    - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-
-    - uses: actions/cache@v4
-      with:
-        key: mkdocs-material-${{ env.cache_id }}
-        path: ~/.cache
-        restore-keys: |
-          mkdocs-material-
-
-    - name: install mkdocs and plugins
-      run: |
-        pip install mkdocs-material
-        pip install markdown-callouts
-        pip install mkdocs-git-revision-date-localized-plugin
-        pip install mkdocs-git-committers-plugin-2
-        pip install pytest-playwright
-        pip install mkdocs-print-site-plugin
-        pip install mkdocs-tech-docs-template
-        pip install mkdocs-redirects
-        pip install mkdocs-awesome-nav
-
-    - name: install playwright
-      run: |
-        playwright install --with-deps
-        playwright install chrome --with-deps
-
-    - name: generate site pdf 
-      run: |
-        mkdocs serve --no-livereload -c -q &
-        echo "waiting for mkdocs dev server to start..."
-        until curl --output /dev/null --silent --head --fail http://localhost:8000; do
-          printf '.'
-          sleep 1
-        done
-        playwright pdf --wait-for-selector=#print-site-page localhost:8000/print_page/ docs/ukhsa-api-guidelines.pdf
-        killall -9 mkdocs
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        MKDOCS_GIT_PROVENANCE_ENABLED: true
-        MKDOCS_EXPORTER_PDF_ENABLED: true
-
-    - name: Publish docs
-      run: mkdocs build
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        MKDOCS_GIT_PROVENANCE_ENABLED: true
-        MKDOCS_EXPORTER_PDF_ENABLED: true
-
-    - name: Upload build
-      uses: actions/upload-pages-artifact@v4
-      with:
-        path: site
-
-  publish-gh-pages:
-    needs: build-documentation
-    name: Publish Guidelines To Github Pages
-
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-
-    # Deploy to the github-pages environment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Dispatch publish workflow in standards-org
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          echo "Triggering publish workflow in standards-org"
+          gh workflow run publish-guidelines.yml \
+            -R ${{ github.repository_owner }}/standards-org \
+            --ref main \
+            -f upstream_repo="${GITHUB_REPOSITORY}" \
+            -f upstream_sha="${GITHUB_SHA}" \
+            -f hmac_body="${{ steps.hmac.outputs.body }}" \
+            -f hmac_sig="${{ steps.hmac.outputs.sig }}"
