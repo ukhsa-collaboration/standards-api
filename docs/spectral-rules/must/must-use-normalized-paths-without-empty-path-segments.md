@@ -1,7 +1,3 @@
----
-title: use normalised paths without empty path segments
----
-
 # **MUST** use normalised paths without empty path segments
 
 Path segments **MUST** not contain duplicate slashes.

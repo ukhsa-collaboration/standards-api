@@ -587,7 +587,7 @@ def get_cached_response(cache_key):
 [5]: https://github.com/Krukov/cashews
 [6]: https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-cache
 [7]: #server-side-response-caching
-[8]: ../api-design.md#http-methods-semantics
+[8]: ../api-design.md#http-methods-and-semantics
 [9]: https://datatracker.ietf.org/doc/html/rfc9111#section-5.2
 [10]: https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5
 [11]: https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3

@@ -12,7 +12,6 @@ function escapeRegExp(str) {
 
 // 1. Transform plugin: convert leading [!TYPE] text into a custom node
 export function calloutMarkerPlugin() {
-
   // Register toMarkdown handler at plugin setup time
   const data = this.data()
   const add = (field, value) => {

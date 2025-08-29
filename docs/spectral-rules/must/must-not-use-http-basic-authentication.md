@@ -23,4 +23,4 @@ security:
 [UKHSA Guidelines Security][2]
 
 [1]: https://owasp.org/API-Security/editions/2019/en/0xa2-broken-user-authentication/
-[2]: api-design-guidelines/api-guidelines/security.md#authentication
+[2]: ../../api-guidelines/security.md#authentication
