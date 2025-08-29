@@ -1,4 +1,4 @@
-import { calloutMarkerPlugin } from './callout-plugin.mjs'
+import { calloutMarkerPlugin } from './src/remark/callout-plugin.mjs'
 
 export default {
   settings: {
@@ -10,6 +10,8 @@ export default {
     ['frontmatter', { type: 'yaml', marker: '-' }],
     ['gfm', { tablePipeAlign: false }],
     ['renumber-references', { preserveAlphanumericDefinitions: false }],
-    calloutMarkerPlugin
+    calloutMarkerPlugin,
+    'preset-lint-consistent',
+    'preset-lint-recommended'
   ]
 }

@@ -33,7 +33,7 @@ Read the [official spectral documentation][7] for more installation options.
 
 Run Spectral against your OpenAPI definition, referencing the spectral ruleset.
 
-You must install the ruleset as via [npm package][9] and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Installing a GitHub npm package][10].
+You must install the ruleset as via [npm package][8] and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Installing a GitHub npm package][9].
 
 ```sh
 npm install @ukhsa-collaboration/spectral-rules --save-dev
@@ -100,10 +100,10 @@ jobs:
 
 | Tool | Description |
 | - | - |
-| [VS Code Extension][11] | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
-| [Github Action][12] | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
+| [VS Code Extension][10] | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
+| [Github Action][11] | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
 
-Read the [official spectral documentation][14] for more development workflows.
+Read the [official spectral documentation][12] for more development workflows.
 
 [1]: ../api-guidelines/index.md
 [2]: https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all
@@ -112,10 +112,8 @@ Read the [official spectral documentation][14] for more development workflows.
 [5]: https://swagger.io/specification/
 [6]: https://docs.stoplight.io/docs/spectral
 [7]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
-[8]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#http-server
-[9]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm
-[10]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
-[11]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
-[12]: https://github.com/marketplace/actions/spectral-linting
-[13]: https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#github-actions-access-for-packages-scoped-to-personal-accounts
-[14]: https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows
+[8]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm
+[9]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
+[10]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
+[11]: https://github.com/marketplace/actions/spectral-linting
+[12]: https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows
