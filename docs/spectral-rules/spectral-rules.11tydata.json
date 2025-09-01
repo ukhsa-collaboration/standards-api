@@ -1,4 +1,5 @@
 {
   "layout": "sub-navigation",
-  "caption": "Spectral Rules"
+  "caption": "Spectral Rules",
+  "showPagination": true
 }
