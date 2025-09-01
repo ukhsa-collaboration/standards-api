@@ -22,9 +22,7 @@ APIs **MUST NOT** use HTTP Basic Authentication.
 
 **SHOULD** use [JWT (JSON Web Tokens)][1], passed in the [Authorization][2] header using the Bearer scheme to convey authentication data.
 
-> [!NOTE]
-> **OpenAPI Definition**
->
+> [!NOTE] OpenAPI Definition
 > Refer to OpenAPI documentation for the [bearer scheme][3] when designing the API.
 
 When using JWTs as Bearer tokens, they **MUST** be included in the Authorization header as follows:
@@ -41,9 +39,7 @@ APIs **SHOULD** use [OpenID Connect][4] (OIDC) as the identity layer on top of O
 
 JWTs **MUST** be signed based on the JSON Web Signature (JWS) standard.
 
-> [!NOTE]
->
-> **JWT Validation**
+> [!NOTE] JWT Validation
 > JWT validation is a [policy][5] configurable on the APIM Platform that will perform some validation. However, APIs **MUST** still validate the JWT as specified below.
 
 The API **MUST** validate the JWT `signature`, `expiry time`, `issuer`, `audience`, `subject` and `claims` in order to determine whether to grant access.
@@ -58,9 +54,7 @@ The API **MUST** validate the JWT `signature`, `expiry time`, `issuer`, `audienc
 
 JWT expiration for interactive end-user applications **SHOULD** be between 1 and 60 minutes.
 
-> [!WARNING]
-> **Security Note**
->
+> [!WARNING] Security Note
 > Review the OWASP API guidelines on [Broken Authentication][6] and ensure relevant guidance is followed.
 
 ## Authorisation
@@ -80,7 +74,6 @@ APIs **SHOULD** use OAuth 2.0 for authorisation. Using OAuth 2.0 will provide th
 APIs **SHOULD NOT** use the "[Resource Owner Password Credentials Grant][11]" or "[Implicit Grant][12]", which are considered legacy and have been deprecated from OAuth 2.1 as they are considered weak from a security standpoint.
 
 > [!NOTE]
->
 > Refer to OpenAPI documentation for [OAuth 2.0][13] when designing the API.
 
 ### OAuth 2.0 Authorization Code Grant Type
@@ -120,9 +113,7 @@ If your API exposes Employee Resources then example scope might look like this `
 - **SHOULD** consider a mechanism for [Access Control][20] in the absence of scopes.
 - **SHOULD NOT** use refresh tokens with `Client Credentials` grant type.
 
-> [!WARNING]
->
-> **Security Note**
+> [!WARNING] Security Note
 > Review the OWASP guidelines on [Broken Function Level Authorization][21] and ensure relevant guidance is followed.
 
 #### Access Control
@@ -169,9 +160,7 @@ A common pattern is to use a verb-noun format (e.g., `Employee.Read`, `Manager.C
 
 Rate limiting controls the number of API requests a client can make within a specific time period to protect the API from abuse, denial of service attacks, and to ensure fair usage.
 
-> [!WARNING]
-> **Security Note**
->
+> [!WARNING] Security Note
 > Review the OWASP API Security Top 10 guidance on [Lack of Resources & Rate Limiting][27] and ensure relevant controls are implemented.
 
 APIs **SHOULD** implement rate limiting to:

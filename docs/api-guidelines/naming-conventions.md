@@ -30,8 +30,7 @@ APIs **MUST** use lowercase for the entire URI.
 
 APIs **SHOULD** limit the level of nesting to avoid overly complex URIs. Typically, two to three levels are sufficient.
 
-> [!NOTE]
-> **Environments**\
+> [!NOTE] Environments
 > Domain Names for various environments can be found in the [API Management Low Level Design.][1]
 
 ### Namespaces
