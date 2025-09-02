@@ -10,7 +10,7 @@
     "fmt:md": "remark . --ext .md --output",
     "lint:md": "remark . --ext .md --frail",
     "prepare": "husky && git config commit.template .gitmessage",
-    "start": "docker run -p \"8080:8080\" -v \"./docs:/site/docs/api-design-guidelines\" ghcr.io/ukhsa-collaboration/standards-org",
+    "start": "docker run --rm --pull=always -p \"8080:8080\" -v \"./docs:/site/docs/api-design-guidelines\" ghcr.io/ukhsa-collaboration/standards-org:latest",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch"
   },
