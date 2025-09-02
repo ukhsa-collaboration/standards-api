@@ -79,7 +79,7 @@ jobs:
           npx spectral lint "./example/*.{json,yml,yaml}" -f github-actions
 
   run-typescript-tests:
-    name: Run TypeScript and Spectral Tests
+    name: Run Tests
     needs: changes
     if: ${{ needs.changes.outputs.run_ci == 'true' }}
     runs-on: ubuntu-latest

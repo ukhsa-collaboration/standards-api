@@ -4,37 +4,37 @@ Thank you for your interest in contributing to the UKHSA API Guidelines! This re
 
 ## Table of Contents
 
-- [Contributing to UKHSA API Guidelines](#contributing-to-ukhsa-api-guidelines)
-  - [Table of Contents](#table-of-contents)
-  - [Code of Conduct](#code-of-conduct)
-  - [Getting Started](#getting-started)
-    - [Setting Up Your Development Environment](#setting-up-your-development-environment)
-      - [1. Fork the repository](#1-fork-the-repository)
-      - [2. Clone the repository](#2-clone-the-repository)
-      - [3. Install dependencies](#3-install-dependencies)
-      - [4. Compile TypeScript](#4-compile-typescript)
-    - [Understanding the Repository Structure](#understanding-the-repository-structure)
-  - [Contributing Process](#contributing-process)
-    - [Finding Issues to Work On](#finding-issues-to-work-on)
-    - [Signed Commits](#signed-commits)
-      - [1. Generate a GPG key (if you don't have one already)](#1-generate-a-gpg-key-if-you-dont-have-one-already)
-      - [2. Configure Git to use your GPG key](#2-configure-git-to-use-your-gpg-key)
-      - [3. Add your GPG key to GitHub](#3-add-your-gpg-key-to-github)
-      - [4. Sign your commits](#4-sign-your-commits)
-    - [Opening New Issues](#opening-new-issues)
-    - [Making Changes](#making-changes)
-      - [Example](#example)
-    - [Pull Request Process](#pull-request-process)
-  - [Development Guidelines](#development-guidelines)
-    - [Documentation Standards](#documentation-standards)
-    - [Spectral Rules Development](#spectral-rules-development)
-    - [Testing Guidelines](#testing-guidelines)
-  - [Viewing the Guidelines Locally](#viewing-the-guidelines-locally)
-  - [Documentation Deployment](#documentation-deployment)
-  - [Spectral Rules Release](#spectral-rules-release)
-    - [1. Update the Version Number](#1-update-the-version-number)
-    - [2. Document the Changes](#2-document-the-changes)
-    - [3. Create a Release](#3-create-a-release)
+- [Contributing to UKHSA API Guidelines][1]
+  - [Table of Contents][2]
+  - [Code of Conduct][3]
+  - [Getting Started][4]
+    - [Setting Up Your Development Environment][5]
+      - [1. Fork the repository][6]
+      - [2. Clone the repository][7]
+      - [3. Install dependencies][8]
+      - [4. Compile TypeScript][9]
+    - [Understanding the Repository Structure][10]
+  - [Contributing Process][11]
+    - [Finding Issues to Work On][12]
+    - [Signed Commits][13]
+      - [1. Generate a GPG key (if you don't have one already)][14]
+      - [2. Configure Git to use your GPG key][15]
+      - [3. Add your GPG key to GitHub][16]
+      - [4. Sign your commits][17]
+    - [Opening New Issues][18]
+    - [Making Changes][19]
+      - [Example][20]
+    - [Pull Request Process][21]
+  - [Development Guidelines][22]
+    - [Documentation Standards][23]
+    - [Spectral Rules Development][24]
+    - [Testing Guidelines][25]
+  - [Viewing the Guidelines Locally][26]
+  - [Documentation Deployment][27]
+  - [Spectral Rules Release][28]
+    - [1. Update the Version Number][29]
+    - [2. Document the Changes][30]
+    - [3. Create a Release][31]
 
 ## Code of Conduct
 
@@ -410,11 +410,11 @@ Resolves issue #123"
 
 - Add automated tests for each new Spectral rule:
   1. Define the rule in `ukhsa.oas.rules.yml`.
-  2. Create a Jest test file in:
+  1. Create a Jest test file in:
      ```
      src/__tests__/rules/<rule-name>.spec.ts
      ```
-  3. Use the testRule helper from src/__tests__/__helpers__/helper.ts to define one or more inline scenarios:
+  1. Use the testRule helper from src/**tests**/**helpers**/helper.ts to define one or more inline scenarios:
      ```ts
      import testRule from './__helpers__/helper';
 

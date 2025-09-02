@@ -106,5 +106,3 @@ For detailed requirements on standardised error responses (e.g., 401, 403, 500) 
 [8]: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 [9]: https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.2
 [10]: ./error-handling.md
-
-For detailed requirements on standardised error responses (e.g., 401, 403, 500) using Problem Details (RFC-9457), see [UKHSA Guidelines Error Handling](./error-handling.md).

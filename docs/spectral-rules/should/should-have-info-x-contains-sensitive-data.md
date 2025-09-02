@@ -10,7 +10,7 @@ Adding this flag allows downstream systems and reviewers to apply additional con
 > advertise the API as a target for bad actors. Keep the field only in private
 > specs or inject it during internal build/validation steps.
 
-See [OWASP API Security Top 10](https://owasp.org/www-project-api-security/) and relevant regulatory frameworks (e.g., [GDPR](https://gdpr.eu/), [NHS – Protecting patient data](https://digital.nhs.uk/services/national-data-opt-out/understanding-the-national-data-opt-out/protecting-patient-data)) for background on handling sensitive data in APIs.
+See [OWASP API Security Top 10][1] and relevant regulatory frameworks (e.g., [GDPR][2], [NHS – Protecting patient data][3]) for background on handling sensitive data in APIs.
 
 ## Valid Example
 
@@ -24,3 +24,7 @@ info:
 ## Guidance
 
 Use `true` if any operations in the API may expose or accept sensitive data. Otherwise, set it explicitly to `false`.
+
+[1]: https://owasp.org/www-project-api-security/
+[2]: https://gdpr.eu/
+[3]: https://digital.nhs.uk/services/national-data-opt-out/understanding-the-national-data-opt-out/protecting-patient-data
