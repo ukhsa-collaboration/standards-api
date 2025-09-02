@@ -163,7 +163,10 @@ jobs:
     permissions:
       pull-requests: write
       contents: write
-      actions: write
+
+    outputs:
+      merged: ${{ steps.merge-status.outputs.merged }}
+      pr_details: ${{ steps.get-pr-details.outputs.data }}
 
     # Run only if
     # 1. The user has write or admin permissions on the repository.
@@ -186,7 +189,6 @@ jobs:
         id: get-pr-details
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_NUMBER: ${{ env.PULL_NUMBER }}
           GH_API_VERSION: '2022-11-28'
         run: |
           echo "Fetching pull request details"
@@ -196,32 +198,6 @@ jobs:
             repos/$GITHUB_REPOSITORY/pulls/$PULL_NUMBER)
           echo "response: $RESPONSE"
           echo "data=$RESPONSE" >> $GITHUB_OUTPUT
-
-      - name: Fetch PR Branch
-        env:
-          HEAD_BRANCH: pull/${{ env.PULL_NUMBER }}/head
-        run: |
-          git fetch origin +refs/$HEAD_BRANCH:refs/heads/$HEAD_BRANCH
-
-      - name: Filter paths
-        if: ${{ fromJson(steps.get-pr-details.outputs.data).mergeable_state == 'clean' }}
-        id: changes
-        uses: dorny/paths-filter@v3
-        with:
-          base: ${{ fromJson(steps.get-pr-details.outputs.data).base.ref }}
-          ref: pull/${{ env.PULL_NUMBER }}/head
-          filters: |
-            docs:
-              - 'docs/**'
-            ci:
-              - 'src/**'
-              - 'example/**'
-              - '__tests__/**'
-              - '.spectral.yaml'
-              - '*.oas.rules.*'
-              - 'package.json'
-              - 'tsconfig.json'
-              - 'jest.config.*'
 
       # Merge (rebase) the PR if it is allowed.
       - name: Merge the PR
@@ -268,45 +244,17 @@ jobs:
       - name: Add comment to PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_NUMBER: ${{ env.PULL_NUMBER }}
           body: ${{ steps.merge-status.outputs.message }}
         run: |
           echo "Adding success/failure comment to PR"
           RESPONSE=$(gh pr comment $PULL_NUMBER --repo "$GITHUB_REPOSITORY" -b "$body")
           echo "response: $RESPONSE"
 
-      # when merges are done by github build agent it doesn't trigger any usual workflows
-      # so here we trigger them ourselves
-      - name: Triggering 'Publish Guidelines Dispatch' workflow
-        if: ${{ steps.merge-status.outputs.merged == 'true' && steps.changes.outputs.docs == 'true' }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Triggering 'Publish Guidelines Dispatch' workflow"
-          gh workflow run publish-guidelines.yml --ref main
-
-      - name: Triggering 'Spectral Checks' workflows
-        if: ${{ steps.merge-status.outputs.merged == 'true' && steps.changes.outputs.ci == 'true' }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Triggering 'Spectral Checks' workflows"
-          gh workflow run spectral-checks.yml --ref main
-
-      - name: Triggering Standard CI workflows
-        if: ${{ steps.merge-status.outputs.merged == 'true' }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Triggering 'Standard CI' workflows"
-          gh workflow run codeql.yml --ref main
-
       # Post a failure message when any of the previous steps fail.
       - name: Add failure comment to PR
         if: ${{ failure() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_NUMBER: ${{ env.PULL_NUMBER }}
           body: ${{ env.ERROR_MESSAGE }}
         run: |
           echo "Adding failure comment to PR"
@@ -317,8 +265,81 @@ jobs:
         if: ${{ always() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_NUMBER: ${{ env.PULL_NUMBER }}
         run: |
           echo "Removing 'fast-forward' label from PR"
           RESPONSE=$(gh pr edit $PULL_NUMBER --repo "$GITHUB_REPOSITORY" --remove-label "fast-forward")
           echo "response: $RESPONSE"
+
+  trigger_workflows:
+    name: Trigger Workflows
+    needs:
+      - import-event
+      - merge_comment
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      actions: write
+
+    # Run only if
+    # 1. the pull request was merged
+    if: ${{ needs.merge_comment.outputs.merged == 'true' }}
+
+    env:
+      HEAD_BRANCH: pull/${{ fromJson(needs.import-event.outputs.trigger_event).pull_request.number }}/head
+      BASE_REF: ${{ fromJson(needs.merge_comment.outputs.pr_details).base.ref }}
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Fetch PR Branch
+        run: |
+          git fetch origin +refs/$HEAD_BRANCH:refs/heads/$HEAD_BRANCH
+
+      - name: Filter paths
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          base: ${{ env.BASE_REF }}
+          ref: ${{ env.HEAD_BRANCH }}
+          filters: |
+            docs:
+              - 'docs/**'
+            ci:
+              - 'src/**'
+              - 'example/**'
+              - '__tests__/**'
+              - '.spectral.yaml'
+              - '*.oas.rules.*'
+              - 'package.json'
+              - 'tsconfig.json'
+              - 'jest.config.*'
+
+      # when merges are done by github build agent it doesn't trigger any usual workflows
+      # so here we trigger them ourselves
+      - name: Triggering 'Publish Guidelines Dispatch' workflow
+        if: ${{ steps.changes.outputs.docs == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Triggering 'Publish Guidelines Dispatch' workflow"
+          gh workflow run publish-guidelines.yml --ref main
+
+      - name: Triggering 'Spectral Checks' workflows
+        if: ${{ steps.changes.outputs.ci == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Triggering 'Spectral Checks' workflows"
+          gh workflow run spectral-checks.yml --ref main
+
+      - name: Triggering Standard CI workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Triggering 'Standard CI' workflows"
+          gh workflow run codeql.yml --ref main
+
