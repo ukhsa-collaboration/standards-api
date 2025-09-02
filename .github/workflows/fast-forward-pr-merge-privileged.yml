@@ -300,7 +300,6 @@ jobs:
         run: |
           echo "Triggering 'Standard CI' workflows"
           gh workflow run codeql.yml --ref main
-          gh workflow run lint-commit-msg.yml --ref main
 
       # Post a failure message when any of the previous steps fail.
       - name: Add failure comment to PR
