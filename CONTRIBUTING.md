@@ -411,7 +411,7 @@ Resolves issue #123"
 - Add automated tests for each new Spectral rule:
   1. Define the rule in `ukhsa.oas.rules.yml`.
   1. Create a Jest test file in:
-     ```
+     ```text
      src/__tests__/rules/<rule-name>.spec.ts
      ```
   1. Use the testRule helper from src/**tests**/**helpers**/helper.ts to define one or more inline scenarios:
