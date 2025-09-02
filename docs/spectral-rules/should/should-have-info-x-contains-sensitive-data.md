@@ -4,8 +4,8 @@ The OpenAPI `info` object **SHOULD** include a field `x-contains-sensitive-data`
 
 Adding this flag allows downstream systems and reviewers to apply additional controls, validations, or security measures early in the API lifecycle.
 
-> [!CAUTION]
-> **Security Note** If the API definition will be public, **omit** this field
+> [!CAUTION] Security Note
+> If the API definition will be public, **omit** this field
 > from the published spec. Exposing sensitive-data flags can unintentionally
 > advertise the API as a target for bad actors. Keep the field only in private
 > specs or inject it during internal build/validation steps.
