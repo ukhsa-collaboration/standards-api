@@ -1,4 +1,4 @@
 *
-!functions/*.js
+!dist/functions/*.js
 !.spectral.yaml
 !*.oas.rules.yml
