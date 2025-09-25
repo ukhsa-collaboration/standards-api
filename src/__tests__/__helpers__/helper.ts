@@ -5,6 +5,8 @@ import yaml from 'js-yaml';
 import SpectralCore from '@stoplight/spectral-core';
 import { httpAndFileResolver } from '@stoplight/spectral-ref-resolver';
 import * as spectralFns from '@stoplight/spectral-functions';
+import * as customFns from '../../functions/spectral-functions';
+
 import type { IRuleResult, Ruleset, RulesetDefinition } from '@stoplight/spectral-core';
 
 const { Spectral, Document } = SpectralCore;
@@ -14,7 +16,9 @@ const { Yaml } = SpectralParsers;
 
 const RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.yml');
 
-type FnName = keyof typeof spectralFns;
+type FnName = keyof typeof spectralFns | keyof typeof customFns;
+const allFns = { ...spectralFns, ...customFns };
+
 type SpectralLike = {
   setRuleset(def: RulesetDefinition): void;
   run(doc: unknown): Promise<IRuleResult[]>;
@@ -61,7 +65,8 @@ function materializeFunctions(ruleDef: any): any {
   const normalize = (step: any) => {
     if (step && typeof step.function === 'string') {
       const fnName = step.function as FnName;
-      const impl = spectralFns[fnName];
+      const impl = allFns[fnName];
+
       if (typeof impl !== 'function') {
         throw new Error(
           `Rule references unknown function "${fnName}". ` +
@@ -113,21 +118,27 @@ export function createWithRules(rules: RuleName[]): SpectralLike {
  * Jest test helper to validate a single Spectral rule against multiple scenarios.
  *
  * @param {RuleName} ruleName - The name of the rule to test.
+ * @param {RuleName[]} [additionalRules=[]] - Optional array of additional rule names to include.
  * @param {Scenario} tests - Array of test scenarios, each with a document and expected errors.
  */
-export default function testRule(ruleName: RuleName, tests: Scenario): void {
+export default function testRule(ruleName: RuleName, additionalRules: RuleName[] = [], tests: Scenario): void {
   describe(`Rule ${String(ruleName)}`, () => {
     for (const t of tests) {
       it(t.name, async () => {
-        const spectral = createWithRules([ruleName]);
-
+        const rulesToInclude = [ruleName, ...additionalRules];
+        const spectral = createWithRules(rulesToInclude);
+        console.log((<any>spectral).ruleset.rules);
         const doc =
           t.document instanceof Document
             ? t.document
             : new Document(t.document, Yaml, 'inline.yaml');
 
+        // if (ruleName === 'override-severity') {
+        //   console.log(doc);
+        // }
+
         const results = await spectral.run(doc);
-        const got = results.filter(({ code }) => code === ruleName);
+        const got = results.filter(({ code }) => rulesToInclude.includes(<string>code));
 
         expect(got).toEqual(
           t.errors.map((e) => expect.objectContaining(e) as unknown)

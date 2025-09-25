@@ -6,12 +6,21 @@ extends:
 documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
 
 functions:
-  - is-api-info-json-schema
-  - has-required-problem-details-error-responses
+  - isApiInfoJsonSchema
+  - hasRequiredProblemDetailsErrorResponses
+  - overrideSeverity
 
 functionsDir: dist/functions
 
 rules:
+
+  # Conditional overrides based on API type
+  override-severity:
+    message: "Adjusting severity for legacy API"
+    given: "$"
+    then:
+      function: overrideSeverity
+
   oas3-api-servers: off
   must-have-info-x-api-id: off
   must-always-return-json-objects-as-top-level-data-structures: warn
@@ -116,7 +125,7 @@ rules:
     given: $.paths["/"].*.responses["200"].content["application/json"]
     severity: error
     then:
-      function: is-api-info-json-schema
+      function: isApiInfoJsonSchema
       field: schema
     recommended: true
     description: '`ApiInfo` schema must include this set of minimal required properties and validations.'
@@ -275,7 +284,7 @@ rules:
     severity: warn
     given: $.paths[*][*]
     then:
-      function: has-required-problem-details-error-responses
+      function: hasRequiredProblemDetailsErrorResponses
       functionOptions:
         mode: 'critical'
 
@@ -288,7 +297,7 @@ rules:
     severity: warn
     given: $.paths[*][*]
     then:
-      function: has-required-problem-details-error-responses
+      function: hasRequiredProblemDetailsErrorResponses
       functionOptions:
         mode: 'explicit-security'
 

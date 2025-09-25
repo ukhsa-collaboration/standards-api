@@ -5,19 +5,7 @@ describe('ruleset file', () => {
   it('exists', () => expectRulesetFileExists());
 });
 
-testRule('should-have-info-x-contains-sensitive-data', [], [
-  {
-    name: 'valid: info.x-contains-sensitive-data present and boolean',
-    document: `
-openapi: 3.0.0
-info:
-  title: Sample API
-  version: 1.0.0
-  x-contains-sensitive-data: true
-paths: {}
-`,
-    errors: [],
-  },
+testRule('override-severity', ['should-have-info-x-contains-sensitive-data'], [
   {
     name: 'invalid: info.x-contains-sensitive-data missing',
     document: `
@@ -25,6 +13,7 @@ openapi: 3.0.0
 info:
   title: Example
   version: 1.0.0
+  x-api-type: pygeoapi
 paths: {}
 `,
     errors: [
@@ -43,6 +32,7 @@ info:
   title: Example
   version: 1.0.0
   x-contains-sensitive-data: "yes"
+  x-api-type: pygeoapi
 paths: {}
 `,
     errors: [

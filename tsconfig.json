@@ -4,6 +4,9 @@
     "paths": {
       "src/*": ["src/*"]
     },
+    "allowJs": true,
+    "checkJs": true,
+    "declaration": true,
     "target": "ES2016",
     "module": "ESNext",
     "esModuleInterop": true,
@@ -16,6 +19,6 @@
     "outDir": "./dist",
     "rootDir": "src"
   },
-  "include": ["src", "__tests__", "src/functions/legacy/legacy.d.ts"],
+  "include": ["src", "__tests__"],
   "exclude": ["node_modules", "dist"]
 }
