@@ -1,17 +1,44 @@
-extends: 
+extends:
   - ./zalando.oas.rules.yml
   - [spectral:oas, recommended]
-  - https://unpkg.com/@stoplight/spectral-documentation/dist/ruleset.mjs
+  - '@stoplight/spectral-documentation'
 
-documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
+documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/
 
 functions:
-  - is-api-info-json-schema
-  - has-required-problem-details-error-responses
+  - isApiInfoJsonSchema
+  - hasRequiredProblemDetailsErrorResponses
+  - overrideSeverity
 
 functionsDir: dist/functions
 
 rules:
+
+  # Conditional overrides based on API type
+  override-severity-pygeoapi:
+    message: "Adjusting severity for pygeoapi definitions"
+    given: "$"
+    then:
+      function: overrideSeverity
+      functionOptions:
+        target: $.info["x-api-type"]
+        value: pygeoapi
+        rulesToAdjust:
+          must-define-a-format-for-integer-types: warn
+          must-define-a-format-for-number-types: warn
+          must-define-security-schemes: warn
+          must-have-info-api-audience: warn
+          must-have-info-contact-email: warn
+          must-have-info-value-chain: warn
+          must-have-info-version: warn
+          must-specify-default-response: warn
+          must-use-camel-case-for-property-names: warn
+          must-use-camel-case-for-query-parameters: warn
+          must-use-https-protocol-only: warn
+          must-use-problem-json-as-default-response: warn
+          must-use-problem-json-for-errors: warn
+          must-use-valid-version-info-schema: warn
+
   oas3-api-servers: off
   must-have-info-x-api-id: off
   must-always-return-json-objects-as-top-level-data-structures: warn
@@ -116,7 +143,7 @@ rules:
     given: $.paths["/"].*.responses["200"].content["application/json"]
     severity: error
     then:
-      function: is-api-info-json-schema
+      function: isApiInfoJsonSchema
       field: schema
     recommended: true
     description: '`ApiInfo` schema must include this set of minimal required properties and validations.'
@@ -275,7 +302,7 @@ rules:
     severity: warn
     given: $.paths[*][*]
     then:
-      function: has-required-problem-details-error-responses
+      function: hasRequiredProblemDetailsErrorResponses
       functionOptions:
         mode: 'critical'
 
@@ -288,7 +315,7 @@ rules:
     severity: warn
     given: $.paths[*][*]
     then:
-      function: has-required-problem-details-error-responses
+      function: hasRequiredProblemDetailsErrorResponses
       functionOptions:
         mode: 'explicit-security'
 
@@ -309,3 +336,24 @@ rules:
     recommended: true
     description: 'The `info` object SHOULD contain `x-contains-sensitive-data` to indicate presence of sensitive data such as PII or PHI.'
     message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'."
+
+  # MAY include `info.x-api-type` to indicate API category; enforce enum values when present.
+  # => /docs/spectral-rules/may/may-have-info-x-api-type.md
+
+  may-have-info-x-api-type:
+    given: $.info
+    severity: info
+    then:
+      - function: defined
+        field: x-api-type
+        message: "info.x-api-type omitted; assuming 'standard'. Valid values: standard, pygeoapi."
+      - function: enumeration
+        field: x-api-type
+        functionOptions:
+          values:
+            - standard
+            - pygeoapi
+        message: "info.x-api-type must be one of: standard, pygeoapi. Assuming 'standard' when absent."
+    recommended: true
+    description: 'APIs MAY include info.x-api-type to indicate API category. When present, it MUST be one of: standard, pygeoapi. When omitted, standard is assumed.'
+    message: "Missing or wrong 'info.x-api-type'. Assuming 'standard'. Valid values: standard, pygeoapi."

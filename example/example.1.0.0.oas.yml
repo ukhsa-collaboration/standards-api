@@ -45,7 +45,7 @@ paths:
         '500':
           $ref: '#/components/responses/UnexpectedError'
         default:
-          $ref: '#/components/responses/UnexpectedError'
+           $ref: '#/components/responses/UnexpectedError'
 
   /results:
     get:
