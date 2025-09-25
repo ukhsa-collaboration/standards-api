@@ -5,14 +5,15 @@
   "main": ".spectral.yaml",
   "type": "module",
   "scripts": {
-    "build": "tsc && npm run build:copy-legacy",
-    "build:copy-legacy": "cpx \"src/functions/legacy/*.js\" dist/functions",
+    "build": "tsc",
     "fmt:md": "remark . --ext .md --output",
     "lint:md": "remark . --ext .md --frail",
+    "pretest": "npm run build",
+    "pretest:watch": "npm run build",
     "prepare": "husky && git config commit.template .gitmessage",
     "start": "docker run --rm --pull=always -p \"8080:8080\" -v \"./docs:/site/docs/api-design-guidelines\" ghcr.io/ukhsa-collaboration/standards-org:latest",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
-    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch"
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -22,22 +23,27 @@
   "license": "MIT",
   "engines": {
     "npm": ">=10",
-    "node": "22"
+    "node": ">=22.21.0 <23"
   },
   "keywords": [
     "UKHSA",
     "spectral",
     "ruleset"
   ],
+  "dependencies": {
+    "@stoplight/spectral-documentation": "^1.3.1"
+  },
   "devDependencies": {
-    "@commitlint/cli": "^20.0.0",
+    "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@stoplight/spectral-cli": "^6.15.0",
     "@stoplight/spectral-core": "^1.20.0",
     "@stoplight/spectral-functions": "^1.10.1",
     "@stoplight/spectral-parsers": "^1.0.5",
+    "@stoplight/spectral-ruleset-bundler": "^1.6.3",
+    "@swc/core": "^1.13.21",
+    "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/js-yaml": "^4.0.9",
     "cpx2": "^8.0.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
@@ -46,9 +52,9 @@
     "remark-cli": "^12.0.1",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
-    "remark-renumber-references": "^3.0.0",
     "remark-preset-lint-consistent": "^6.0.1",
     "remark-preset-lint-recommended": "^7.0.1",
+    "remark-renumber-references": "^3.0.0",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",

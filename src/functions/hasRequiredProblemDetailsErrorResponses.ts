@@ -21,8 +21,7 @@ All responses must conform to the Problem Details standard (RFC 9457).
 */
 
 import type {
-  IFunction,
-  IFunctionResult,
+  RulesetFunction,
   RulesetFunctionContext,
 } from '@stoplight/spectral-core';
 
@@ -43,7 +42,7 @@ type OpenAPIResponse = ResponseObject;
 
 interface OperationObject {
   responses?: Record<string, ResponseObject>;
-  security?: unknown[];
+  security?: unknown[] | unknown;
 }
 
 interface Options {
@@ -57,6 +56,10 @@ interface ValidationIssue {
 
 /**
  * Checks if a response defines application/problem+json or application/problem+xml and includes at least one example.
+ *
+ * @param responses - The set of operation responses keyed by HTTP status code.
+ * @param code - The HTTP status code being validated.
+ * @returns The validation issue for the response, or `null` when it satisfies the requirements.
  */
 function validateResponse(
   responses: Record<string, OpenAPIResponse> | undefined,
@@ -83,12 +86,17 @@ function validateResponse(
 
 /**
  * Spectral custom function to validate common error responses on operations.
+ *
+ * @param targetVal - The operation being evaluated.
+ * @param opts - Function options that adjust which status codes must be present.
+ * @param context - The Spectral rule execution context.
+ * @returns An array of rule results describing missing or invalid error responses.
  */
-const validateCommonErrorResponses = function (
+const validateCommonErrorResponses: RulesetFunction<OperationObject, Options> = function (
   targetVal: OperationObject,
   opts: Options,
   context: RulesetFunctionContext,
-): IFunctionResult[] {
+) {
   const { responses = {}, security: opSecurity } = targetVal;
   const globalSecurity = (context.document?.data as { security?: any })?.security;
   const globalSecurityActive = Array.isArray(globalSecurity) && globalSecurity.length > 0;
@@ -146,4 +154,4 @@ const validateCommonErrorResponses = function (
   ];
 };
 
-export default validateCommonErrorResponses as IFunction;
+export default validateCommonErrorResponses;

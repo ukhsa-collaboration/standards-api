@@ -40,6 +40,14 @@ properties:
     example: https://developer.ukhsa.gov.uk/namespace/product/v1/releaseNotes
 */
 
+/**
+ * @import Core from "@stoplight/spectral-core"
+ */
+
+/**
+ * Asserts that the given schema is a valid ApiInfo JSON schema.
+ * @type {Core.RulesetFunction<any, null>}
+ */
 const assertApiInfoSchema = (schema) => {
 
   const results = [];
@@ -78,30 +86,48 @@ const assertApiInfoSchema = (schema) => {
 
   const releaseNotes = (schema.properties || {}).releaseNotes || {};
   if (releaseNotes.type !== 'string' || releaseNotes.format !== 'uri') {
-    results.push({ message: "ApiInfo json must have property 'releaseNotes' with type 'string' and format 'uri" });
+    results.push({ message: "ApiInfo json must have property 'releaseNotes' with type 'string' and format 'uri'" });
   }
 
   return results;
 };
 
-const check = (schema) => {
+/**
+ * Checks the API Info JSON schema for compliance.
+ * @type {Core.RulesetFunction<any, null>}
+ */
+const check = (schema, _options, _context) => {
   const combinedSchemas = [...(schema?.anyOf ?? []), ...(schema?.oneOf ?? []), ...(schema?.allOf ?? [])];
 
   if (combinedSchemas.length > 0) {
-    return combinedSchemas.map(check).flat();
-  } else {
-    return assertApiInfoSchema(schema);
+    const aggregated = [];
+    for (const subSchema of combinedSchemas) {
+      const res = check(subSchema, _options, _context);
+      if (Array.isArray(res)) {
+        aggregated.push(...res);
+      }
+    }
+    return aggregated;
   }
+
+  return assertApiInfoSchema(schema, _options, _context);
 };
 
-export default (targetValue) => {
-  if(targetValue === null || typeof targetValue !== "object") {
+/**
+ * Validates if the target value is a valid ApiInfo JSON schema.
+ * @type {Core.RulesetFunction<any, null>}
+ * @param {any} targetValue - The value to validate.
+ * @param {null} _options - Additional options (not used).
+ * @param {Core.RulesetFunctionContext} _context - The context.
+ */
+export default (targetValue, _options, _context) => {
+  if (targetValue === null || typeof targetValue !== "object") {
     return [];
   }
 
   try {
-    return check(targetValue);
-  } catch (ex) {
+    return check(targetValue, _options, _context);
+  } catch (/** @type {any} */ex) {
     return [
       {
         message: ex?.message ?? ex,

@@ -1,8 +1,15 @@
 import type { Config } from 'jest';
+import tsconfig from './tsconfig.json' with { type: "json" };
+import { pathsToModuleNameMapper } from 'ts-jest';
+
+const { compilerOptions } = tsconfig;
+
+const moduleNameMapper = {
+  '^(\\.{1,2}/.*)\\.m?js$': '$1',
+  ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+};
 
 const config: Config = {
-  // ESM preset for TS modules, CJS for legacy JS
-  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.ts'],
   testPathIgnorePatterns: ['<rootDir>/src/__tests__/__helpers__'],
@@ -10,23 +17,14 @@ const config: Config = {
     '/node_modules/',
     '<rootDir>/src/__tests__/__helpers__/',
   ],
-  moduleFileExtensions: ['ts', 'js', 'json'],
-  extensionsToTreatAsEsm: ['.ts'],
+  transformIgnorePatterns: ['/node_modules/(?!(abort-controller|event-target-shim)/.*)'],
+  moduleFileExtensions: ['mts','mjs', 'ts', 'js', 'json'],
   transform: {
-    '^.+\\.ts$': [
-      'ts-jest',
-      {
-        useESM: true,
-        tsconfig: {
-          module: 'ESNext',
-          target: 'ES2019',
-        },
-      },
-    ],
+    '^.+\\.m?(t|j)s$': '@swc/jest',
   },
-  moduleNameMapper: {
-    '^src/(.*)$': '<rootDir>/src/$1',
-  },
+  roots: ['<rootDir>'],
+  modulePaths: [compilerOptions.baseUrl],
+  moduleNameMapper,
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageThreshold: {

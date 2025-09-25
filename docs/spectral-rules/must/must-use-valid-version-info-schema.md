@@ -2,6 +2,9 @@
 
 `ApiInfo` schema **MUST** include this set of minimal required properties and validations:
 
+> [!IMPORTANT]
+> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [1].
+
 ## Valid Example
 
 ```yaml
@@ -43,3 +46,5 @@ components:
         - documentation
         - releaseNotes
 ```
+
+[1]: ../index.md#pygeoapi-severity-overrides

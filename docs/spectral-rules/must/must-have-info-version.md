@@ -2,6 +2,9 @@
 
 The `info` object **MUST** have a `version` property that follows [semantic rules][1] to distinguish API versions.
 
+> [!IMPORTANT]
+> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [2].
+
 ## Invalid Example
 
 ```yaml
@@ -22,8 +25,9 @@ info:
   ...
 ```
 
-[Zalando Guideline 218][2] and [Zalando Guideline 116][3]
+[Zalando Guideline 218][3] and [Zalando Guideline 116][4]
 
 [1]: http://semver.org/spec/v2.0.0.html
-[2]: https://opensource.zalando.com/restful-api-guidelines/#218
-[3]: https://opensource.zalando.com/restful-api-guidelines/#116
+[2]: ../index.md#pygeoapi-severity-overrides
+[3]: https://opensource.zalando.com/restful-api-guidelines/#218
+[4]: https://opensource.zalando.com/restful-api-guidelines/#116

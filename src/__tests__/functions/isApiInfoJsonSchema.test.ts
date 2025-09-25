@@ -1,6 +1,5 @@
-import validateApiInfo from 'src/functions/legacy/is-api-info-json-schema.js';
-
-type ValidationResult = { message: string };
+import { type IFunctionResult } from '@stoplight/spectral-core';
+import validateApiInfo from '../../functions/isApiInfoJsonSchema.js';
 
 describe('is-api-info-json-schema', () => {
   it('passes with a fully valid ApiInfo schema', () => {
@@ -22,14 +21,16 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
     expect(result).toEqual([]);
   });
 
   it('fails when name is missing or invalid', () => {
     const schema = { type: 'object', properties: { name: {} } };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes('name'))).toBe(true);
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
+    expect(result.some((r: IFunctionResult) => r.message.includes('name'))).toBe(true);
   });
 
   it('fails when version is missing semver pattern', () => {
@@ -47,8 +48,10 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes('semver'))).toBe(true);
+
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
+    expect(result.some((r: IFunctionResult) => r.message.includes('semver'))).toBe(true);
   });
 
   it('fails when status enum is invalid or missing', () => {
@@ -63,8 +66,9 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes('status'))).toBe(true);
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result = validateApiInfo(schema) as IFunctionResult[];
+    expect(result.some((r: IFunctionResult) => r.message.includes('status'))).toBe(true);
   });
 
   it('fails when releaseDate is missing format', () => {
@@ -82,8 +86,10 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes('releaseDate'))).toBe(true);
+
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
+    expect(result.some((r: IFunctionResult) => r.message.includes('releaseDate'))).toBe(true);
   });
 
   it('fails when documentation and releaseNotes formats are missing', () => {
@@ -101,13 +107,15 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string' }
       }
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes('documentation'))).toBe(true);
-    expect(result.some((r: ValidationResult) => r.message.includes('releaseNotes'))).toBe(true);
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
+    expect(result.some((r: IFunctionResult) => r.message.includes('documentation'))).toBe(true);
+    expect(result.some((r: IFunctionResult) => r.message.includes('releaseNotes'))).toBe(true);
   });
 
   it('fails when schema is null', () => {
-    const result: ValidationResult[] = validateApiInfo(null as any);
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(null as any);
     expect(result).toEqual([]);
   });
 
@@ -129,8 +137,10 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes('semver'))).toBe(true);
+    
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
+    expect(result.some((r: IFunctionResult) => r.message.includes('semver'))).toBe(true);
   });
 
   it('fails when x-extensible-enum is missing entirely', () => {
@@ -148,15 +158,19 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes('status'))).toBe(true);
+
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
+    expect(result.some((r: IFunctionResult) => r.message.includes('status'))).toBe(true);
   });
 
   it('skips validation if schema is not an object', () => {
     const schema = {
       type: 'string'
     };
-    const result: ValidationResult[] = validateApiInfo(schema);
-    expect(result.some((r: ValidationResult) => r.message.includes("type 'object'"))).toBe(true);
+
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: IFunctionResult[] = validateApiInfo(schema);
+    expect(result.some((r: IFunctionResult) => r.message.includes("type 'object'"))).toBe(true);
   });
 });

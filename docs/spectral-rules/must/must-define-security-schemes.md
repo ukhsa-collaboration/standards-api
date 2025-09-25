@@ -2,6 +2,9 @@
 
 All APIs **MUST** have a security scheme defined.
 
+> [!IMPORTANT]
+> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [1].
+
 If an API doesn't have a security scheme defined, it means the entire API is open to the public. That's probably not what you want, even if all the data is read-only. Setting lower rate limits for the public and letting known consumers use more resources is a handy path to monetization, and helps know who your power users are when changes need feedback or migration, even if not just good practice.
 
 ## Valid Example
@@ -22,6 +25,7 @@ components:
             tests:write: submit test results
 ```
 
-[UKHSA Guidelines Security][1]
+[UKHSA Guidelines Security][2]
 
-[1]: ../../api-guidelines/security.md#authentication
+[1]: ../index.md#pygeoapi-severity-overrides
+[2]: ../../api-guidelines/security.md#authentication

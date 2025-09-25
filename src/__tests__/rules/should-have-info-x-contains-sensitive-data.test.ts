@@ -1,5 +1,5 @@
 import { DiagnosticSeverity } from '@stoplight/types';
-import testRule, { expectRulesetFileExists } from './__helpers__/helper';
+import testRule, { expectRulesetFileExists } from '../__helpers__/helper.mjs';
 
 describe('ruleset file', () => {
   it('exists', () => expectRulesetFileExists());
