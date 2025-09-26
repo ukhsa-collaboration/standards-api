@@ -22,10 +22,10 @@ export default (targetValue, _options = null, context) => {
   if (apiType === "pygeoapi") {
     // Modify rule severity for legacy APIs
     console.log("Applying legacy overrides");
-    console.log(context.rule.owner);
+    //console.log(context.rule.owner);
     if (rules["should-have-info-x-contains-sensitive-data"]) {
       console.log(rules["should-have-info-x-contains-sensitive-data"].definition)
-      rules["should-have-info-x-contains-sensitive-data"].definition.severity = "info";
+      rules["should-have-info-x-contains-sensitive-data"].severity = "info";
       console.log(rules["should-have-info-x-contains-sensitive-data"].definition)
     }
     //rules["parameter-description"].severity = "info";

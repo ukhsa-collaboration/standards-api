@@ -1,5 +1,5 @@
 import { DiagnosticSeverity } from '@stoplight/types';
-import testRule, { expectRulesetFileExists } from './__helpers__/helper';
+import testRule, { expectRulesetFileExists } from 'src/__tests__/__helpers__/helper.ts';
 
 describe('ruleset file', () => {
   it('exists', () => expectRulesetFileExists());
@@ -18,7 +18,7 @@ paths: {}
 `,
     errors: [
       {
-        severity: DiagnosticSeverity.Warning, // or 1
+        severity: DiagnosticSeverity.Information, // or 1
         path: ['info'],
         message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
       },
@@ -37,7 +37,7 @@ paths: {}
 `,
     errors: [
       {
-        severity: DiagnosticSeverity.Warning,
+        severity: DiagnosticSeverity.Information,
         path: ['info', 'x-contains-sensitive-data'],
         message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
       },

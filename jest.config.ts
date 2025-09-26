@@ -2,7 +2,7 @@ import type { Config } from 'jest';
 
 const config: Config = {
   // ESM preset for TS modules, CJS for legacy JS
-  preset: 'ts-jest/presets/default-esm',
+  preset: 'ts-jest/presets/js-with-ts-esm',
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.ts'],
   testPathIgnorePatterns: ['<rootDir>/src/__tests__/__helpers__'],
@@ -18,8 +18,10 @@ const config: Config = {
       {
         useESM: true,
         tsconfig: {
-          module: 'ESNext',
-          target: 'ES2019',
+          target: "ES2022",
+          module: "node16",
+          moduleResolution: "node16",
+          isolatedModules: true,
         },
       },
     ],

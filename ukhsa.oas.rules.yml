@@ -1,9 +1,9 @@
 extends: 
   - ./zalando.oas.rules.yml
   - [spectral:oas, recommended]
-  - https://unpkg.com/@stoplight/spectral-documentation/dist/ruleset.mjs
+  - '@stoplight/spectral-documentation'
 
-documentationUrl: https://refactored-chainsaw-8qmo7ge.pages.github.io/
+documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/
 
 functions:
   - isApiInfoJsonSchema

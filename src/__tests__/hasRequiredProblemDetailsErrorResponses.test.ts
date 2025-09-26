@@ -1,4 +1,4 @@
-import validateCommonErrorResponses from '../functions/hasRequiredProblemDetailsErrorResponses';
+import validateCommonErrorResponses from 'src/functions/hasRequiredProblemDetailsErrorResponses.ts';
 import type { RulesetFunctionContext } from '@stoplight/spectral-core';
 
 const baseContext: RulesetFunctionContext = {

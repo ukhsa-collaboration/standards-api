@@ -1,5 +1,5 @@
 import { IFunctionResult } from '@stoplight/spectral-core';
-import validateApiInfo from 'src/functions/legacy/isApiInfoJsonSchema';
+import validateApiInfo from 'src/functions/legacy/isApiInfoJsonSchema.js';
 
 describe('is-api-info-json-schema', () => {
   it('passes with a fully valid ApiInfo schema', () => {
