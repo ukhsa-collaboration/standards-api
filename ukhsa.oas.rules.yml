@@ -17,9 +17,26 @@ rules:
   # Conditional overrides based on API type
   override-severity:
     message: "Adjusting severity for legacy API"
-    given: "$"
+    given: "$.info.x-api-type"
     then:
       function: overrideSeverity
+      functionOptions:
+        value: pygeoapi
+        rulesToAdjust:
+          must-define-a-format-for-integer-types: off
+          must-define-a-format-for-number-types: off
+          must-define-security-schemes: off
+          must-have-info-api-audience: off
+          must-have-info-contact-email: off
+          must-have-info-value-chain: off
+          must-have-info-version: off
+          must-specify-default-response: off
+          must-use-camel-case-for-property-names: off
+          must-use-camel-case-for-query-parameters: off
+          must-use-https-protocol-only: off
+          must-use-problem-json-as-default-response: off
+          must-use-problem-json-for-errors: off
+          must-use-valid-version-info-schema: off
 
   oas3-api-servers: off
   must-have-info-x-api-id: off
