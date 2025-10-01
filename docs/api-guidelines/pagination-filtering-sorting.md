@@ -233,3 +233,59 @@ components:
           value: nhsNumber|asc,type|desc
           summary: Sort by multiple fields
 ```
+
+## Field Selection
+
+**SHOULD** support a `fields` query parameter to allow clients to specify which fields should be included in the JSON response.
+
+This improves performance by reducing payload size and network transfer time, and enhances usability for consumers who don't need the full object representation.
+
+### Query Parameter
+
+- `fields`: A comma-separated list of field names to include in the response.
+
+### Examples
+
+#### Basic field selection
+
+```text
+GET /api/widgets?fields=id,name,createdAt
+```
+
+Returns only the specified fields:
+
+```json
+{
+  "results": [
+    {
+      "id": "de750613-ef3c-4f5d-8148-10308b91896c",
+      "name": "Widget Example",
+      "createdAt": "2024-01-15T10:30:00Z"
+    }
+  ]
+}
+```
+
+#### Combining with other parameters
+
+```text
+GET /api/widgets?fields=id,name,status&status=active&limit=5
+```
+
+#### All fields (default behavior)
+
+When the `fields` parameter is omitted, all fields are returned:
+
+```text
+GET /api/widgets
+```
+
+### Behavior
+
+**SHOULD** implement the following behavior for the `fields` parameter:
+
+- **Valid fields**: Include only the requested fields in the response
+- **Invalid field names**: Ignore invalid field names silently and include only valid ones
+- **Empty fields parameter**: Return all fields (same as omitting the parameter)
+- **Case sensitivity**: Field names should be case-sensitive
+- **Nested fields**: Support dot notation for nested objects (e.g., `metadata.total`)
