@@ -61,6 +61,13 @@ The following is a sample Github actions job which can be used as an example of 
 
 ```yaml
 ...
+---
+name: API Standards Checks
+
+on:
+  pull_request:
+    branches: [main, master] # Example only - you would typically use either 'main' or 'master', not both
+
 jobs:
   lint-openapi:
     name: Lint OpenAPI
@@ -71,6 +78,7 @@ jobs:
       issues: read
       checks: write
       pull-requests: write
+      packages: read
 
     steps:
       - name: Checkout code
@@ -78,23 +86,40 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
-          registry-url: 'https://npm.pkg.github.com'
+          node-version: "22.x"
+          registry-url: "https://npm.pkg.github.com"
           # Defaults to the user or organization that owns the workflow file
-          scope: '@ukhsa-collaboration'
+          scope: "@ukhsa-collaboration"
 
       - run: npm install @ukhsa-collaboration/spectral-rules
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install spectral
-        run: curl -L https://raw.github.com/stoplightio/spectral/master/scripts/install.sh | sh
-
-      - name: Lint example OpenAPI
+      - name: Lint OpenAPI specifications
         run: |
-          spectral --version
-          spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions
+          npx spectral --version
+          npx spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions
+
+          # Example: Only lint OpenAPI files
+          # npx spectral lint "@(openapi|swagger|*api)*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions
 ```
+
+The above example uses [glob syntax][13] to target only OpenAPI specification files.
+
+The glob pattern `@(openapi|swagger|*api)*.{json,yml,yaml}` matches:
+
+> ```text
+> openapi.json
+> something.api.yaml
+> swagger.json
+> ```
+
+The global pattern does not match:
+
+> ```text
+> /node_modules/openapi.yaml
+> /.git/something.json
+> ```
 
 ### Additional Recommended Tooling
 
@@ -117,3 +142,4 @@ Read the [official spectral documentation][12] for more development workflows.
 [10]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
 [11]: https://github.com/marketplace/actions/spectral-linting
 [12]: https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows
+[13]: https://github.com/mrmlnc/fast-glob
