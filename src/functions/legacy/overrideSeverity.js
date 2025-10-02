@@ -26,21 +26,22 @@ const overrideSeverity = (targetValue, options = null, context) => {
   const { document, rule } = context;
 
   const { owner: { rules } } = /** @type {Core.Rule} */ (rule);
-  console.log(`|${targetValue}| === |${options.value}|`)
+  const apiType = targetValue?.info?.['x-api-type'];
+  console.log(`|${apiType}| === |${options.value}|`)
   console.log(options.rulesToAdjust)
 
   // Check for API type
   //const result = JSONPath({ path: options.condition.jsonPath, json: /** @type {string} */ (document.data) });
   //const apiType = targetValue.info?.["x-api-type"] || "standard";
 
-  if (targetValue === options.value) {
+  if (apiType === options.value) {
     // Modify rule severity for legacy APIs
     console.log("Applying legacy overrides");
 
     for (const [rule, severity] of Object.entries(options.rulesToAdjust)) {
       if (rules[rule]) {
         console.log("before:",rules[rule].definition.severity)
-        rules[rule].definition.severity = severity;
+        rules[rule].severity = severity;
         console.log("after:",rules[rule].definition.severity)
         console.log(rules[rule].definition);
       }

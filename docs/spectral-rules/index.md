@@ -15,6 +15,27 @@ As well as the rules described herein, the UKHSA ruleset includes the [recommend
 
 Where rules been adopted from from existing open source API rulesets a link is supplied on the relevant rule page.
 
+## Pygeoapi severity overrides
+
+Some legacy services (for example pygeoapi deployments) cannot yet meet every MUST requirement in the ruleset. When an OpenAPI document is marked with `info.x-api-type: pygeoapi`, the ruleset automatically suppresses the following rules by setting their severity to `off`:
+
+- `must-define-a-format-for-integer-types`
+- `must-define-a-format-for-number-types`
+- `must-define-security-schemes`
+- `must-have-info-api-audience`
+- `must-have-info-contact-email`
+- `must-have-info-value-chain`
+- `must-have-info-version`
+- `must-specify-default-response`
+- `must-use-camel-case-for-property-names`
+- `must-use-camel-case-for-query-parameters`
+- `must-use-https-protocol-only`
+- `must-use-problem-json-as-default-response`
+- `must-use-problem-json-for-errors`
+- `must-use-valid-version-info-schema`
+
+Other rules continue to run normally, so pygeoapi definitions should still be linted and improved where possible.
+
 ## How to use the rules
 
 ### Install Spectral
