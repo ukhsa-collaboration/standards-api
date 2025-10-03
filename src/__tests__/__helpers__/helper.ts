@@ -66,17 +66,16 @@ export function createWithRules(rules: RuleName[]): SpectralCore.Spectral {
 }
 
 /**
- * Jest test helper to validate a single Spectral rule against multiple scenarios.
+ * Jest test helper to validate one or more Spectral rules against multiple scenarios.
  *
- * @param {RuleName} ruleName - The name of the rule to test.
- * @param {RuleName[]} [additionalRules=[]] - Optional array of additional rule names to include.
+ * @param {RuleName | RuleName[]} rules - A rule name or list of rule names to test.
  * @param {Scenario} tests - Array of test scenarios, each with a document and expected errors.
  */
-export default function testRule(ruleName: RuleName, additionalRules: RuleName[] = [], tests: Scenario): void {
-  describe(`Rule ${String(ruleName)}`, () => {
+export default function testRule(rules: RuleName | RuleName[], tests: Scenario): void {
+  const rulesToInclude: RuleName[] = Array.isArray(rules) ? rules : [rules];
+  describe(`Rule ${rulesToInclude.join(', ')}`, () => {
     for (const t of tests) {
       it(t.name, async () => {
-        const rulesToInclude = [ruleName, ...additionalRules];
         const spectral = createWithRules(rulesToInclude);
 
         const doc =

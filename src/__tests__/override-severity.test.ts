@@ -5,7 +5,7 @@ describe('ruleset file', () => {
   it('exists', () => expectRulesetFileExists());
 });
 
-testRule('override-severity', ['should-have-info-x-contains-sensitive-data'], [
+testRule(['override-severity', 'should-have-info-x-contains-sensitive-data'], [
   {
     name: 'invalid: info.x-contains-sensitive-data missing',
     document: `

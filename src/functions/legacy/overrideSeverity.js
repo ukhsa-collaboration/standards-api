@@ -22,13 +22,10 @@ import { createRulesetFunction } from "@stoplight/spectral-core";
  */
 const overrideSeverity = (targetValue, options = null, context) => {
   // Access the current ruleset
-  //console.log(arguments);
   const { document, rule } = context;
 
   const { owner: { rules } } = /** @type {Core.Rule} */ (rule);
   const apiType = targetValue?.info?.['x-api-type'];
-  console.log(`|${apiType}| === |${options.value}|`)
-  console.log(options.rulesToAdjust)
 
   // Check for API type
   //const result = JSONPath({ path: options.condition.jsonPath, json: /** @type {string} */ (document.data) });
@@ -36,14 +33,9 @@ const overrideSeverity = (targetValue, options = null, context) => {
 
   if (apiType === options.value) {
     // Modify rule severity for legacy APIs
-    console.log("Applying legacy overrides");
-
     for (const [rule, severity] of Object.entries(options.rulesToAdjust)) {
       if (rules[rule]) {
-        console.log("before:",rules[rule].definition.severity)
         rules[rule].severity = severity;
-        console.log("after:",rules[rule].definition.severity)
-        console.log(rules[rule].definition);
       }
       //rules["parameter-description"].severity = "info";
     }

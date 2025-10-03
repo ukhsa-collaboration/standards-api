@@ -5,7 +5,7 @@ describe('ruleset file', () => {
   it('exists', () => expectRulesetFileExists());
 });
 
-testRule('should-have-info-x-contains-sensitive-data', [], [
+testRule('should-have-info-x-contains-sensitive-data', [
   {
     name: 'valid: info.x-contains-sensitive-data present and boolean',
     document: `
