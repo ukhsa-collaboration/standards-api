@@ -29,7 +29,6 @@ async function loadRulesetFromYaml(): Promise<Ruleset> {
   return await bundleAndLoadRuleset(RULESET_PATH, { fs, fetch }, [commonjs()]);
 
 }
-const baseRuleset = await loadRulesetFromYaml() as any;
 
 export type RuleName = keyof Ruleset['rules'];
 
@@ -50,17 +49,11 @@ type Scenario = ReadonlyArray<
  * @throws {Error} If any requested rule is not found in the loaded ruleset.
  * @returns {SpectralCore.Spectral} A Spectral instance with the filtered ruleset.
  */
-export function createWithRules(rules: RuleName[]): SpectralCore.Spectral {
+export async function createWithRules(rules: RuleName[]): Promise<SpectralCore.Spectral> {
   const s = new Spectral({ resolver: httpAndFileResolver });
-  const sourceRules: Record<string, any> = (baseRuleset?.rules ?? {}) as Record<string, any>;
-
-  const filtered: Record<string, any> = Object.fromEntries(
-    Object.entries(sourceRules)
-      .filter(([name]) => rules.includes(name as RuleName))
-  );
-  baseRuleset.rules = filtered;
-
-  s.setRuleset(baseRuleset as RulesetDefinition);
+  // Load a fresh ruleset per Spectral instance to guarantee isolation
+  const freshRuleset = await loadRulesetFromYaml();
+  s.setRuleset(freshRuleset as RulesetDefinition);
 
   return s;
 }
@@ -76,7 +69,7 @@ export default function testRule(rules: RuleName | RuleName[], tests: Scenario):
   describe(`Rule ${rulesToInclude.join(', ')}`, () => {
     for (const t of tests) {
       it(t.name, async () => {
-        const spectral = createWithRules(rulesToInclude);
+        const spectral = await createWithRules(rulesToInclude);
 
         const doc =
           t.document instanceof Document

@@ -5,42 +5,56 @@ describe('ruleset file', () => {
   it('exists', () => expectRulesetFileExists());
 });
 
-testRule(['override-severity', 'should-have-info-x-contains-sensitive-data'], [
+testRule(['override-severity', 'must-use-https-protocol-only'], [
   {
-    name: 'invalid: info.x-contains-sensitive-data missing',
+    name: 'wrong x-api-type: override not applied',
     document: `
 openapi: 3.0.0
 info:
   title: Example
   version: 1.0.0
-  x-api-type: pygeoapi
+  x-api-type: not-pygeoapi
+servers:
+  - url: http://api.example.com
 paths: {}
 `,
     errors: [
       {
-        severity: DiagnosticSeverity.Information, // or 1
-        path: ['info'],
-        message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
+        severity: DiagnosticSeverity.Error,
+        message: 'Servers MUST be `https` and no other protocol is allowed.',
       },
     ],
   },
   {
-    name: 'invalid: info.x-contains-sensitive-data wrong type (string)',
+    name: 'non-pygeoapi: must-use-https-protocol-only enforced',
     document: `
 openapi: 3.0.0
 info:
   title: Example
   version: 1.0.0
-  x-contains-sensitive-data: "yes"
-  x-api-type: pygeoapi
+servers:
+  - url: http://api.example.com
 paths: {}
 `,
     errors: [
       {
-        severity: DiagnosticSeverity.Information,
-        path: ['info', 'x-contains-sensitive-data'],
-        message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
+        severity: DiagnosticSeverity.Error,
+        message: 'Servers MUST be `https` and no other protocol is allowed.',
       },
     ],
+  },
+  {
+    name: 'pygeoapi: must-use-https-protocol-only disabled by override-severity',
+    document: `
+openapi: 3.0.0
+info:
+  title: Example
+  version: 1.0.0
+  x-api-type: pygeoapi
+servers:
+  - url: http://api.example.com
+paths: {}
+`,
+    errors: [],
   },
 ]);
