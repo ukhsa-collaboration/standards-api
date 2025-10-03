@@ -19,6 +19,11 @@
     "url": "git+https://github.com/ukhsa-collaboration/standards-api.git"
   },
   "homepage": "https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/",
+  "license": "MIT",
+  "engines": {
+    "npm": ">=10",
+    "node": "22"
+  },
   "keywords": [
     "UKHSA",
     "spectral",

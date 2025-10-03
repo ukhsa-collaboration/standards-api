@@ -18,3 +18,9 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "build"
+    groups:
+      commitlint:
+        applies-to: version-updates
+        dependency-type: "development"
+        patterns:
+          - "@commitlint*"
