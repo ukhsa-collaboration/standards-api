@@ -32,25 +32,30 @@ If your product API is based on a different API technology, such as GraphQL or g
 
 ## How to read the guidelines
 
-The CAPITALIZED words throughout these guidelines have a special meaning:
+The **CAPITALISED** words throughout these guidelines have a special meaning:
 
-```text
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in 
-this document are to be interpreted as described in RFC2119.
-```
+The following key words are used throughout this guidance to indicate the strength of each requirement. These are adapted from [RFC2119][1] and contextualised for UKHSA:
 
-Refer to [RFC2119][1] for details.
+| Key words | UKHSA Interpretation |
+| :---: | --- |
+| **MUST** | This word, or the terms "**REQUIRED**" or "**SHALL**", mean that the requirement is mandatory. It applies universally and must be followed without exception unless formally approved. |
+| **MUST NOT** | This phrase, or the phrase "**SHALL NOT**", mean that this action is explicitly prohibited. It must not be taken under any circumstances unless an approved exception is in place. |
+| **SHOULD** | This word, or the adjective "**RECOMMENDED**", mean that this is a strong recommendation. There may be valid reasons to deviate, but the implications must be understood, justified and documented. |
+| **SHOULD NOT** | This phrase, or the phrase "**NOT RECOMMENDED**", mean that this is a strong recommendation against a practice. Exceptions may exist, but they must be carefully considered, justified and documented. |
+| **MAY** | This word, or the adjective "**OPTIONAL**", mean that this is an optional practice or recommendation. Teams may choose to adopt it based on context, value or preference. |
 
-### How to use these guidelines
+## How to use these guidelines
 
 Each section addresses key aspects of building APIs, including naming conventions, versioning, security, error handling, and documentation.
 
 Here's how to navigate and use these guidelines effectively:
 
 Review the sections on API design, naming conventions, versioning and error handling and create an OpenAPI definition that adheres to these patterns.
+
 Determine your security requirements and apply the recommended authorisation, authentication and security patterns, such as OAuth 2.0, JWTs, and Role-Based Access Control (RBAC).
+
 Ensure your API is well-documented including error scenarios and example responses within the OpenAPI definition.
+
 Use the recommended tools for linting, validating and testing your OpenAPI definition and other aspects of your API.
 
 [1]: https://datatracker.ietf.org/doc/html/rfc2119
