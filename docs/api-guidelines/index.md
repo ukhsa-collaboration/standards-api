@@ -32,15 +32,19 @@ If your product API is based on a different API technology, such as GraphQL or g
 
 ## How to read the guidelines
 
-The CAPITALIZED words throughout these guidelines have a special meaning:
+The **CAPITALISED** words throughout these guidelines have a special meaning:
 
-```text
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in 
-this document are to be interpreted as described in RFC2119.
-```
+The following key words are used throughout this guidance to indicate the strength of each requirement. These are adapted from [RFC2119][1] and contextualised for UKHSA:
 
-Refer to [RFC2119][1] for details.
+1. **MUST**&emsp;This word, or the terms "**REQUIRED**" or "**SHALL**", mean that the requirement is mandatory. It applies universally and must be followed without exception unless formally approved.
+
+1. **MUST NOT**&emsp;This phrase, or the phrase "**SHALL NOT**", mean that this action is explicitly prohibited. It must not be taken under any circumstances unless an approved exception is in place.
+
+1. **SHOULD**&emsp;This word, or the adjective "**RECOMMENDED**", mean that this is a strong recommendation. There may be valid reasons to deviate, but the implications must be understood, justified and documented.
+
+1. **SHOULD NOT**&emsp;This phrase, or the phrase "**NOT RECOMMENDED**", mean that this is a strong recommendation against a practice. Exceptions may exist, but they must be carefully considered, justified and documented.
+
+1. **MAY**&emsp;This word, or the adjective "**OPTIONAL**", mean that this is an optional practice or recommendation. Teams may choose to adopt it based on context, value or preference.
 
 ### How to use these guidelines
 
