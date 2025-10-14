@@ -16,6 +16,10 @@ Standardising API design reduces friction, making APIs easier to understand, use
 
 These guidelines will ensure that all APIs follow accepted design, security and governance models, thereby raising the bar on API quality across the organisation.
 
+## Scope and audience
+
+Please refer to [Scope and audience][1] for details of the scope and intended audience for these guidelines.
+
 ## When to use these guidelines
 
 These guidelines follow the principles of Representational State Transfer (REST), using HTTP methods and stateless communication between client and server. The guidelines cover these use cases:
@@ -32,17 +36,7 @@ If your product API is based on a different API technology, such as GraphQL or g
 
 ## How to read the guidelines
 
-The **CAPITALISED** words throughout these guidelines have a special meaning:
-
-The following key words are used throughout this guidance to indicate the strength of each requirement. These are adapted from [RFC2119][1] and contextualised for UKHSA:
-
-| Key words | UKHSA Interpretation |
-| :---: | --- |
-| **MUST** | This word, or the terms "**REQUIRED**" or "**SHALL**", mean that the requirement is mandatory. It applies universally and must be followed without exception unless formally approved. |
-| **MUST NOT** | This phrase, or the phrase "**SHALL NOT**", mean that this action is explicitly prohibited. It must not be taken under any circumstances unless an approved exception is in place. |
-| **SHOULD** | This word, or the adjective "**RECOMMENDED**", mean that this is a strong recommendation. There may be valid reasons to deviate, but the implications must be understood, justified and documented. |
-| **SHOULD NOT** | This phrase, or the phrase "**NOT RECOMMENDED**", mean that this is a strong recommendation against a practice. Exceptions may exist, but they must be carefully considered, justified and documented. |
-| **MAY** | This word, or the adjective "**OPTIONAL**", mean that this is an optional practice or recommendation. Teams may choose to adopt it based on context, value or preference. |
+The **CAPITALISED** words throughout these guidelines have a special meaning, please refer to [How to read the guidelines][2] for guidance on interpreting them.
 
 ## How to use these guidelines
 
@@ -58,4 +52,5 @@ Ensure your API is well-documented including error scenarios and example respons
 
 Use the recommended tools for linting, validating and testing your OpenAPI definition and other aspects of your API.
 
-[1]: https://datatracker.ietf.org/doc/html/rfc2119
+[1]: /about.md#scope-and-audience
+[2]: /about.md#how-to-read-the-guidelines

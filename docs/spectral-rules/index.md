@@ -104,7 +104,7 @@ jobs:
           # npx spectral lint "@(openapi|swagger|*api)*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions
 ```
 
-The above example uses [glob syntax][13] to target only OpenAPI specification files.
+The above example uses [glob syntax][10] to target only OpenAPI specification files.
 
 The glob pattern `@(openapi|swagger|*api)*.{json,yml,yaml}` matches:
 
@@ -125,10 +125,10 @@ The global pattern does not match:
 
 | Tool | Description |
 | - | - |
-| [VS Code Extension][10] | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
-| [Github Action][11] | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
+| [VS Code Extension][11] | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
+| [Github Action][12] | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
 
-Read the [official spectral documentation][12] for more development workflows.
+Read the [official spectral documentation][13] for more development workflows.
 
 [1]: ../api-guidelines/index.md
 [2]: https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all
@@ -139,7 +139,7 @@ Read the [official spectral documentation][12] for more development workflows.
 [7]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
 [8]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm
 [9]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
-[10]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
-[11]: https://github.com/marketplace/actions/spectral-linting
-[12]: https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows
-[13]: https://github.com/mrmlnc/fast-glob
+[10]: https://github.com/mrmlnc/fast-glob
+[11]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
+[12]: https://github.com/marketplace/actions/spectral-linting
+[13]: https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows
