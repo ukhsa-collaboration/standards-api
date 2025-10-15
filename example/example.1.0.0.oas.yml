@@ -58,6 +58,7 @@ paths:
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
         - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/fieldsParam'
         - in: query
           name: type
           required: false
@@ -200,7 +201,7 @@ components:
           scopes:
             tests:read: read test results
             tests:write: submit test results
-  
+
   schemas:
     ResultRequest:
       type: object
@@ -464,6 +465,24 @@ components:
         sortByMultipleField:
           value: nhsNumber|asc,type|desc
           summary: Sort by multiple fields
+
+    fieldsParam:
+      in: query
+      name: fields
+      description: Comma-separated list of fields to include in the response.
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(?:[A-Z0-9](?:[a-z0-9]+|$))*(?:\.[a-z][a-z0-9]*(?:[A-Z0-9](?:[a-z0-9]+|$))*)*(?:,[a-z][a-z0-9]*(?:[A-Z0-9](?:[a-z0-9]+|$))*(?:\.[a-z][a-z0-9]*(?:[A-Z0-9](?:[a-z0-9]+|$))*)*)*$
+      examples:
+        basicFields:
+          value: resultId,nhsNumber,result
+          summary: Basic field selection
+        nestedFields:
+          value: resultId,nhsNumber,metadata.createdAt
+          summary: Including nested fields
+        allFields:
+          value: resultId,nhsNumber,type,result,metadata.createdAt,metadata.updatedAt
+          summary: Multiple fields selection
 
   headers:
     Location:
