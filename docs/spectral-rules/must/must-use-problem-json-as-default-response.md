@@ -2,6 +2,9 @@
 
 The content type for the default response **MUST** be `application/problem+json`.
 
+> [!IMPORTANT]
+> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [1].
+
 ## Invalid Example
 
 The default response in this example incorrectly uses `application/json` as the content type.
@@ -42,6 +45,7 @@ get:
              $ref: ../models/Problem.yaml
 ```
 
-[Zalando Guideline 151][1]
+[Zalando Guideline 151][2]
 
-[1]: https://opensource.zalando.com/restful-api-guidelines/#151
+[1]: ../index.md#pygeoapi-severity-overrides
+[2]: https://opensource.zalando.com/restful-api-guidelines/#151

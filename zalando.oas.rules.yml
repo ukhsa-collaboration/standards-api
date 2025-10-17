@@ -1,9 +1,9 @@
 extends: [[spectral:oas, off]]
 
 functions:
-  - is-object-schema
-  - is-problem-json-schema
-  - count-resource-types
+  - isObjectSchema
+  - isProblemJsonSchema
+  - countResourceTypes
 
 functionsDir: dist/functions
 
@@ -25,7 +25,7 @@ rules:
     given: $.paths.*.*[responses,requestBody]..content..schema
     severity: error
     then:
-      function: is-object-schema
+      function: isObjectSchema
     description: 'The top-level data structure for a `request body` or `response body` must be an object.'
     message: Top-level data structure must be an object
 
@@ -204,7 +204,7 @@ rules:
     given: $.paths
     severity: warn
     then:
-      function: count-resource-types
+      function: countResourceTypes
       functionOptions:
         max: 8
     description: Resource types (root URL paths) should be limited to no more than eight.
@@ -374,7 +374,7 @@ rules:
     given: $.paths.*.*.responses.*.content.application/problem+json
     severity: error
     then:
-      function: is-problem-json-schema
+      function: isProblemJsonSchema
       field: schema
     description: '`Problem` schema must include this set of minimal required properties and validations.'
     message: '{{error}}'

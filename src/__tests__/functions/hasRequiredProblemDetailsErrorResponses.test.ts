@@ -1,5 +1,5 @@
-import validateCommonErrorResponses from '../functions/has-required-problem-details-error-responses';
-import type { IFunctionResult, RulesetFunctionContext } from '@stoplight/spectral-core';
+import validateCommonErrorResponses from '../../functions/hasRequiredProblemDetailsErrorResponses.js';
+import type { RulesetFunctionContext } from '@stoplight/spectral-core';
 
 const baseContext: RulesetFunctionContext = {
   document: {
