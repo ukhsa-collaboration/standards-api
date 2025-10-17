@@ -17,7 +17,7 @@ Where rules been adopted from from existing open source API rulesets a link is s
 
 ## Pygeoapi severity overrides
 
-Some definitions (for example, based on pygeoapi) cannot yet meet every **MUST** requirement in the ruleset. When an OpenAPI document is marked with `info.x-api-type: pygeoapi`, the ruleset automatically downgrades the following error-level rules to `warn`:
+Some definitions (for example, produced by pygeoapi) cannot yet meet every **MUST** requirement in the ruleset. When an OpenAPI document is marked with `info.x-api-type: pygeoapi`, the ruleset automatically downgrades the following error-level rules to `warn`:
 
 - `must-define-a-format-for-integer-types`
 - `must-define-a-format-for-number-types`
@@ -36,10 +36,6 @@ Some definitions (for example, based on pygeoapi) cannot yet meet every **MUST**
 
 Other rules continue to run normally, so pygeoapi definitions should still be linted and improved where possible. Rules already at `warn` are not changed.
 
-### Customising the selector
-
-The `overrideSeverity` function accepts a `target` option if you need to base overrides on a different field. Provide either a dotted path (for example, `info.x-api-type`) or a JSONPath expression such as `$.metadata["x-api-type"]`.
-
 ### `info.x-api-type` values
 
 To make intent explicit, the `info.x-api-type` field can be treated as an enum in API definitions to indicate the API category:
@@ -50,6 +46,16 @@ To make intent explicit, the `info.x-api-type` field can be treated as an enum i
 If you omit `info.x-api-type`, the ruleset assumes the API is `standard`.
 
 See also: [MAY have info.x-api-type][6].
+
+When generating a definition from a local pygeoapi instance, you can inject the `info.x-api-type` flag during export so relaxed severities will be applied. The example below wraps the `pygeoapi openapi generate` command in Docker, binds your local configuration, and uses `yq` to add `info.x-api-type: pygeoapi` before writing the result to `openapi-pygeoapi.yml`.
+
+```sh
+docker run --entrypoint= --rm -p 5000:80 \
+  --mount type=bind,src=./pygeoapi-config.yml,dst=/pygeoapi/config.yml \
+  -e PYGEOAPI_CONFIG=/pygeoapi/config.yml geopython/pygeoapi:latest \
+  sh -c 'pygeoapi openapi generate $PYGEOAPI_CONFIG'  \
+| yq '.info += {"x-api-type": "pygeoapi"}' - > openapi-pygeoapi.yml
+```
 
 ## How to use the rules
 
