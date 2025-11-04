@@ -38,8 +38,8 @@ type ExtractOptions = {
  *   no other BusinessCapability’s `<mxCell>` references this object's id
  *   via its `"parent"` attribute).
  *
- * @param xmlPath Absolute or relative path to the diagrams.net XML file.
- * @param opts Options controlling extraction behavior.
+ * @param xmlPath - Absolute or relative path to the diagrams.net XML file.
+ * @param opts - Options controlling extraction behavior.
  * @returns Array of unique capability labels. Empty labels are ignored.
  *          Duplicates (case-sensitive) are removed.
  * @throws {Error} If the file cannot be read or the XML cannot be parsed.
@@ -157,8 +157,8 @@ export function extractLeafCapabilities(
  * export default CAPABILITIES;
  * ```
  *
- * @param capabilities Array of capability labels.
- * @param outPath Destination file path for the TypeScript module.
+ * @param capabilities - Array of capability labels.
+ * @param outPath - Destination file path for the TypeScript module.
  *
  * @throws {Error} If the file cannot be written or renamed.
  *
@@ -173,8 +173,17 @@ export function writeTsFile(capabilities: string[], outPath: string): void {
   if (outDir) fs.mkdirSync(outDir, { recursive: true });
 
   const lines = capabilities.map((cap) => `  ${JSON.stringify(cap)}`).join(",\n");
+  const headerComment = [
+    "/**",
+    " * Enumerates the UKHSA Business Capabilities accepted by validation rules.",
+    " *",
+    " * @remarks",
+    " * Generated via the `capabilities.ts` script to keep the controlled list in sync",
+    " * with source taxonomy data.",
+    " */",
+  ].join("\n");
   const tsContent =
-    `const CAPABILITIES = [\n${lines}\n];\n\nexport default CAPABILITIES;\n`;
+    `${headerComment}\nconst CAPABILITIES = [\n${lines}\n];\n\nexport default CAPABILITIES;\n`;
 
   const tmp = path.join(
     outDir || ".",
@@ -185,10 +194,10 @@ export function writeTsFile(capabilities: string[], outPath: string): void {
 }
 
 /**
- * Render capabilities as a Markdown bullet list, matching the style:
- * two leading spaces, a dash, a space, then the label.
+ * Render capabilities as a Markdown bullet list, one label per line.
  *
- * @param capabilities Capabilities to render.
+ * @param capabilities - Capability labels to render.
+ * @returns Markdown bullet list comprised of the provided capabilities.
  */
 function renderMarkdownList(capabilities: string[]): string {
   return capabilities.map((c) => `- ${c}`).join("\n");
@@ -205,8 +214,8 @@ function renderMarkdownList(capabilities: string[]): string {
  *   the line "Examples may include (but are not limited to):" and the next
  *   Markdown H2 heading (i.e., a line starting with "## ").
  *
- * @param mdPath Path to the Markdown file to update (in-place).
- * @param capabilities Capability labels to inject.
+ * @param mdPath - Path to the Markdown file to update (in-place).
+ * @param capabilities - Capability labels to inject.
  * @returns A short status string describing what was updated.
  * @throws {Error} If the file cannot be read or written, or section cannot be found.
  */
@@ -298,7 +307,12 @@ export function updateMarkdownCapabilities(
   return 'Updated Markdown "Valid Capabilities" bullet list.';
 }
 
-/** Escape a string for use in a RegExp constructor. */
+/**
+ * Escape a string for safe inclusion in a regular expression.
+ *
+ * @param s - String to escape.
+ * @returns The escaped representation of the input string.
+ */
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -311,7 +325,7 @@ function escapeRegExp(s: string): string {
  * - `--md <file>`: Update the Markdown file in-place with the capabilities.
  * - `--sort` / `--no-sort`: Enable or disable sorting of capability labels.
  *
- * @param argv Raw argument array (excluding `node`/script name).
+ * @param argv - Raw argument array (excluding `node`/script name).
  * @returns Parsed configuration: `{ xmlPath, tsOut, md, sort }`.
  * @throws {Error} On unknown options or missing arguments.
  */

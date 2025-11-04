@@ -21,7 +21,12 @@ import type {
 import CAPABILITIES from './ukhsa-business-capabilities';
 
 /**
- * Spectral custom function to validate `info.x-leading-capability` field.
+ * Spectral custom function to validate the `info.x-leading-capability` field.
+ *
+ * @param targetVal - The value supplied by the Spectral rule selector.
+ * @param opts - Unused options placeholder required by the Spectral function signature.
+ * @param context - Spectral ruleset execution context.
+ * @returns Rule results describing validation issues, or an empty array when valid.
  */
 const validateLeadingCapability = function (
   targetVal: string | null | undefined,

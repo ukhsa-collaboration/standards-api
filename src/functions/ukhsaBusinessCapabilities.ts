@@ -1,3 +1,10 @@
+/**
+ * Enumerates the UKHSA Business Capabilities accepted by validation rules.
+ *
+ * @remarks
+ * Generated via the `capabilities.ts` script to keep the controlled list in sync
+ * with source taxonomy data.
+ */
 const CAPABILITIES = [
   "Advice Management",
   "Behavioural Science",
