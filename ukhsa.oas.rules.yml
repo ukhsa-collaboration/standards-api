@@ -9,7 +9,7 @@ functions:
   - isApiInfoJsonSchema
   - hasRequiredProblemDetailsErrorResponses
   - overrideSeverity
-  - has-valid-leading-capability
+  - hasValidLeadingCapability
 
 functionsDir: dist/functions
 
@@ -368,6 +368,6 @@ rules:
     severity: warn
     given: $.info
     then:
-      - function: has-valid-leading-capability
+      - function: hasValidLeadingCapability
         field: x-leading-capability
     recommended: true

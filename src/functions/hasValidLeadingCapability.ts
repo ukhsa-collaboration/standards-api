@@ -18,7 +18,7 @@ import type {
   RulesetFunctionContext,
 } from '@stoplight/spectral-core';
 
-import CAPABILITIES from './ukhsa-business-capabilities';
+import CAPABILITIES from './ukhsaBusinessCapabilities.js';
 
 /**
  * Spectral custom function to validate the `info.x-leading-capability` field.
