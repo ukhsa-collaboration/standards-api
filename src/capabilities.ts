@@ -6,7 +6,7 @@
  *
  * Example CLI usage:
  *   npx ts-node src/capabilities.ts path/to/capabilities.xml \
- *     --ts-out src/functions/ukhsa-business-capabilities.ts \
+ *     --ts-out src/functions/ukhsaBusinessCapabilities.ts \
  *     --md docs/must-have-info-leading-capability.md
  */
 
