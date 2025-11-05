@@ -3,6 +3,7 @@ includeInBreadcrumbs: true
 eleventyNavigation:
   parent: spectral-rules
   key: must
+order: 2
 ---
 
 # MUST
