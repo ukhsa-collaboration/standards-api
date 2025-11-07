@@ -106,7 +106,7 @@ As per the [GDS Guidence][11] you **SHOULD** design your APIs to follow appropri
 See [Common Data Types][15] for additional standards.
 
 [1]: https://datatracker.ietf.org/doc/html/rfc8259
-[2]: https://confluence.collab.test-and-trace.nhs.uk/display/TCFPP/Logical+Data+Model
+[2]: https://ukhsa.atlassian.net/wiki/spaces/CDA/pages/173320590/UKHSA+Logical+Data+Model
 [3]: https://hl7.org/fhir/
 [4]: https://ohdsi.github.io/CommonDataModel/
 [5]: https://digital.nhs.uk/services/fhir-uk-core
