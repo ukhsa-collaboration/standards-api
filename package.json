@@ -1,6 +1,6 @@
 {
   "name": "@ukhsa-collaboration/spectral-rules",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "UKHSA Spectral ruleset",
   "main": ".spectral.yaml",
   "type": "module",
@@ -31,19 +31,21 @@
     "ruleset"
   ],
   "dependencies": {
-    "@stoplight/spectral-documentation": "^1.3.1"
+    "@stoplight/spectral-core": "^1.20.0",
+    "@stoplight/spectral-documentation": "^1.3.1",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@stoplight/spectral-cli": "^6.15.0",
-    "@stoplight/spectral-core": "^1.20.0",
     "@stoplight/spectral-functions": "^1.10.1",
     "@stoplight/spectral-parsers": "^1.0.5",
     "@stoplight/spectral-ruleset-bundler": "^1.6.3",
     "@swc/core": "^1.13.21",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.20",
     "cpx2": "^8.0.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",

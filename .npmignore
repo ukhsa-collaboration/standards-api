@@ -1,4 +1,5 @@
 *
-!dist/functions/*.js
+!dist/functions/*.{js,d.ts}
+!dist/utils/*.{js,d.ts}
 !.spectral.yaml
 !*.oas.rules.yml

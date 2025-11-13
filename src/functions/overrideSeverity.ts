@@ -7,13 +7,14 @@ import type {
   Rule,
 } from '@stoplight/spectral-core';
 import { DiagnosticSeverity } from '@stoplight/types';
+import { printPath, PrintStyle } from '@stoplight/spectral-runtime';
 import { EOL } from "node:os";
 /**
- * shouldn't really do this however there is no other way to get these functions, and it keeps us
- * aligned with spectral internals
+ * this is a utility function obtained from spectral-core
+ * https://github.com/stoplightio/spectral/blob/develop/packages/core/src/runner/utils/getLintTargets.ts
  */
-import { getLintTargets, type ILintTarget } from '../../node_modules/@stoplight/spectral-core/dist/runner/utils/getLintTargets.js';
-import { printPath, PrintStyle } from '../../node_modules/@stoplight/spectral-runtime/dist/utils/printPath.js';
+import { getLintTargets } from '../utils/getLintTargets.js';
+
 
 /**
  * Configuration options provided by the ruleset when invoking the override.
@@ -56,7 +57,7 @@ const overrideSeverity = (
   if (targetField.trim().length === 0) {
     throw new Error('overrideSeverity requires a non-empty target selector');
   }
-  const targets = getLintTargets(targetValue, targetField) as ILintTarget[];
+  const targets = getLintTargets(targetValue, targetField)
   const matchingTarget = targets.find(({ value }) => value === options.value);
 
   if (matchingTarget && typeof matchingTarget.value === 'string') {
