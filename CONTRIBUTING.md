@@ -392,6 +392,8 @@ Resolves issue #123"
 
 - Each rule should have a corresponding documentation file in the relevant folder `/docs/spectral-rules/must/`, `/docs/spectral-rules/should/` or `/docs/spectral-rules/may/`.
 
+- Every rule definition **MUST** set `documentationUrl` so Spectral CLI can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/<rule-name>/`).
+
 - Include references to the relevant sections of the API guidelines.
 
 - [Test the rules][25] that you have created or modified.
@@ -403,7 +405,7 @@ Resolves issue #123"
 - Test new rules against the example specifications in the `/example/` directory (you may need to modify the example definition to test your rules).
 
   ```bash
-  spectral lint example/example.1.0.0.oas.yml
+  spectral lint example/example.1.0.0.oas.yml --show-documentation-url
   ```
 
 - Verify that rules produce the expected results for both valid and invalid API definitions.

@@ -17,6 +17,7 @@ rules:
   # Conditional overrides based on API type
   override-severity-pygeoapi:
     message: "Adjusting severity for pygeoapi definitions"
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/severity-overrides/
     given: "$"
     then:
       function: overrideSeverity
@@ -58,6 +59,7 @@ rules:
     recommended: true
     description: Properties must use lower camel case.
     message: Properties must use lower camel case.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-camel-case-for-property-names/
 
   # MUST Query parameters must use lower camel case.
   # => /docs/spectral-rules/must/must-use-camel-case-for-query-parameters.md
@@ -73,6 +75,7 @@ rules:
     recommended: true
     description: Query parameters must use lower camel case.
     message: Query parameters must use lower camel case.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-camel-case-for-query-parameters/
 
   # MUST The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.
   # => /docs/spectral-rules/must/must-have-info-api-audience.md
@@ -95,6 +98,7 @@ rules:
     recommended: true
     description: 'The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.'
     message: Missing or wrong `info.x-audience`, {{error}}.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-api-audience/
 
   # MUST Path must start with a slash and must not end with a slash.
   # => /docs/spectral-rules/must/must-use-normalized-paths.md
@@ -109,6 +113,7 @@ rules:
         match: ^\/($|[^\/].*[^\/]$)
     description: "Path must start with a slash and must not end with a slash (except root path '/')"
     message: "Path must start with a slash and must not end with a slash (except root path '/')"
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-normalized-paths/
 
   # SHOULD APIs SHOULD have a root path (`/`) defined.
   # => /docs/spectral-rules/must/should-define-api-root.md
@@ -122,6 +127,7 @@ rules:
     recommended: true
     description: Good documentation is always welcome, but API consumers should be able to get a pretty long way through interaction with the API alone. They should at least know they're looking at the right place instead of getting a 404 or random 500 error as is common in some APIs.
     message: APIs SHOULD have a root path (`/`) defined.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-define-api-root/
 
   # MUST Root path must define a 200 response..
   # => /docs/spectral-rules/must/must-return-200-for-api-root.md
@@ -135,6 +141,7 @@ rules:
     recommended: true
     description: 'Root path must define a 200 response.'
     message: 'Root path must define a 200 response.'
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-return-200-for-api-root/
 
   # MUST `ApiInfo` schema must include this set of minimal required properties and validations.
   # => /docs/spectral-rules/must/must-use-valid-version-info-schema.md
@@ -148,6 +155,7 @@ rules:
     recommended: true
     description: '`ApiInfo` schema must include this set of minimal required properties and validations.'
     message: '{{error}}'
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-valid-version-info-schema/
 
   # MUST The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.
   # => /docs/spectral-rules/must/must-have-info-value-chain.md
@@ -171,6 +179,7 @@ rules:
     recommended: true
     description: 'The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.'
     message: "Missing or wrong `info.x-value-chain`, {{error}}."
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-value-chain/
 
   # MUST ALL requests MUST go through `https` protocol only
   # => /docs/spectral-rules/must/must-use-https-protocol-only.md
@@ -185,6 +194,7 @@ rules:
     recommended: true
     description: ALL requests MUST go through `https` protocol only
     message: Servers MUST be `https` and no other protocol is allowed.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-https-protocol-only/
 
   # MUST APIs MUST NOT use `HTTP` Basic Authentication.
   # => /docs/spectral-rules/must/must-not-use-http-basic-authentication.md
@@ -199,6 +209,7 @@ rules:
         notMatch: basic
     recommended: true
     message: APIs MUST NOT use `HTTP` Basic Authentication.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-not-use-http-basic-authentication/
     description: >-
       HTTP Basic is an inherently insecure way to pass credentials to the API. They're placed in the URL in base64 which can be decrypted easily. Even if you're using a token, there are far better ways to handle passing tokens to an API which are less likely to leak.
 
@@ -223,6 +234,7 @@ rules:
     recommended: true
     description: Every request SHOULD support at least one `application/json` content type
     message: Every request SHOULD support at least one `application/json` content type.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-support-application-json-content-request-body/
 
   # MUST A GET request MUST NOT accept a request body.
   # => /docs/spectral-rules/must/must-not-define-request-body-for-get-requests.md
@@ -235,6 +247,7 @@ rules:
     recommended: true
     description: Defining a request body on a HTTP GET is in some implementations, but is increasingly frowned upon due to the confusion that comes from unspecified behavior in the HTTP specification.
     message: A GET request MUST NOT accept a request body.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-not-define-request-body-for-get-requests/
 
   # MUST All APIs MUST have a security scheme defined.
   # => /docs/spectral-rules/must/must-define-security-schemes.md
@@ -248,6 +261,7 @@ rules:
     recommended: true
     description: This API definition does not have any security scheme defined, which means the entire API is open to the public. That's probably not what you want, even if all the data is read-only. Setting lower rate limits for the public and letting known consumers use more resources is a handy path to monetization, and helps know who your power users are when changes need feedback or migration, even if not just good practice.
     message: All APIs MUST have a security scheme defined.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-security-schemes/
 
   # SHOULD `201 Created` responses to `POST` methods SHOULD have a `Location` header identifying the location of the newly created resource.
   # => /docs/spectral-rules/should/should-have-location-header-in-201-response.md
@@ -292,6 +306,7 @@ rules:
     recommended: true
     description: '`201 Created` responses to `POST` methods SHOULD have a `Location` header identifying the location of the newly created resource.'
     message: '{{error}}'
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-have-location-header-in-201-response/
 
   # MUST Each operation MUST define 400, 404, and 500 responses using `application/problem+json` with examples.
   # => /docs/spectral-rules/must/must-define-critical-problem-responses.md
@@ -299,6 +314,7 @@ rules:
   must-define-critical-problem-responses:
     description: "Operations must define 400, 404, 500 with examples and application/problem+json"
     message: "{{error}}"
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-critical-problem-responses/
     severity: warn
     given: $.paths[*][*]
     then:
@@ -312,6 +328,7 @@ rules:
   must-define-security-problem-responses:
     description: "Operations with their own non-empty 'security' MUST define 401 and 403"
     message: "{{error}}"
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-security-problem-responses/
     severity: warn
     given: $.paths[*][*]
     then:
@@ -336,6 +353,7 @@ rules:
     recommended: true
     description: 'The `info` object SHOULD contain `x-contains-sensitive-data` to indicate presence of sensitive data such as PII or PHI.'
     message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'."
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-have-info-x-contains-sensitive-data/
 
   # MAY include `info.x-api-type` to indicate API category; enforce enum values when present.
   # => /docs/spectral-rules/may/may-have-info-x-api-type.md
@@ -357,3 +375,4 @@ rules:
     recommended: true
     description: 'APIs MAY include info.x-api-type to indicate API category. When present, it MUST be one of: standard, pygeoapi. When omitted, standard is assumed.'
     message: "Missing or wrong 'info.x-api-type'. Assuming 'standard'. Valid values: standard, pygeoapi."
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/may/may-have-info-x-api-type/

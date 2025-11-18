@@ -57,8 +57,11 @@ echo "extends: ['@ukhsa-collaboration/spectral-rules']" > .spectral.yml
 then you can just run the following.
 
 ```sh
-npx spectral lint openapi-definition.yml
+npx spectral lint openapi-definition.yml --show-documentation-url
 ```
+
+> [!TIP] Show documentation links
+> Spectral CLI v6.15.0 and newer support `--show-documentation-url`, which prints the `documentationUrl` value for every rule violation. Always include this flag so developers can jump straight to the detailed guidance that explains how to fix an issue.
 
 ### Review and fix any reported issues
 
@@ -115,10 +118,10 @@ jobs:
       - name: Lint OpenAPI specifications
         run: |
           npx spectral --version
-          npx spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions
+          npx spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions --show-documentation-url
 
           # Example: Only lint OpenAPI files
-          # npx spectral lint "@(openapi|swagger|*api)*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions
+          # npx spectral lint "@(openapi|swagger|*api)*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions --show-documentation-url
 ```
 
 <!-- {% endraw %} -->

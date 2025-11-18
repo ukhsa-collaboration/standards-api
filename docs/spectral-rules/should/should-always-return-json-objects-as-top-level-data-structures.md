@@ -31,7 +31,7 @@ requestBody:
 
 [UKHSA Guidelines API Design][1]
 
-[Zalando Guideline 210][2]
+[Zalando Guideline 110][2]
 
 [1]: ../../api-guidelines/api-design.md#response-format
-[2]: https://opensource.zalando.com/restful-api-guidelines/#210
+[2]: https://opensource.zalando.com/restful-api-guidelines/#110

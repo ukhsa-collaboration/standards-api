@@ -28,6 +28,7 @@ rules:
       function: isObjectSchema
     description: 'The top-level data structure for a `request body` or `response body` must be an object.'
     message: Top-level data structure must be an object
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-always-return-json-objects-as-top-level-data-structures/
 
   # SHOULD '`enum` values should use the marker `x-extensible-enum` rather than `enum`.'
   # => /docs/spectral-rules/should/should-use-x-extensible-enum.md
@@ -39,6 +40,7 @@ rules:
       function: undefined
     description: '`enum` values should use the marker `x-extensible-enum` rather than `enum`.'
     message: Should use `x-extensible-enum` instead of `enum`
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-use-x-extensible-enum/
 
   # MUST Path must not contain versions.
   # => /docs/spectral-rules/must/must-not-use-uri-versioning.md
@@ -52,20 +54,21 @@ rules:
         notMatch: /v[0-9]+/
     description: Path must not contain versions.
     message: Path must not contain versioning
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-not-use-uri-versioning/
 
   # MUST 'Property names must use snake-case strings that match this pattern: `^[a-z_][a-z_0-9]*$`.'
-  # => /docs/spectral-rules/must/must-use-snake-case-for-property-names.md
+  # => turned off
 
   must-use-snake-case-for-property-names:
     given: $.paths.*.*[responses,requestBody]..content..schema..properties.*~
     severity: error
-    then:
     then:
       function: casing
       functionOptions:
         type: snake
     description: 'Property names must use snake-case strings that match this pattern: `^[a-z_][a-z_0-9]*$`.'
     message: Property name has to be ASCII snake_case
+    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#118
 
   # MUST Path segments must use lowercase letters and hyphens to separate words.
   # => /docs/spectral-rules/must/must-use-lowercase-with-hyphens-for-path-segments.md
@@ -79,9 +82,10 @@ rules:
         match: ^(([\/a-z][a-z0-9\-\/]*)?({[^}]*})?)+$
     description: Path segments must use lowercase letters and hyphens to separate words.
     message: Path segments have to be lowercase separate words with hyphens.
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-lowercase-with-hyphens-for-path-segments/
 
   # MUST Query parameter must use snake-case and match this pattern: `^[a-z][_a-z0-9]*$`.
-  # => 
+  # => turned off
 
   must-use-snake-case-for-query-parameters:
     given: $.paths.*.*.parameters[?(@ && @.in=='query')].name
@@ -120,8 +124,8 @@ rules:
       ```
 
 
-      [Zalando Guideline 130](https://opensource.zalando.com/restful-api-guidelines/#130)
     message: Query parameters must be snake_case
+    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#130
 
   # SHOULD Header parameters should use hyphenated Pascal case.
   # => /docs/spectral-rules/should/should-use-hyphenated-pascal-case-for-header-parameters.md
@@ -135,8 +139,12 @@ rules:
         type: pascal
         separator:
           char: '-'
-    description: Header parameters should use hyphenated Pascal case. 
+    description: Header parameters should use hyphenated Pascal case.
     message: Header parameters should be Hyphenated-Pascal-Case
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-use-hyphenated-pascal-case-for-header-parameters/
+
+  # SHOULD Base path should not include `api`.
+  # => turned off
 
   should-not-use-api-as-base-path:
     given: $.paths.*~
@@ -168,8 +176,8 @@ rules:
 
       ```
 
-      [Zalando Guideline 135](https://opensource.zalando.com/restful-api-guidelines/#135)
     message: Path should not start with /api
+    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#135
 
   # MUST Path segments must not contain duplicate slashes.
   # => /docs/spectral-rules/must/must-use-normalized-paths-without-empty-path-segments.md
@@ -183,9 +191,10 @@ rules:
         notMatch: //
     description: Path segments must not contain duplicate slashes.
     message: Empty path segments are not allowed
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-normalized-paths-without-empty-path-segments/
 
   # MUST Path with trailing slash is not allowed.
-  # => /docs/spectral-rules/must/must-use-normalized-paths-without-trailing-slash.md
+  # => turned off
 
   must-use-normalized-paths-without-trailing-slash:
     given: $.paths.*~
@@ -196,6 +205,7 @@ rules:
         notMatch: /$
     description: Path with trailing slash is not allowed.
     message: Path with trailing slash is not allowed
+    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#136
 
   # SHOULD Resource types (root URL paths) should be limited to no more than eight.
   # => /docs/spectral-rules/should/should-limit-number-of-resource-types.md
@@ -209,6 +219,7 @@ rules:
         max: 8
     description: Resource types (root URL paths) should be limited to no more than eight.
     message: '{{error}}'
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-limit-number-of-resource-types/
 
   # SHOULD Path should contain no more than 3 sub-resources (nested resources with non-root URL paths).
   # => /docs/spectral-rules/should/should-limit-number-of-sub-resource-levels.md
@@ -222,6 +233,7 @@ rules:
         match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
     description: Path should contain no more than 3 sub-resources (nested resources with non-root URL paths).
     message: Sub-resource levels should by <= 3
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-limit-number-of-sub-resource-levels/
 
   # SHOULD Path should contain no more than 3 sub-resources (nested resources with non-root URL paths).
   # => /docs/spectral-rules/should/should-use-standard-http-status-codes.md
@@ -283,6 +295,7 @@ rules:
           - default
     description: '`response` should use standard HTTP status codes.'
     message: '{{property}} is not a standardized response code'
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-use-standard-http-status-codes/
 
   # MUST Each `operation` must include a default error response that combines multiple errors.
   # => /docs/spectral-rules/must/must-specify-default-response.md
@@ -295,6 +308,7 @@ rules:
       field: default
     description: Each `operation` must include a default error response that combines multiple errors.
     message: Operation does not contain a default response
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-specify-default-response/
 
   # MUST The content type for the default response must be `application/problem+json`.
   # => /docs/spectral-rules/must/must-use-problem-json-as-default-response.md
@@ -307,6 +321,7 @@ rules:
       field: content.application/problem+json
     description: The content type for the default response must be `application/problem+json`.
     message: Operation must use problem json as default response
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-problem-json-as-default-response/
 
   # MUST `number` properties must have a format defined (`float`, `double`, or `decimal`).
   # => /docs/spectral-rules/must/must-define-a-format-for-number-types.md
@@ -323,6 +338,7 @@ rules:
         field: format
     description: '`number` properties must have a format defined (`float`, `double`, or `decimal`).'
     message: Numeric properties must have valid format specified
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-a-format-for-number-types/
 
   # MUST `integer` properties must have a format defined (`int32`, `int64`, or `bigint`).
   # => /docs/spectral-rules/must/must-define-a-format-for-integer-types.md
@@ -339,6 +355,7 @@ rules:
         field: format
     description: '`integer` properties must have a format defined (`int32`, `int64`, or `bigint`).'
     message: Numeric properties must have valid format specified
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-a-format-for-integer-types/
 
   # SHOULD Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
   # => /docs/spectral-rules/should/should-prefer-standard-media-type-names.md
@@ -352,6 +369,7 @@ rules:
         match: ^application\/(problem\+)?json$|^[a-zA-Z0-9_]+\/[-+.a-zA-Z0-9_]+;(v|version)=[0-9]+$
     description: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
     message: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-prefer-standard-media-type-names/
 
   # MUST Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
   # => /docs/spectral-rules/must/must-use-problem-json-for-errors.md
@@ -366,6 +384,7 @@ rules:
           - application/problem+json
     description: The content type for 4xx and 5xx status codes must be `application/problem+json`.
     message: Error response must be application/problem+json
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-problem-json-for-errors/
 
   # MUST `Problem` schema must include this set of minimal required properties and validations
   # => /docs/spectral-rules/must/must-use-valid-problem-json-schema.md
@@ -378,6 +397,7 @@ rules:
       field: schema
     description: '`Problem` schema must include this set of minimal required properties and validations.'
     message: '{{error}}'
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-valid-problem-json-schema/
 
   # MUST The `info` object must have a `description` property defined.
   # => /docs/spectral-rules/must/must-have-info-description.md
@@ -390,6 +410,7 @@ rules:
       field: description
     description: The `info` object must have a `description` property defined.
     message: Must have API description defined in `info.description`
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-description/
 
   # MUST The `info` object must have a `contact:name` property that contains a valid name for the team or person responsible for the API.
   # => /docs/spectral-rules/must/must-have-info-contact-name.md
@@ -402,6 +423,7 @@ rules:
       field: contact.name
     description: The `info` object must have a `contact:name` property that contains a valid name for the team or person responsible for the API.
     message: Must have name defined in `info.contact.name`
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-contact-name/
 
   # MUST The `info` object must have a `contact:url` property that contains a valid URL to contact the team or person responsible for the API.
   # => /docs/spectral-rules/must/must-have-info-contact-url.md
@@ -414,6 +436,7 @@ rules:
       field: contact.url
     description: The `info` object must have a `contact:url` property that contains a valid URL to contact the team or person responsible for the API.
     message: Must have email defined in `info.contact.url`
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-contact-url/
 
   # MUST The `info` object must have a `contact email` property that contains a valid email address for the responsible team.
   # => /docs/spectral-rules/must/must-have-info-contact-email.md
@@ -426,6 +449,7 @@ rules:
       field: contact.email
     description: The `info` object must have a `contact email` property that contains a valid email address for the responsible team.
     message: Must have email defined in `info.contact.email`
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-contact-email/
 
   # MUST The `info` object must have an `x-api-id` property that conforms to this  pattern: `^[a-z0-9][a-z0-9-:.]{6,62}[a-z0-9]$`
   # => turned off
@@ -454,7 +478,7 @@ rules:
       info:
         api-id:
         title: Payments API
-      ``` 
+      ```
 
 
       **Valid Example**
@@ -464,11 +488,11 @@ rules:
 
       info:
         x-api-id: d0184f38-b98d-11e7-9c56-68f728c1ba70
-        title: Payments API    
-      ``` 
+        title: Payments API
+      ```
 
-      [Zalando Guideline 218](https://opensource.zalando.com/restful-api-guidelines/#218) and [Zalando Guideline 215](https://opensource.zalando.com/restful-api-guidelines/#215)
     message: Missing `info.x-api-id`.
+    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#215
 
   # MUST The `info` object must have an `x-audience` that matches at least one of these values:
   # => turned off
@@ -485,6 +509,7 @@ rules:
         field: x-audience
     description: Missing or wrong `info.x-audience`.
     message: Missing or wrong `info.x-audience`.
+    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#219
 
   # SHOULD `enum` and `x-extensible-enum` values should be in UPPER_SNAKE_CASE format.
   # => /docs/spectral-rules/should/should-declare-enum-values-using-upper-snake-case-format.md
@@ -498,6 +523,7 @@ rules:
         match: ^[A-Z][A-Z_0-9]*$
     description: '`enum` and `x-extensible-enum` values should be in UPPER_SNAKE_CASE format.'
     message: Enum values should be in UPPER_SNAKE_CASE format
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-declare-enum-values-using-upper-snake-case-format/
 
   # MUST The `info` object must have a `title` property defined.
   # => /docs/spectral-rules/must/must-have-info-title.md
@@ -510,6 +536,7 @@ rules:
       field: title
     description: The `info` object must have a `title` property defined.
     message: Must have API title defined in `info.title`
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-title/
 
   # MUST The `info` object must have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html) to distinguish API versions.
   # => /docs/spectral-rules/must/must-have-info-version.md
@@ -528,3 +555,4 @@ rules:
         field: version
     description: The `info` object must have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html) to distinguish API versions.
     message: Must have API version defined in `info.version`
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-version/
