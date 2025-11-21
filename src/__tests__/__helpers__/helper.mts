@@ -13,7 +13,7 @@ import type { IRuleResult, Ruleset, RulesetDefinition } from '@stoplight/spectra
 const { fetch } = spectralRuntime;
 const { Spectral, Document } = SpectralCore;
 const { Yaml } = SpectralParsers;
-const RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.yml');
+const DEFAULT_RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.yml');
 
 /**
  * Loads the Spectral ruleset definition from a local YAML file.
@@ -21,16 +21,20 @@ const RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.yml');
  * @throws {Error} If the ruleset file does not exist at the expected path.
  * @returns The parsed ruleset definition object.
  */
-async function loadRulesetFromYaml(): Promise<RulesetDefinition> {
-  if (!fs.existsSync(RULESET_PATH)) {
-    throw new Error(`Ruleset file not found at ${RULESET_PATH}`);
+async function loadRulesetFromYaml(rulesetPath: string = DEFAULT_RULESET_PATH): Promise<RulesetDefinition> {
+  if (!fs.existsSync(rulesetPath)) {
+    throw new Error(`Ruleset file not found at ${rulesetPath}`);
   }
 
-  return await bundleAndLoadRuleset(RULESET_PATH, { fs, fetch }, [commonjs()]);
+  return await bundleAndLoadRuleset(rulesetPath, { fs, fetch }, [commonjs()]);
 
 }
 
 export type RuleName = keyof Ruleset['rules'];
+
+type TestRuleOptions = Readonly<{
+  rulesetPath?: string;
+}>;
 
 type Scenario = ReadonlyArray<
   Readonly<{
@@ -49,10 +53,13 @@ type Scenario = ReadonlyArray<
  * @throws {Error} If any requested rule is not found in the loaded ruleset.
  * @returns A Spectral instance with the filtered ruleset.
  */
-export async function createWithRules(rules: RuleName[]): Promise<SpectralCore.Spectral> {
+export async function createWithRules(
+  rules: RuleName[],
+  rulesetPath: string = DEFAULT_RULESET_PATH,
+): Promise<SpectralCore.Spectral> {
   const s = new Spectral({ resolver: httpAndFileResolver });
   // Load a fresh ruleset per Spectral instance to guarantee isolation
-  const freshRuleset = await loadRulesetFromYaml();
+  const freshRuleset = await loadRulesetFromYaml(rulesetPath);
   s.setRuleset(freshRuleset as RulesetDefinition);
 
   return s;
@@ -64,12 +71,17 @@ export async function createWithRules(rules: RuleName[]): Promise<SpectralCore.S
  * @param rules - A rule name or list of rule names to test.
  * @param tests - Array of test scenarios, each with a document and expected errors.
  */
-export default function testRule(rules: RuleName | RuleName[], tests: Scenario): void {
+export default function testRule(
+  rules: RuleName | RuleName[],
+  tests: Scenario,
+  options: TestRuleOptions = {},
+): void {
   const rulesToInclude: RuleName[] = Array.isArray(rules) ? rules : [rules];
+  const rulesetPath = options.rulesetPath ?? DEFAULT_RULESET_PATH;
   describe(`Rule ${rulesToInclude.join(', ')}`, () => {
     for (const t of tests) {
       it(t.name, async () => {
-        const spectral = await createWithRules(rulesToInclude);
+        const spectral = await createWithRules(rulesToInclude, rulesetPath);
 
         const doc =
           t.document instanceof Document
@@ -91,8 +103,8 @@ export default function testRule(rules: RuleName | RuleName[], tests: Scenario):
  *
  * @throws {Error} If the ruleset file is missing.
  */
-export function expectRulesetFileExists(): void {
-  if (!fs.existsSync(RULESET_PATH)) {
-    throw new Error(`Ruleset file not found at ${RULESET_PATH}`);
+export function expectRulesetFileExists(rulesetPath: string = DEFAULT_RULESET_PATH): void {
+  if (!fs.existsSync(rulesetPath)) {
+    throw new Error(`Ruleset file not found at ${rulesetPath}`);
   }
 }
