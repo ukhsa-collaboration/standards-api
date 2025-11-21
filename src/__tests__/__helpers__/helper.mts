@@ -14,6 +14,7 @@ const { fetch } = spectralRuntime;
 const { Spectral, Document } = SpectralCore;
 const { Yaml } = SpectralParsers;
 const DEFAULT_RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.yml');
+const rulesetCache = new Map<string, Promise<RulesetDefinition>>();
 
 /**
  * Loads the Spectral ruleset definition from a local YAML file.
@@ -26,7 +27,11 @@ async function loadRulesetFromYaml(rulesetPath: string = DEFAULT_RULESET_PATH): 
     throw new Error(`Ruleset file not found at ${rulesetPath}`);
   }
 
-  return await bundleAndLoadRuleset(rulesetPath, { fs, fetch }, [commonjs()]);
+  if (!rulesetCache.has(rulesetPath)) {
+    rulesetCache.set(rulesetPath, bundleAndLoadRuleset(rulesetPath, { fs, fetch }, [commonjs()]));
+  }
+
+  return await rulesetCache.get(rulesetPath)!;
 
 }
 
@@ -79,10 +84,14 @@ export default function testRule(
   const rulesToInclude: RuleName[] = Array.isArray(rules) ? rules : [rules];
   const rulesetPath = options.rulesetPath ?? DEFAULT_RULESET_PATH;
   describe(`Rule ${rulesToInclude.join(', ')}`, () => {
+    let spectral!: SpectralCore.Spectral;
+
+    beforeAll(async () => {
+      spectral = await createWithRules(rulesToInclude, rulesetPath);
+    });
+
     for (const t of tests) {
       it(t.name, async () => {
-        const spectral = await createWithRules(rulesToInclude, rulesetPath);
-
         const doc =
           t.document instanceof Document
             ? t.document
