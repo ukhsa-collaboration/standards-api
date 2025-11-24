@@ -45,7 +45,7 @@
     "@swc/core": "^1.15.3",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.20",
+    "@types/lodash": "^4.17.21",
     "cpx2": "^8.0.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
