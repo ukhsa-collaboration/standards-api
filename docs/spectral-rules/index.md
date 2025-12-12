@@ -5,33 +5,31 @@ eleventyNavigation:
   parent: api-design-guidelines
 ---
 
-# Spectral Rules
+# Linting Rules
 
 ## Overview
 
-A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines][1], ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA.
+A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines][1], ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA. We now recommend running this ruleset with [Vacuum][2] to avoid the `$ref` performance problems seen with Spectral while keeping full Spectral compatibility for teams that still rely on it.
 
-As well as the rules described herein, the UKHSA ruleset includes the [recommended][2] built in spectral [OpenAPI Rules][3] and the [Spectral Documentation Ruleset][4]; These are common sense rules that ensure an OpenAPI definition adheres to the [OpenAPI specification][5], as well as encourage high quality, rich documentation which is especially important for providing the best possible APIM Developer Portal experience.
+As well as the rules described herein, the UKHSA ruleset includes the [recommended][3] built in spectral [OpenAPI Rules][4] and the [Spectral Documentation Ruleset][5]; These are common sense rules that ensure an OpenAPI definition adheres to the [OpenAPI specification][6], as well as encourage high quality, rich documentation which is especially important for providing the best possible APIM Developer Portal experience.
 
 Where rules been adopted from from existing open source API rulesets a link is supplied on the relevant rule page.
 
 ## How to use the rules
 
-### Install Spectral
+### Install Vacuum
 
-[Spectral][6] is a flexible JSON/YAML linter for creating automated style guides, with baked in support for OpenAPI (v3.1, v3.0, and v2.0), Arazzo v1.0, as well as AsyncAPI v2.x.
-
-Install Spectral globally or as a dev dependency.
+[Vacuum][2] is a fast OpenAPI linter that can execute Spectral-compatible rulesets (including this one) without the `$ref` memory issues we've observed with Spectral. Install Vacuum globally or as a dev dependency.
 
 ```sh
-npm install @stoplight/spectral-cli --save-dev
+npm install @quobix/vacuum --save-dev
 ```
 
-Read the [official spectral documentation][7] for more installation options.
+Read the [official Vacuum documentation][7] for more installation options.
 
-### Run Spectral against your OpenAPI definition
+### Run Vacuum against your OpenAPI definition
 
-Run Spectral against your OpenAPI definition, referencing the spectral ruleset.
+Run Vacuum against your OpenAPI definition, referencing the spectral-compatible ruleset. The custom rules rely on JavaScript functions, so build them first and pass the functions directory to Vacuum.
 
 You must install the ruleset as via [npm package][8] and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Installing a GitHub npm package][9].
 
@@ -54,14 +52,17 @@ create a local `.spectral.yml` ruleset which extends the one in this repository.
 echo "extends: ['@ukhsa-collaboration/spectral-rules']" > .spectral.yml
 ```
 
-then you can just run the following.
+Build the Vacuum-compatible functions (outputs to `dist-vacuum/functions`) and run the linter with the `--functions` flag so the custom rules load correctly.
 
 ```sh
-npx spectral lint openapi-definition.yml --show-documentation-url
+npm run build:functions:cjs
+npx vacuum lint openapi-definition.yml \
+  -r ./node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml \
+  --functions ./node_modules/@ukhsa-collaboration/spectral-rules/dist-vacuum/functions
 ```
 
-> [!TIP] Show documentation links
-> Spectral CLI v6.15.0 and newer support `--show-documentation-url`, which prints the `documentationUrl` value for every rule violation. Always include this flag so developers can jump straight to the detailed guidance that explains how to fix an issue.
+> [!TIP] Need Spectral-style JSON?
+> Use `npx vacuum spectral-report <spec> <report.json>` to generate a Spectral-compatible JSON report if you have existing tooling that expects that format.
 
 ### Review and fix any reported issues
 
@@ -117,11 +118,10 @@ jobs:
 
       - name: Lint OpenAPI specifications
         run: |
-          npx spectral --version
-          npx spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions --show-documentation-url
+          npx vacuum lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml
 
           # Example: Only lint OpenAPI files
-          # npx spectral lint "@(openapi|swagger|*api)*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions --show-documentation-url
+          # npx vacuum lint "@(openapi|swagger|*api)*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml
 ```
 
 <!-- {% endraw %} -->
@@ -151,24 +151,23 @@ The global pattern does not match:
 
 | Tool | Description |
 | - | - |
-| [VS Code Extension][14] | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
-| [Github Action][15] | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
+| [Vacuum GitHub Action][14] | Official Vacuum action for linting OpenAPI definitions in CI/CD workflows. |
+| [VS Code Extension][15] | Spectral VS Code extension still works because the ruleset format remains Spectral-compatible. |
 
-Read the [official spectral documentation][16] for more development workflows.
+Read the [official Vacuum documentation][7] for more development workflows.
 
 [1]: ../api-guidelines/index.md
-[2]: https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all
-[3]: https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules
-[4]: https://github.com/stoplightio/spectral-documentation
-[5]: https://swagger.io/specification/
-[6]: https://docs.stoplight.io/docs/spectral
-[7]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
+[2]: https://quobix.com/vacuum/
+[3]: https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all
+[4]: https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules
+[5]: https://github.com/stoplightio/spectral-documentation
+[6]: https://swagger.io/specification/
+[7]: https://quobix.com/vacuum/installing/
 [8]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm
 [9]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
 [10]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token
 [11]: https://pygeoapi.io/
 [12]: ./severity-overrides.md
 [13]: https://github.com/mrmlnc/fast-glob
-[14]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
-[15]: https://github.com/marketplace/actions/spectral-linting
-[16]: https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows
+[14]: https://github.com/marketplace/actions/vacuum-openapi-linter-and-quality-analysis-tool
+[15]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral

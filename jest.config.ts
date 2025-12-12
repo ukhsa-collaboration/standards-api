@@ -1,8 +1,10 @@
 import type { Config } from 'jest';
-import tsconfig from './tsconfig.json' with { type: "json" };
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
-const { compilerOptions } = tsconfig;
+const tsconfigPath = path.join(process.cwd(), 'tsconfig.json');
+const { compilerOptions } = JSON.parse(readFileSync(tsconfigPath, 'utf8'));
 
 const moduleNameMapper = {
   '^(\\.{1,2}/.*)\\.m?js$': '$1',

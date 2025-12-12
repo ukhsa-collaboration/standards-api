@@ -92,66 +92,70 @@ function validateResponse(
  * @param context - The Spectral rule execution context.
  * @returns An array of rule results describing missing or invalid error responses.
  */
-const validateCommonErrorResponses: RulesetFunction<OperationObject, Options> = function (
+export const runRule: RulesetFunction<OperationObject, Options> = function (
   targetVal: OperationObject,
   opts: Options,
   context: RulesetFunctionContext,
 ) {
-  const { responses = {}, security: opSecurity } = targetVal;
-  const globalSecurity = (context.document?.data as { security?: any })?.security;
-  const globalSecurityActive = Array.isArray(globalSecurity) && globalSecurity.length > 0;
-  const path = context.path?.[1] || '';
-  const isRoot = path === '/';
-  const mode = opts?.mode;
+  try {
+    const { responses = {}, security: opSecurity } = targetVal;
+    const globalSecurity = (context.document?.data as { security?: any })?.security;
+    const globalSecurityActive = Array.isArray(globalSecurity) && globalSecurity.length > 0;
+    const path = context.path?.[1] || '';
+    const isRoot = path === '/';
+    const mode = opts?.mode;
 
-  let requiredStatusCodes: string[] = [];
-  let shouldRun = false;
+    let requiredStatusCodes: string[] = [];
+    let shouldRun = false;
 
-  if (mode === 'critical') {
-    requiredStatusCodes = [...REQUIRED_ALWAYS];
-    shouldRun = true;
-  }
-
-  if (mode === 'explicit-security') {
-    const securityExplicitlyDisabled = Array.isArray(opSecurity) && opSecurity.length === 0;
-    const securityExplicitlyActive = Array.isArray(opSecurity) && opSecurity.length > 0;
-    if (securityExplicitlyActive || (!securityExplicitlyDisabled && !isRoot && globalSecurityActive)) {
-      requiredStatusCodes = [...REQUIRED_IF_SECURED];
+    if (mode === 'critical') {
+      requiredStatusCodes = [...REQUIRED_ALWAYS];
       shouldRun = true;
     }
-  }
 
-  if (mode === 'root-inherit') {
-    const isInheritingGlobalSecurity =
-      isRoot && (opSecurity === undefined || opSecurity === null) && globalSecurityActive;
-
-    if (isInheritingGlobalSecurity) {
-      requiredStatusCodes = [...REQUIRED_IF_SECURED];
-      shouldRun = true;
+    if (mode === 'explicit-security') {
+      const securityExplicitlyDisabled = Array.isArray(opSecurity) && opSecurity.length === 0;
+      const securityExplicitlyActive = Array.isArray(opSecurity) && opSecurity.length > 0;
+      if (securityExplicitlyActive || (!securityExplicitlyDisabled && !isRoot && globalSecurityActive)) {
+        requiredStatusCodes = [...REQUIRED_IF_SECURED];
+        shouldRun = true;
+      }
     }
+
+    if (mode === 'root-inherit') {
+      const isInheritingGlobalSecurity =
+        isRoot && (opSecurity === undefined || opSecurity === null) && globalSecurityActive;
+
+      if (isInheritingGlobalSecurity) {
+        requiredStatusCodes = [...REQUIRED_IF_SECURED];
+        shouldRun = true;
+      }
+    }
+
+    if (!shouldRun) return [];
+
+    const issues = requiredStatusCodes
+      .map((code) => validateResponse(responses, code))
+      .filter((x): x is ValidationIssue => Boolean(x));
+
+    if (issues.length === 0) return [];
+
+    const level = context.rule.severity === 0 ? 'MUST' : 'SHOULD';
+    const details = issues
+      .map((issue) => `${issue.statusCode} (${issue.issues.join(', ')})`)
+      .join('; ');
+
+    return [
+      {
+        message: `Each operation ${level} define Problem Details for: ${requiredStatusCodes.join(
+          ', ',
+        )}. Issues: ${details}.`,
+        path: [...context.path, 'responses'],
+      },
+    ];
+  } catch (_err) {
+    return [];
   }
-
-  if (!shouldRun) return [];
-
-  const issues = requiredStatusCodes
-    .map((code) => validateResponse(responses, code))
-    .filter((x): x is ValidationIssue => Boolean(x));
-
-  if (issues.length === 0) return [];
-
-  const level = context.rule.severity === 0 ? 'MUST' : 'SHOULD';
-  const details = issues
-    .map((issue) => `${issue.statusCode} (${issue.issues.join(', ')})`)
-    .join('; ');
-
-  return [
-    {
-      message: `Each operation ${level} define Problem Details for: ${requiredStatusCodes.join(
-        ', ',
-      )}. Issues: ${details}.`,
-      path: [...context.path, 'responses'],
-    },
-  ];
 };
 
-export default validateCommonErrorResponses;
+export default runRule;
