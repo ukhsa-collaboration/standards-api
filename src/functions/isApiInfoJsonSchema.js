@@ -48,7 +48,7 @@ properties:
  * Asserts that the given schema is a valid ApiInfo JSON schema.
  * @type {Core.RulesetFunction<any, null>}
  */
-const assertApiInfoSchema = (schema) => {
+export const assertApiInfoSchema = (schema) => {
 
   const results = [];
 
@@ -92,17 +92,19 @@ const assertApiInfoSchema = (schema) => {
   return results;
 };
 
-/**
- * Checks the API Info JSON schema for compliance.
- * @type {Core.RulesetFunction<any, null>}
- */
-const check = (schema, _options, _context) => {
-  const combinedSchemas = [...(schema?.anyOf ?? []), ...(schema?.oneOf ?? []), ...(schema?.allOf ?? [])];
+/** @type {(schema: any, _options: any, _context: any, resolveRef: (schema: any) => any) => any} */
+const check = (schema, _options, _context, resolveRef) => {
+  const resolvedSchema = resolveRef(schema);
+  const combinedSchemas = [
+    ...(resolvedSchema?.anyOf ?? []),
+    ...(resolvedSchema?.oneOf ?? []),
+    ...(resolvedSchema?.allOf ?? []),
+  ].map(resolveRef);
 
   if (combinedSchemas.length > 0) {
     const aggregated = [];
     for (const subSchema of combinedSchemas) {
-      const res = check(subSchema, _options, _context);
+      const res = check(subSchema, _options, _context, resolveRef);
       if (Array.isArray(res)) {
         aggregated.push(...res);
       }
@@ -110,7 +112,7 @@ const check = (schema, _options, _context) => {
     return aggregated;
   }
 
-  return assertApiInfoSchema(schema, _options, _context);
+  return assertApiInfoSchema(resolvedSchema, _options, _context);
 };
 
 /**
@@ -120,13 +122,83 @@ const check = (schema, _options, _context) => {
  * @param {null} _options - Additional options (not used).
  * @param {Core.RulesetFunctionContext} _context - The context.
  */
-export default (targetValue, _options, _context) => {
-  if (targetValue === null || typeof targetValue !== "object") {
+export const runRule = (targetValue, _options, _context) => {
+  const schema = targetValue?.schema ?? targetValue;
+
+  if (schema === null || typeof schema !== "object") {
     return [];
   }
 
   try {
-    return check(targetValue, _options, _context);
+    let document = _context?.document?.data;
+    const specInfo = _context ? /** @type {any} */ (_context).specInfo : undefined;
+
+    /** @type {any} */
+    const bytes = specInfo && specInfo.bytes;
+    const hasBytes =
+      Array.isArray(bytes) ||
+      (typeof ArrayBuffer !== "undefined" && bytes instanceof ArrayBuffer) ||
+      ArrayBuffer.isView?.(bytes);
+
+    if (!document && hasBytes) {
+      try {
+        const SafeBuffer =
+          typeof Buffer !== "undefined" ? Buffer : /** @type {any} */ (require("buffer").Buffer);
+        let buffer;
+        if (Array.isArray(bytes)) {
+          buffer = SafeBuffer.from(bytes);
+        } else if (bytes instanceof ArrayBuffer) {
+          buffer = SafeBuffer.from(new Uint8Array(bytes));
+        } else if (ArrayBuffer.isView?.(bytes)) {
+          buffer = SafeBuffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+        } else {
+          buffer = SafeBuffer.from([]);
+        }
+        const text = buffer.toString("utf8");
+        // @ts-expect-error - js-yaml typings are not available in this build context.
+        const yaml = require("js-yaml");
+        document = yaml.load(text);
+      } catch {
+        document = undefined;
+      }
+    }
+
+    if (!document && typeof schema?.$ref === "string" && schema.$ref.includes("/ApiInfo")) {
+      return [];
+    }
+
+    /** @param {string} ref */
+    const resolveLocalRef = (ref) => {
+      if (typeof ref !== "string" || !ref.startsWith("#/")) return null;
+      const pathSegments = ref
+        .slice(2)
+        .split("/")
+        .map((segment) => segment.replace(/~1/g, "/").replace(/~0/g, "~"));
+
+      /** @type {any} */
+      let node = document;
+      for (const segment of pathSegments) {
+        if (node && typeof node === "object" && segment in node) {
+          node = node[segment];
+        } else {
+          return null;
+        }
+      }
+      return node;
+    };
+
+    /** @param {any} schemaNode */
+    const resolveRef = (schemaNode) => {
+      if (schemaNode && typeof schemaNode === "object" && typeof schemaNode.$ref === "string") {
+        const resolved = resolveLocalRef(schemaNode.$ref);
+        if (resolved) {
+          return resolved;
+        }
+      }
+      return schemaNode;
+    };
+
+    return check(schema, _options, _context, resolveRef);
   } catch (/** @type {any} */ex) {
     return [
       {
@@ -135,3 +207,5 @@ export default (targetValue, _options, _context) => {
     ];
   }
 };
+
+export default runRule;

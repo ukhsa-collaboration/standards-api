@@ -314,11 +314,11 @@ rules:
   # => /docs/spectral-rules/must/must-use-problem-json-as-default-response.md
 
   must-use-problem-json-as-default-response:
-    given: $.paths.*.*.responses.default
+    given: $.paths.*.*.responses.default.content
     severity: error
     then:
       function: truthy
-      field: content.application/problem+json
+      field: application/problem+json
     description: The content type for the default response must be `application/problem+json`.
     message: Operation must use problem json as default response
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-problem-json-as-default-response/
@@ -361,12 +361,13 @@ rules:
   # => /docs/spectral-rules/should/should-prefer-standard-media-type-names.md
 
   should-prefer-standard-media-type-names:
-    given: $.paths.*.*.responses.*.content.*~
+    given: $.paths.*.*.responses.*.content.*
     severity: warn
     then:
       function: pattern
       functionOptions:
         match: ^application\/(problem\+)?json$|^[a-zA-Z0-9_]+\/[-+.a-zA-Z0-9_]+;(v|version)=[0-9]+$
+      field: '@key'
     description: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
     message: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/should/should-prefer-standard-media-type-names/
@@ -375,13 +376,14 @@ rules:
   # => /docs/spectral-rules/must/must-use-problem-json-for-errors.md
 
   must-use-problem-json-for-errors:
-    given: $.paths[*]..responses[?(@property.match(/^(4|5)/))].content.*~"
+    given: $.paths.*.*.responses['400','401','403','404','405','406','407','408','409','410','411','412','413','414','415','416','417','418','421','422','423','424','425','426','428','429','431','451','500','501','502','503','504','505','506','507','508','510','511','default'].content.*
     severity: error
     then:
       function: enumeration
       functionOptions:
         values:
           - application/problem+json
+      field: '@key'
     description: The content type for 4xx and 5xx status codes must be `application/problem+json`.
     message: Error response must be application/problem+json
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-problem-json-for-errors/
@@ -390,7 +392,7 @@ rules:
   # => /docs/spectral-rules/must/must-use-valid-problem-json-schema.md
 
   must-use-valid-problem-json-schema:
-    given: $.paths.*.*.responses.*.content.application/problem+json
+    given: $.paths.*.*.responses.*.content['application/problem+json']
     severity: error
     then:
       function: isProblemJsonSchema
@@ -416,11 +418,11 @@ rules:
   # => /docs/spectral-rules/must/must-have-info-contact-name.md
 
   must-have-info-contact-name:
-    given: $.info
     severity: error
+    given: $.info.contact
     then:
+      field: name
       function: truthy
-      field: contact.name
     description: The `info` object must have a `contact:name` property that contains a valid name for the team or person responsible for the API.
     message: Must have name defined in `info.contact.name`
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-contact-name/
@@ -429,11 +431,11 @@ rules:
   # => /docs/spectral-rules/must/must-have-info-contact-url.md
 
   must-have-info-contact-url:
-    given: $.info
+    given: $.info.contact
     severity: error
     then:
       function: truthy
-      field: contact.url
+      field: url
     description: The `info` object must have a `contact:url` property that contains a valid URL to contact the team or person responsible for the API.
     message: Must have email defined in `info.contact.url`
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-contact-url/
@@ -442,11 +444,11 @@ rules:
   # => /docs/spectral-rules/must/must-have-info-contact-email.md
 
   must-have-info-contact-email:
-    given: $.info
+    given: $.info.contact
     severity: error
     then:
       function: truthy
-      field: contact.email
+      field: email
     description: The `info` object must have a `contact email` property that contains a valid email address for the responsible team.
     message: Must have email defined in `info.contact.email`
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-contact-email/
@@ -515,7 +517,7 @@ rules:
   # => /docs/spectral-rules/should/should-declare-enum-values-using-upper-snake-case-format.md
 
   should-declare-enum-values-using-upper-snake-case-format:
-    given: $.paths..[?(@ && @.type=='string')].[enum,x-extensible-enum].*
+    given: $..[?(@ && @.type=="string")]['enum','x-extensible-enum'][*]
     severity: warn
     then:
       function: pattern

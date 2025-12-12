@@ -8,7 +8,7 @@
  * Asserts that the given schema is a valid object schema.
  * @type {Core.RulesetFunction<any, null>}
  */
-const assertObjectSchema = (schema, _options, _context) => {
+export const assertObjectSchema = (schema, _options, _context) => {
   const results = [];
 
   if (schema.type !== 'object') {
@@ -50,7 +50,7 @@ const check = (schema, _options, _context) => {
  * @param {null} _options - Additional options (not used).
  * @param {Core.RulesetFunctionContext} _context - The context.
  */
-export default (targetValue, _options, _context) => {
+export const runRule = (targetValue, _options, _context) => {
   if(targetValue === null || typeof targetValue !== "object") {
       return [];
   }
@@ -65,3 +65,5 @@ export default (targetValue, _options, _context) => {
     ];
   }
 };
+
+export default runRule;

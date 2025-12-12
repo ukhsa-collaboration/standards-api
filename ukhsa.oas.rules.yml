@@ -50,7 +50,7 @@ rules:
 
   must-use-snake-case-for-property-names: off
   must-use-camel-case-for-property-names:
-    given: $.paths.*.*[responses,requestBody]..content..schema..properties.*~
+    given: $.paths.*.*['responses','requestBody']..content..schema..properties.*~
     severity: error
     then:
       function: casing
@@ -85,16 +85,20 @@ rules:
     given: $.info
     severity: error
     then:
-      - function: enumeration
-        field: x-audience
-        functionOptions:
-          values:
-            - company-internal
-            - partner-external
-            - premium-external
-            - public-external
-      - function: defined
-        field: x-audience
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - x-audience
+          properties:
+            x-audience:
+              type: string
+              enum:
+                - company-internal
+                - partner-external
+                - premium-external
+                - public-external
     recommended: true
     description: 'The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.'
     message: Missing or wrong `info.x-audience`, {{error}}.
@@ -149,6 +153,7 @@ rules:
   must-use-valid-version-info-schema:
     given: $.paths["/"].*.responses["200"].content["application/json"]
     severity: error
+    resolved: true
     then:
       function: isApiInfoJsonSchema
       field: schema
@@ -164,18 +169,22 @@ rules:
     given: $.info
     severity: error
     then:
-      - function: enumeration
-        field: x-value-chain
-        functionOptions:
-          values:
-            - prevent
-            - detect
-            - analyse
-            - respond
-            - cross-cutting
-            - enabling
-      - function: defined
-        field: x-value-chain
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - x-value-chain
+          properties:
+            x-value-chain:
+              type: string
+              enum:
+                - prevent
+                - detect
+                - analyse
+                - respond
+                - cross-cutting
+                - enabling
     recommended: true
     description: 'The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.'
     message: "Missing or wrong `info.x-value-chain`, {{error}}."
@@ -190,7 +199,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "/^https:/"
+        match: "^https:/"
     recommended: true
     description: ALL requests MUST go through `https` protocol only
     message: Servers MUST be `https` and no other protocol is allowed.
@@ -273,36 +282,40 @@ rules:
       function: schema
       field: headers
       functionOptions:
-        allErrors: true
         schema:
           type: object
-          properties:
-            Location:
-              type: object
-              properties:
-                description:
-                  type: string
-                  description: 'The URL of the created resource.'
-                schema:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                      enum: [string]
-                    format:
-                      type: string
-                      enum: [uri]
-                    example:
-                      type: string
-                  required:
-                    - type
-                    - format
-                    - example
-              required:
-                - description
-                - schema
           required:
             - Location
+          properties:
+            Location:
+              anyOf:
+                - type: object
+                  required:
+                    - schema
+                  properties:
+                    description:
+                      type: string
+                      description: 'The URL of the created resource.'
+                    schema:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum: [string]
+                        format:
+                          type: string
+                          enum: [uri]
+                        example:
+                          type: string
+                      required:
+                        - type
+                        - format
+                - type: object
+                  required:
+                    - $ref
+                  properties:
+                    $ref:
+                      type: string
     recommended: true
     description: '`201 Created` responses to `POST` methods SHOULD have a `Location` header identifying the location of the newly created resource.'
     message: '{{error}}'
@@ -362,16 +375,18 @@ rules:
     given: $.info
     severity: info
     then:
-      - function: defined
-        field: x-api-type
-        message: "info.x-api-type omitted; assuming 'standard'. Valid values: standard, pygeoapi."
-      - function: enumeration
-        field: x-api-type
-        functionOptions:
-          values:
-            - standard
-            - pygeoapi
-        message: "info.x-api-type must be one of: standard, pygeoapi. Assuming 'standard' when absent."
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - x-api-type
+          properties:
+            x-api-type:
+              type: string
+              enum:
+                - standard
+                - pygeoapi
     recommended: true
     description: 'APIs MAY include info.x-api-type to indicate API category. When present, it MUST be one of: standard, pygeoapi. When omitted, standard is assumed.'
     message: "Missing or wrong 'info.x-api-type'. Assuming 'standard'. Valid values: standard, pygeoapi."

@@ -71,16 +71,16 @@ Before you begin, ensure you have the following installed:
 | Tool | Version | Description |
 | - | - | - |
 | [Node.js][34] / npm | `Latest LTS` | Required for packaging and testing spectral rules. |
-| [Spectral][35] | `Latest` | Required for developing linting rules for OpenAPI specifications. |
+| [Vacuum][35] | `Latest` | Preferred CLI for running the Spectral-compatible ruleset without `$ref` memory issues. |
 
-You can install npm and Spectral CLI using your system's package manager or download them from their respective websites.
+You can install npm and Vacuum CLI using your system's package manager or download them from their respective websites.
 
 You can verify your installations with:
 
 ```bash
 node --version
 npm --version
-spectral --version
+vacuum --version
 ```
 
 install the required dependencies with the following command:
@@ -375,6 +375,8 @@ Resolves issue #123"
 
 ### Spectral Rules Development
 
+Vacuum is now the recommended CLI for running the Spectral-compatible ruleset; keep using the Spectral rule format when authoring new checks so both tools remain supported.
+
 - For documentation on how to create custom spectral rules, see [Write Your First Rule][54] spectral documentation.
 
 - UKHSA specific spectral rules are defined in the `ukhsa.oas.rules.yml` file.
@@ -392,7 +394,7 @@ Resolves issue #123"
 
 - Each rule should have a corresponding documentation file in the relevant folder `/docs/spectral-rules/must/`, `/docs/spectral-rules/should/` or `/docs/spectral-rules/may/`.
 
-- Every rule definition **MUST** set `documentationUrl` so Spectral CLI can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/<rule-name>/`).
+- Every rule definition **MUST** set `documentationUrl` so Vacuum/Spectral outputs can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/<rule-name>/`).
 
 - Include references to the relevant sections of the API guidelines.
 
@@ -405,7 +407,7 @@ Resolves issue #123"
 - Test new rules against the example specifications in the `/example/` directory (you may need to modify the example definition to test your rules).
 
   ```bash
-  spectral lint example/example.1.0.0.oas.yml --show-documentation-url
+  vacuum lint example/example.1.0.0.oas.yml -r ./.spectral.yaml
   ```
 
 - Verify that rules produce the expected results for both valid and invalid API definitions.
@@ -538,7 +540,7 @@ Thank you for contributing to improving API design and development practices acr
 [32]: ./CODE_OF_CONDUCT.md
 [33]: https://help.github.com/articles/fork-a-repo/
 [34]: https://nodejs.org/en/download/
-[35]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
+[35]: https://quobix.com/vacuum/installing/
 [36]: https://github.com/ukhsa-collaboration/standards-api/issues
 [37]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
 [38]: https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments

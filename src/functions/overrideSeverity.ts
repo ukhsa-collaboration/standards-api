@@ -48,7 +48,7 @@ function generateMessageSeparator(message: string) {
  * @param context - The ruleset function context.
  * @returns An array of function results (always empty in this case).
  */
-const overrideSeverity = (
+export const runRule = (
   targetValue: unknown,
   options: Options,
   context: RulesetFunctionContext
@@ -89,7 +89,7 @@ const overrideSeverity = (
   return [];
 };
 
-export default createRulesetFunction<unknown, Options>({
+const exported = createRulesetFunction<unknown, Options>({
   input: null,
   errorOnInvalidInput: true,
   options: {
@@ -116,4 +116,6 @@ export default createRulesetFunction<unknown, Options>({
     },
     required: ['value', 'target', 'rulesToAdjust'],
   },
-}, overrideSeverity);
+}, runRule);
+
+export default exported;

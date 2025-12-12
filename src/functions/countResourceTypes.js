@@ -6,7 +6,7 @@
 
 /**
  * @typedef  {Object} CountResourceTypesOptions
- * @property {number} max - The maximum number of resource types allowed.
+ * @property {number} [max] - The maximum number of resource types allowed.
  */
 
 /**
@@ -14,24 +14,32 @@
  * @param {string} path - The path to extract the resource type from.
  * @returns {string} The extracted resource type.
  */
-const extractResourceTypeFromPath = (path) => {
-  return path.split('/')[path.startsWith('/') ? 1 : 0];
+export const extractResourceTypeFromPath = (path) => {
+  if (typeof path !== 'string') return '';
+  const parts = path.split('/');
+  return path.startsWith('/') ? parts[1] ?? '' : parts[0] ?? '';
 };
 
 /**
  * Counts the number of resource types in the target value.
  * @type {Core.RulesetFunction<object, CountResourceTypesOptions>}
  */
-export default (targetValue, { max }) => {
-  const paths = Object.keys(targetValue);
-  if (paths.length <= max) return [];
+export const runRule = (targetValue, { max } = {}) => {
+  if (!targetValue || typeof targetValue !== 'object') return [];
 
-  const resourcesTypes = new Set(paths.map(extractResourceTypeFromPath));
-  if (resourcesTypes.size <= max) return [];
+  /** @type {number} */
+  const limit = Number.isFinite(max) ? Number(max) : Infinity;
+  const paths = Object.keys(targetValue);
+  if (!paths.length || paths.length <= limit) return [];
+
+  const resourceTypes = new Set(paths.map(extractResourceTypeFromPath).filter(Boolean));
+  if (resourceTypes.size <= limit) return [];
 
   return [
     {
-      message: `More than ${max} resource types found`,
+      message: `More than ${limit} resource types found`,
     },
   ];
 };
+
+export default runRule;
