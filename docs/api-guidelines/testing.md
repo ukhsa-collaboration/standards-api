@@ -6,7 +6,7 @@ order: 9
 
 ## Validation / Linting
 
-**MUST** validate the OpenAPI definition against the OpenAPI Specification and the [UKSHA spectral ruleset][1].
+**MUST** validate the OpenAPI definition against the OpenAPI Specification and the [UKHSA Redocly styleguide][1].
 
 ## Unit Testing
 
@@ -56,18 +56,19 @@ order: 9
 
 | Tool | Useful For | Open Source Licence |
 | - | - | - |
-| **[Spectral CLI][2]** | Validating your OpenAPI definitions against the OpenAPI Specification and the [UKSHA spectral ruleset][1]. | [Apache 2.0][3] |
-| **[Prism][4]** | API Mock Servers from OpenAPI definition<br>Contract Testing for API consumers and developers. | [Apache 2.0][3] |
-| **[Pact][5]** | Consumer-Driven Contract Testing to ensure that your API meets the expectations of its consumers. | [MIT][6] |
-| **[Zed Attack Proxy (ZAP)][7]** | Web application vulnerability scanner. | [Apache 2.0][3] |
+| **[Redocly CLI][2]** | Validating your OpenAPI definitions against the OpenAPI Specification and the UKHSA styleguide. | [MIT][3] |
+| **[Prism][4]** | API Mock Servers from OpenAPI definition<br>Contract Testing for API consumers and developers. | [Apache 2.0][5] |
+| **[Pact][6]** | Consumer-Driven Contract Testing to ensure that your API meets the expectations of its consumers. | [MIT][7] |
+| **[Zed Attack Proxy (ZAP)][8]** | Web application vulnerability scanner. | [Apache 2.0][5] |
 
-There is also a catalog of [OpenAPI Tooling][8] to support API development and validation.
+There is also a catalog of [OpenAPI Tooling][9] to support API development and validation.
 
 [1]: ../spectral-rules/index.md
-[2]: https://docs.stoplight.io/docs/spectral
-[3]: https://opensource.org/license/apache-2-0
+[2]: https://redocly.com/docs/cli/
+[3]: https://opensource.org/license/mit
 [4]: https://stoplight.io/open-source/prism
-[5]: https://docs.pact.io/
-[6]: https://opensource.org/license/mit
-[7]: https://www.zaproxy.org/
-[8]: https://tools.openapis.org/
+[5]: https://opensource.org/license/apache-2-0
+[6]: https://docs.pact.io/
+[7]: https://opensource.org/license/mit
+[8]: https://www.zaproxy.org/
+[9]: https://tools.openapis.org/

@@ -1,0 +1,30 @@
+# **SHOULD** have info.x-contains-sensitive-data
+
+The OpenAPI `info` object **SHOULD** include a field `x-contains-sensitive-data` of type `boolean` to explicitly signal whether the API handles sensitive data such as Personally Identifiable Information (PII), Protected Health Information (PHI), financial data, or other regulated content.
+
+Adding this flag allows downstream systems and reviewers to apply additional controls, validations, or security measures early in the API lifecycle.
+
+> [!CAUTION] Security Note
+> If the API definition will be public, **omit** this field
+> from the published spec. Exposing sensitive-data flags can unintentionally
+> advertise the API as a target for bad actors. Keep the field only in private
+> specs or inject it during internal build/validation steps.
+
+See [OWASP API Security Top 10][1] and relevant regulatory frameworks (e.g., [GDPR][2], [NHS – Protecting patient data][3]) for background on handling sensitive data in APIs.
+
+## Valid Example
+
+```yaml
+info:
+  title: Clinical Records API
+  version: 1.2.0
+  x-contains-sensitive-data: true
+```
+
+## Guidance
+
+Use `true` if any operations in the API may expose or accept sensitive data. Otherwise, set it explicitly to `false`.
+
+[1]: https://owasp.org/www-project-api-security/
+[2]: https://gdpr.eu/
+[3]: https://digital.nhs.uk/services/national-data-opt-out/understanding-the-national-data-opt-out/protecting-patient-data

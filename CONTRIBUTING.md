@@ -27,11 +27,11 @@ Thank you for your interest in contributing to the UKHSA API Guidelines! This re
     - [Pull Request Process][21]
   - [Development Guidelines][22]
     - [Documentation Standards][23]
-    - [Spectral Rules Development][24]
+    - [Redocly Styleguide Development][24]
     - [Testing Guidelines][25]
   - [Viewing the Guidelines Locally][26]
   - [Documentation Deployment][27]
-  - [Spectral Rules Release][28]
+  - [Redocly Styleguide Release][28]
     - [1. Update the Version Number][29]
     - [2. Document the Changes][30]
     - [3. Create a Release][31]
@@ -70,17 +70,17 @@ Before you begin, ensure you have the following installed:
 
 | Tool | Version | Description |
 | - | - | - |
-| [Node.js][34] / npm | `Latest LTS` | Required for packaging and testing spectral rules. |
-| [Spectral][35] | `Latest` | Required for developing linting rules for OpenAPI specifications. |
+| [Node.js][34] / npm | `Latest LTS` | Required for building, testing, and packaging the Redocly styleguide. |
+| [Redocly CLI][35] | `Latest` | Helpful for locally linting OpenAPI specifications against the styleguide. |
 
-You can install npm and Spectral CLI using your system's package manager or download them from their respective websites.
+You can install npm and Redocly CLI using your system's package manager or download them from their respective websites.
 
 You can verify your installations with:
 
 ```bash
 node --version
 npm --version
-spectral --version
+redocly --version
 ```
 
 install the required dependencies with the following command:
@@ -97,24 +97,17 @@ To transpile TypeScript files to JavaScript:
 npm run build
 ```
 
-Or directly with:
-
-```bash
-npx tsc && npm run build:copy-legacy
-```
-
-This generates `.js` files in the output directory (default: `./dist` or based on tsconfig.json) and copies legacy
-`.js` files into the directory which Spectral is using as the source for functions.
+This generates `.js` files in the output directory (default: `./dist` or based on tsconfig.json) and compiles the Redocly plugin consumed by the styleguide.
 
 ### Understanding the Repository Structure
 
 - `/docs/` - Documentation content written in Markdown
-- `/docs/api-design-guidelines/` - API design guidelines content
-- `/docs/spectral-rules/` - Documentation for API linting rules
+- `/docs/api-guidelines/` - API design guidelines content
+- `/docs/spectral-rules/` - Documentation for Redocly linting rules (MUST/SHOULD/MAY); path retained for legacy links
 - `/example/` - Example OpenAPI specifications
-- `/functions/` - JavaScript functions used in Spectral rules
-- `ukhsa.oas.rules.yml` - UKHSA-specific Spectral rules
-- `zalando.oas.rules.yml` - Zalando API guidelines rules
+- `/src/redocly/` - Source for the custom Redocly plugin and assertions
+- `/dist/redocly/plugin.cjs` - Compiled plugin shipped with the npm package
+- `redocly.yaml` - UKHSA Redocly styleguide configuration
 
 ## Contributing Process
 
@@ -206,7 +199,7 @@ Subject:
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │       │
-  │       └─⫸ Commit Scope: "spectral" for changes to spectral rules or should be omitted otherwise
+  │       └─⫸ Commit Scope: "styleguide" for changes to Redocly rules or omit the scope for general changes
   │
   └─⫸ Commit Type: build|docs|feat|fix|perf|refactor|revert|test
 
@@ -373,13 +366,10 @@ Resolves issue #123"
 - Place documentation in the appropriate section of the `/docs/` directory.
 - Preview changes locally using `npm start` before submitting.
 
-### Spectral Rules Development
+### Redocly Styleguide Development
 
-- For documentation on how to create custom spectral rules, see [Write Your First Rule][54] spectral documentation.
-
-- UKHSA specific spectral rules are defined in the `ukhsa.oas.rules.yml` file.
-
-- Rules should be clearly categorised as **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **MAY**, **MAY NOT** and matched against the appropriate [severity level][55].
+- The UKHSA styleguide is defined in `redocly.yaml` and the accompanying custom plugin in `src/redocly/plugin.ts` (compiled to `dist/redocly/plugin.cjs`). Documentation for the rules lives under `docs/spectral-rules/` to preserve legacy URLs.
+- Rules should be clearly categorised as **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **MAY**, **MAY NOT** and matched against the appropriate severity level:
 
   | Rule Category | Severity Level |
   | - | :-: |
@@ -391,61 +381,32 @@ Resolves issue #123"
   | **MAY NOT** | `info` or `hint` |
 
 - Each rule should have a corresponding documentation file in the relevant folder `/docs/spectral-rules/must/`, `/docs/spectral-rules/should/` or `/docs/spectral-rules/may/`.
-
-- Every rule definition **MUST** set `documentationUrl` so Spectral CLI can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/<rule-name>/`).
-
-- Include references to the relevant sections of the API guidelines.
-
-- [Test the rules][25] that you have created or modified.
-
-- For information on how to use these rules with your API project, check the [How to use the rules][56] documentation section.
+- Include references to the relevant sections of the API guidelines in both the rule configuration and the documentation page.
+- Test the rules you create or modify (see [Testing Guidelines][25]).
+- For information on how to use these rules with your API project, check the [How to use the rules][54] documentation section.
 
 ### Testing Guidelines
 
 - Test new rules against the example specifications in the `/example/` directory (you may need to modify the example definition to test your rules).
 
   ```bash
-  spectral lint example/example.1.0.0.oas.yml --show-documentation-url
+  npx redocly lint --config=redocly.yaml example/example.1.0.0.oas.yml --format=summary
   ```
 
 - Verify that rules produce the expected results for both valid and invalid API definitions.
 
-- Add automated tests for each new Spectral rule:
-  1. Define the rule in `ukhsa.oas.rules.yml`.
-  1. Create a Jest test file in:
+- Add automated tests for each new styleguide rule:
+  1. Define the rule in `redocly.yaml` and/or `src/redocly/plugin.ts`.
+  1. Create or update a Jest test file in:
      ```text
-     src/__tests__/rules/<rule-name>.spec.ts
+     src/__tests__/styleguide/<rule-name>.test.ts
      ```
-  1. Use the testRule helper from src/**tests**/**helpers**/helper.ts to define one or more inline scenarios:
+  1. Use the `lintDocument` helper from `src/__tests__/__helpers__/redocly-helper.ts` to define one or more inline scenarios:
      ```ts
-     import testRule from './__helpers__/helper';
+     import { lintDocument } from '../__helpers__/redocly-helper';
 
-     testRule('<rule-name>', [
-       {
-         name: 'Valid spec passes',
-         document: `
-           openapi: 3.0.0
-           info:
-             title: My API
-             version: 1.0.0
-           paths: {}
-         `,
-         errors: []
-       },
-       {
-         name: 'Invalid spec fails',
-         document: `
-           openapi: 3.0.0
-           info:
-             title: My API
-             version: 1.0.0
-           paths: {}
-         `,
-         errors: [
-           { message: '<expected error message>' }
-         ]
-       }
-     ]);
+     const results = await lintDocument('<openapi spec as string>', ['<rule-id>']);
+     expect(results[0]).toMatchObject({ ruleId: '<rule-id>' });
      ```
 
 - Run the rule tests:
@@ -464,23 +425,23 @@ npm run serve
 ```
 
 This uses docker to host your docs under the hood.
-After running this script you can view your docs by going to [http://localhost:8080/api-design-guidelines/][57].
+After running this script you can view your docs by going to [http://localhost:8080/api-design-guidelines/][55].
 
 While this script is running it will notice when files change and update them so you can see how they look live.
 
 ## Documentation Deployment
 
-The documentation is continuously deployed from the `main` branch by GitHub Actions, using the workflow defined in `/.github/workflows/publish-guidelines.yml` which will trigger a deployment of the main [standards-org][58] repository
+The documentation is continuously deployed from the `main` branch by GitHub Actions, using the workflow defined in `/.github/workflows/publish-guidelines.yml` which will trigger a deployment of the main [standards-org][56] repository
 
 When documentation changes are merged into the `main` branch, the documentation site is automatically updated and re-published on GitHub Pages.
 
-## Spectral Rules Release
+## Redocly Styleguide Release
 
-When updating spectral rules, follow these steps to ensure proper release and distribution:
+When updating the Redocly styleguide, follow these steps to ensure proper release and distribution:
 
 ### 1. Update the Version Number
 
-- Update the version number in `package.json` following [Semantic Versioning][59] principles:
+- Update the version number in `package.json` following [Semantic Versioning][57] principles:
   - `MAJOR` version for incompatible changes
   - `MINOR` version for added functionality in a backwards compatible manner
   - `PATCH` version for backwards compatible bug fixes
@@ -497,10 +458,10 @@ When updating spectral rules, follow these steps to ensure proper release and di
 
 - Trigger the `/.github/workflows/publish-rules.yml` workflow to create a release using GitHub Actions.
 - Add detailed release notes.
-- [Tag the release][60] with the version number.
+- [Tag the release][58] with the version number.
 
 > [!NOTE]
-> Only maintainers with the appropriate permissions can publish new releases of the spectral rules npm package.
+> Only maintainers with the appropriate permissions can publish new releases of the Redocly styleguide npm package.
 
 Thank you for contributing to improving API design and development practices across the UKHSA!
 
@@ -527,18 +488,18 @@ Thank you for contributing to improving API design and development practices acr
 [21]: #pull-request-process
 [22]: #development-guidelines
 [23]: #documentation-standards
-[24]: #spectral-rules-development
+[24]: #redocly-styleguide-development
 [25]: #testing-guidelines
 [26]: #viewing-the-guidelines-locally
 [27]: #documentation-deployment
-[28]: #spectral-rules-release
+[28]: #redocly-styleguide-release
 [29]: #1-update-the-version-number
 [30]: #2-document-the-changes
 [31]: #3-create-a-release
 [32]: ./CODE_OF_CONDUCT.md
 [33]: https://help.github.com/articles/fork-a-repo/
 [34]: https://nodejs.org/en/download/
-[35]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
+[35]: https://redocly.com/docs/cli/
 [36]: https://github.com/ukhsa-collaboration/standards-api/issues
 [37]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
 [38]: https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments
@@ -557,10 +518,8 @@ Thank you for contributing to improving API design and development practices acr
 [51]: ./.github/workflows/fast-forward-pr-merge-init.md#why-is-this-workflow-needed
 [52]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
 [53]: https://datatracker.ietf.org/doc/html/rfc2119
-[54]: https://docs.stoplight.io/docs/spectral/01baf06bdd05a-create-a-ruleset#write-your-first-rule
-[55]: https://docs.stoplight.io/docs/spectral/9ffa04e052cc1-spectral-cli#error-results
-[56]: docs/spectral-rules/index.md#how-to-use-the-rules
-[57]: http://localhost:8080/api-design-guidelines/
-[58]: https://github.com/ukhsa-collaboration/standards-org
-[59]: https://semver.org/
-[60]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release
+[54]: docs/spectral-rules/index.md#how-to-use-the-rules
+[55]: http://localhost:8080/api-design-guidelines/
+[56]: https://github.com/ukhsa-collaboration/standards-org
+[57]: https://semver.org/
+[58]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release

@@ -12,6 +12,6 @@ rules:
     'test'
   ]]
   scope-enum: [2, 'always', [
-    'spectral'
+    'styleguide'
   ]]
   scope-empty: [0, 'never']

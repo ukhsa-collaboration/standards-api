@@ -6,6 +6,10 @@ info:
   x-audience: public-external
   x-contains-sensitive-data: false
   x-value-chain: detect
+  x-api-type: standard
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit
   contact:
     name: Result API contact
     url: https://url-to-api-team-confluence-support-page
@@ -546,6 +550,14 @@ components:
               $ref: '#/components/examples/not-found'
             server-error:
               $ref: '#/components/examples/server-error'
+
+  headers:
+    Location:
+      description: The URL of the created resource.
+      schema:
+        type: string
+        format: uri
+        example: https://azgw.api.ukhsa.gov.uk/detect/testing/v1/results/de750613-ef3c-4f5d-8148-10308b91896c
 
   examples:
     unauthorized:

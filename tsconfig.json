@@ -6,7 +6,7 @@
     },
     "checkJs": true,
     "target": "ES2022",
-    "module": "node16",
+    "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "types": ["jest"],

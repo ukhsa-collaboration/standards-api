@@ -1,0 +1,499 @@
+apis:
+  default:
+    root: example/example.1.0.0.oas.yml
+
+extends:
+  - recommended
+
+plugins:
+  - ./dist/redocly/plugin.cjs
+
+rules:
+  rule/must-use-lowercase-with-hyphens-for-path-segments:
+    severity: error
+    message: Path segments have to be lowercase separate words with hyphens.
+    subject:
+      type: Paths
+    assertions:
+      pattern: "^(([\\/a-z][a-z0-9\\-\\/]*)?({[^}]*})?)+$"
+
+  rule/must-use-normalized-paths-without-empty-path-segments:
+    severity: error
+    message: Empty path segments are not allowed
+    subject:
+      type: Paths
+    assertions:
+      notPattern: "\\/\\/"
+
+  rule/must-use-normalized-paths:
+    severity: error
+    message: "Path must start with a slash and must not end with a slash (except root path '/')"
+    subject:
+      type: Paths
+    assertions:
+      pattern: "^\\/($|[^\\/].*[^\\/]$)"
+
+  rule/must-not-use-uri-versioning:
+    severity: error
+    message: Path must not contain versioning
+    subject:
+      type: Paths
+    assertions:
+      notPattern: /v[0-9]+/
+
+  rule/should-limit-number-of-resource-types:
+    severity: warn
+    message: '{{problems}}'
+    subject:
+      type: Paths
+    assertions:
+      ukhsa/countResourceTypes:
+        max: 8
+
+  rule/should-limit-number-of-sub-resource-levels:
+    severity: warn
+    message: Sub-resource levels should by <= 3
+    subject:
+      type: Paths
+    assertions:
+      pattern: "^\\/[^\\/]*((\\/{[^}]*})*\\/[^\\/]*(\\/{[^}]*})*){0,3}\\/?$"
+
+  rule/should-define-api-root:
+    severity: warn
+    message: APIs SHOULD have a root path (`/`) defined.
+    subject:
+      type: Paths
+    assertions:
+      required:
+        - /
+
+  rule/must-return-200-for-api-root:
+    severity: error
+    message: Root path must define a 200 response.
+    subject:
+      type: Responses
+      matchParentKeys: "^/$"
+    assertions:
+      required:
+        - '200'
+
+  rule/must-use-valid-version-info-schema:
+    severity: error
+    message: '{{problems}}'
+    subject:
+      type: MediaType
+      property: schema
+      filterInParentKeys:
+        - application/json
+    where:
+      - subject:
+          type: Response
+          matchParentKeys: "^200$"
+        assertions:
+          defined: true
+      - subject:
+          type: PathItem
+          matchParentKeys: "^/$"
+        assertions:
+          defined: true
+    assertions:
+      ukhsa/apiInfoSchema: {}
+
+  rule/must-have-info-title:
+    severity: error
+    message: Must have API title defined in `info.title`
+    subject:
+      type: Info
+      property: title
+    assertions:
+      defined: true
+
+  rule/must-have-info-description:
+    severity: error
+    message: Must have API description defined in `info.description`
+    subject:
+      type: Info
+      property: description
+    assertions:
+      defined: true
+
+  rule/must-have-info-version:
+    severity: error
+    message: Must have API version defined in `info.version`
+    subject:
+      type: Info
+      property: version
+    assertions:
+      defined: true
+      pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"
+
+  rule/must-have-info-contact:
+    severity: error
+    message: Must have contact information defined in `info.contact`
+    subject:
+      type: Info
+      property: contact
+    assertions:
+      defined: true
+
+  rule/must-have-info-contact-name:
+    severity: error
+    message: Must have name defined in `info.contact.name`
+    subject:
+      type: Contact
+      property: name
+    assertions:
+      defined: true
+
+  rule/must-have-info-contact-url:
+    severity: error
+    message: Must have URL defined in `info.contact.url`
+    subject:
+      type: Contact
+      property: url
+    assertions:
+      defined: true
+
+  rule/must-have-info-contact-email:
+    severity: error
+    message: Must have email defined in `info.contact.email`
+    subject:
+      type: Contact
+      property: email
+    assertions:
+      defined: true
+
+  rule/must-have-info-api-audience:
+    severity: error
+    message: Missing or wrong `info.x-audience`, {{problems}}.
+    subject:
+      type: Info
+      property: x-audience
+    assertions:
+      defined: true
+      enum:
+        - company-internal
+        - partner-external
+        - premium-external
+        - public-external
+
+  rule/must-have-info-value-chain:
+    severity: error
+    message: "Missing or wrong `info.x-value-chain`, {{problems}}."
+    subject:
+      type: Info
+      property: x-value-chain
+    assertions:
+      defined: true
+      enum:
+        - prevent
+        - detect
+        - analyse
+        - respond
+        - cross-cutting
+        - enabling
+
+  rule/should-have-info-x-contains-sensitive-data:
+    severity: warn
+    message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'."
+    subject:
+      type: Info
+      property: x-contains-sensitive-data
+    assertions:
+      ukhsa/infoContainsSensitiveData: {}
+
+  rule/may-have-info-x-api-type:
+    severity: warn
+    message: "Missing or wrong 'info.x-api-type'. Assuming 'standard'. Valid values: standard, pygeoapi."
+    subject:
+      type: Info
+      property: x-api-type
+    assertions:
+      ukhsa/infoApiType: {}
+
+  rule/must-use-https-protocol-only:
+    severity: error
+    message: Servers MUST be `https` and no other protocol is allowed.
+    subject:
+      type: Server
+      property: url
+    assertions:
+      pattern: "/^https:/"
+
+  rule/must-use-camel-case-for-query-parameters:
+    severity: error
+    message: Query parameters must use lower camel case.
+    subject:
+      type: Parameter
+      property: name
+    where:
+      - subject:
+          type: Parameter
+          property: in
+        assertions:
+          enum:
+            - query
+    assertions:
+      casing: camelCase
+
+  rule/should-use-hyphenated-pascal-case-for-header-parameters:
+    severity: warn
+    message: Header parameters should be Hyphenated-Pascal-Case
+    subject:
+      type: Parameter
+      property: name
+    where:
+      - subject:
+          type: Parameter
+          property: in
+        assertions:
+          enum:
+            - header
+    assertions:
+      pattern: "^[A-Z][A-Za-z0-9]*(?:-[A-Za-z0-9]+)*$"
+
+  rule/must-use-camel-case-for-property-names:
+    severity: error
+    message: Properties must use lower camel case.
+    subject:
+      type: SchemaProperties
+    assertions:
+      casing: camelCase
+
+  rule/must-always-return-json-objects-as-top-level-data-structures:
+    severity: error
+    message: Top-level data structure must be an object
+    subject:
+      type: MediaType
+      property: schema
+    assertions:
+      ukhsa/objectSchema: {}
+
+  rule/should-use-x-extensible-enum:
+    severity: warn
+    message: Should use `x-extensible-enum` instead of `enum`
+    subject:
+      type: Schema
+      property: enum
+    where:
+      - subject:
+          type: Schema
+          property: type
+        assertions:
+          enum:
+            - string
+    assertions:
+      ukhsa/forbidEnum: {}
+
+  rule/should-declare-enum-values-using-upper-snake-case-format:
+    severity: warn
+    message: Enum values should be in UPPER_SNAKE_CASE format
+    subject:
+      type: Schema
+      property: enum
+    assertions:
+      pattern: "^[A-Z][A-Z_0-9]*$"
+
+  rule/should-declare-extensible-enum-values-using-upper-snake-case-format:
+    severity: warn
+    message: Enum values should be in UPPER_SNAKE_CASE format
+    subject:
+      type: Schema
+      property: x-extensible-enum
+    assertions:
+      pattern: "^[A-Z][A-Z_0-9]*$"
+
+  rule/must-define-a-format-for-number-types:
+    severity: error
+    message: Numeric properties must have valid format specified
+    subject:
+      type: Schema
+      property: format
+    where:
+      - subject:
+          type: Schema
+          property: type
+        assertions:
+          enum:
+            - number
+    assertions:
+      defined: true
+      pattern: "^(float|double|decimal)$"
+
+  rule/must-define-a-format-for-integer-types:
+    severity: error
+    message: Numeric properties must have valid format specified
+    subject:
+      type: Schema
+      property: format
+    where:
+      - subject:
+          type: Schema
+          property: type
+        assertions:
+          enum:
+            - integer
+    assertions:
+      defined: true
+      pattern: "^(int32|int64|bigint)$"
+
+  rule/should-use-standard-http-status-codes:
+    severity: warn
+    message: '{{problems}}'
+    subject:
+      type: Responses
+    assertions:
+      enum:
+        - '100'
+        - '101'
+        - '200'
+        - '201'
+        - '202'
+        - '203'
+        - '204'
+        - '205'
+        - '206'
+        - '207'
+        - '300'
+        - '301'
+        - '302'
+        - '303'
+        - '304'
+        - '305'
+        - '307'
+        - '400'
+        - '401'
+        - '402'
+        - '403'
+        - '404'
+        - '405'
+        - '406'
+        - '407'
+        - '408'
+        - '409'
+        - '410'
+        - '411'
+        - '412'
+        - '413'
+        - '414'
+        - '415'
+        - '416'
+        - '417'
+        - '423'
+        - '426'
+        - '428'
+        - '429'
+        - '431'
+        - '500'
+        - '501'
+        - '502'
+        - '503'
+        - '504'
+        - '505'
+        - '511'
+        - default
+
+  rule/must-specify-default-response:
+    severity: error
+    message: Operation does not contain a default response
+    subject:
+      type: Responses
+    assertions:
+      required:
+        - default
+
+  rule/must-use-problem-json-as-default-response:
+    severity: error
+    message: Operation must use problem json as default response
+    subject:
+      type: MediaTypesMap
+    where:
+      - subject:
+          type: Response
+          matchParentKeys: "^default$"
+        assertions:
+          defined: true
+    assertions:
+      required:
+        - application/problem+json
+
+  rule/must-use-problem-json-for-errors:
+    severity: error
+    message: Error response must be application/problem+json
+    subject:
+      type: MediaTypesMap
+      matchParentKeys: "^(4|5)[0-9Xx]{2}$"
+    assertions:
+      enum:
+        - application/problem+json
+
+  rule/must-use-valid-problem-json-schema:
+    severity: error
+    message: '{{problems}}'
+    subject:
+      type: MediaType
+      property: schema
+      filterInParentKeys:
+        - application/problem+json
+    assertions:
+      ukhsa/problemJsonSchema: {}
+
+  rule/should-prefer-standard-media-type-names:
+    severity: warn
+    message: Response content should use a standard media type `application/json` or `application/problem+json` (required for problem schemas).
+    subject:
+      type: MediaTypesMap
+    assertions:
+      pattern: "^application\\/(problem\\+)?json$|^[a-zA-Z0-9_]+\\/[-+.a-zA-Z0-9_]+;(v|version)=[0-9]+$"
+
+  rule/should-support-application-json-content-request-body:
+    severity: warn
+    message: Every request SHOULD support at least one `application/json` content type.
+    subject:
+      type: MediaTypesMap
+    where:
+      - subject:
+          type: RequestBody
+        assertions:
+          defined: true
+    assertions:
+      required:
+        - application/json
+
+  rule/should-have-location-header-in-201-response:
+    severity: warn
+    message: '{{problems}}'
+    subject:
+      type: Response
+      property: headers
+      filterInParentKeys:
+        - '201'
+    assertions:
+      ukhsa/locationHeader: {}
+
+  ukhsa/required-problem-responses-critical:
+    severity: warn
+
+  ukhsa/required-problem-responses-security:
+    severity: warn
+
+  ukhsa/no-get-request-body:
+    severity: error
+
+  rule/must-define-security-schemes:
+    severity: error
+    message: All APIs MUST have a security scheme defined.
+    subject:
+      type: Components
+      property: securitySchemes
+    assertions:
+      defined: true
+
+  rule/must-not-use-http-basic-authentication:
+    severity: error
+    message: APIs MUST NOT use `HTTP` Basic Authentication.
+    subject:
+      type: SecurityScheme
+      property: scheme
+    assertions:
+      notPattern: basic

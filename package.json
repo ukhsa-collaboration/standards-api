@@ -1,11 +1,11 @@
 {
-  "name": "@ukhsa-collaboration/spectral-rules",
+  "name": "@ukhsa-collaboration/api-styleguide",
   "version": "0.4.1",
-  "description": "UKHSA Spectral ruleset",
-  "main": ".spectral.yaml",
+  "description": "UKHSA Redocly API styleguide",
+  "main": "redocly.yaml",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && mv dist/redocly/plugin.js dist/redocly/plugin.cjs",
     "fmt:md": "remark . --ext .md --output",
     "lint:md": "remark . --ext .md --frail",
     "pretest": "npm run build",
@@ -23,34 +23,28 @@
   "license": "MIT",
   "engines": {
     "npm": ">=10",
-    "node": ">=22.21.0 <23"
+    "node": ">=20.17.0"
   },
   "keywords": [
     "UKHSA",
-    "spectral",
+    "redocly",
+    "styleguide",
     "ruleset"
   ],
-  "dependencies": {
-    "@stoplight/spectral-core": "^1.20.0",
-    "@stoplight/spectral-documentation": "^1.3.1",
-    "lodash": "^4.17.21"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "@stoplight/spectral-cli": "^6.15.0",
-    "@stoplight/spectral-functions": "^1.10.1",
-    "@stoplight/spectral-parsers": "^1.0.5",
-    "@stoplight/spectral-ruleset-bundler": "^1.6.3",
+    "@redocly/cli": "^1.34.6",
     "@swc/core": "^1.15.3",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.21",
     "cpx2": "^8.0.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "jest-junit": "^16.0.0",
     "js-yaml": "^4.1.1",
+    "tslib": "^2.8.1",
     "remark-cli": "^12.0.1",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",

@@ -12,7 +12,7 @@ These guidelines will ensure that all APIs follow accepted design, security and 
 
 You will find the documentation in markdown form in the `docs/` directory, you can also view the [documentation site][1] for a friendly searchable format.
 
-As part of the above this repository provides the spectral rules to help developers align their OpenAPI definition with the standards laid out in these guidelines.
+As part of the above this repository provides a Redocly CLI styleguide to help developers align their OpenAPI definition with the standards laid out in these guidelines.
 
 ### When to use these guidelines
 
@@ -30,7 +30,7 @@ If your product API is based on a different API technology, such as GraphQL or g
 
 ## How to Use the Rules with your API
 
-To see how you use these rules with your project, check out the [How to use the rules][2] documentation section.
+To use the Redocly styleguide with your OpenAPI document, see the [How to use the rules][2] documentation section (the docs live under `/docs/spectral-rules/` for legacy URL stability).
 
 ## Contributing
 

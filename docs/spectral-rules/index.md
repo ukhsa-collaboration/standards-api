@@ -5,63 +5,63 @@ eleventyNavigation:
   parent: api-design-guidelines
 ---
 
-# Spectral Rules
+# Redocly Styleguide
 
 ## Overview
 
-A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines][1], ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA.
+A Redocly CLI styleguide was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines][1], ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA.
 
-As well as the rules described herein, the UKHSA ruleset includes the [recommended][2] built in spectral [OpenAPI Rules][3] and the [Spectral Documentation Ruleset][4]; These are common sense rules that ensure an OpenAPI definition adheres to the [OpenAPI specification][5], as well as encourage high quality, rich documentation which is especially important for providing the best possible APIM Developer Portal experience.
-
-Where rules been adopted from from existing open source API rulesets a link is supplied on the relevant rule page.
+> [!NOTE]
+> The documentation path remains `/spectral-rules/` to avoid breaking existing bookmarks and links, even though the content now describes the Redocly styleguide.
 
 ## How to use the rules
 
-### Install Spectral
+### Install Redocly CLI
 
-[Spectral][6] is a flexible JSON/YAML linter for creating automated style guides, with baked in support for OpenAPI (v3.1, v3.0, and v2.0), Arazzo v1.0, as well as AsyncAPI v2.x.
-
-Install Spectral globally or as a dev dependency.
+[Redocly CLI][2] provides linting for OpenAPI (v3.1 and v3.0), bundling, and preview docs. Install it as a development dependency:
 
 ```sh
-npm install @stoplight/spectral-cli --save-dev
+npm install @redocly/cli --save-dev
 ```
 
-Read the [official spectral documentation][7] for more installation options.
+### Install the UKHSA styleguide package
 
-### Run Spectral against your OpenAPI definition
-
-Run Spectral against your OpenAPI definition, referencing the spectral ruleset.
-
-You must install the ruleset as via [npm package][8] and then reference that, bear in mind the UKHSA ruleset npm package is hosted in github so please read Github's documentation [Installing a GitHub npm package][9].
-
-The simplest way to authenticate against the Github NPM registry locally is to use the npm login command (as described [here][10]) to authenticate with GitHub Packages, this adds the required credentials to your npm configuration file i.e. `.npmrc`.
+Install the UKHSA ruleset from GitHub Packages so it can be referenced by your project.
 
 ```sh
-$ npm login --scope=@ukhsa-collaboration --auth-type=legacy --registry=https://npm.pkg.github.com
-
-Username: USERNAME #GITHUB USERNAME
-Password: TOKEN #GITHUB PAT TOKEN
+npm login --scope=@ukhsa-collaboration --auth-type=legacy --registry=https://npm.pkg.github.com
 ```
 
 ```sh
-npm install @ukhsa-collaboration/spectral-rules --save-dev
+npm install @ukhsa-collaboration/api-styleguide --save-dev
 ```
 
-create a local `.spectral.yml` ruleset which extends the one in this repository.
+> [!TIP] Authenticating with GitHub Packages
+> If you have not used GitHub Packages before, follow the steps in [Installing a GitHub npm package][3]. The simplest local option is to authenticate with a GitHub personal access token using `npm login` as shown above; this adds the required credentials to your `.npmrc`.
 
-```bash
-echo "extends: ['@ukhsa-collaboration/spectral-rules']" > .spectral.yml
+### Configure Redocly
+
+Create a `redocly.yaml` in your project that extends the UKHSA styleguide and points at your OpenAPI document:
+
+```yaml
+apis:
+  default:
+    root: ./openapi.yml
+
+extends:
+  - recommended
+  - ./node_modules/@ukhsa-collaboration/api-styleguide/redocly.yaml
 ```
 
-then you can just run the following.
+The extension automatically loads the UKHSA plugin bundled with the package and brings in the **MUST/SHOULD/MAY** rules described in this section. Keep this configuration file under version control so CI/CD can reuse it.
+
+### Run Redocly lint
+
+Lint your OpenAPI definition using the config above:
 
 ```sh
-npx spectral lint openapi-definition.yml --show-documentation-url
+npx redocly lint --config=redocly.yaml --format=github-actions
 ```
-
-> [!TIP] Show documentation links
-> Spectral CLI v6.15.0 and newer support `--show-documentation-url`, which prints the `documentationUrl` value for every rule violation. Always include this flag so developers can jump straight to the detailed guidance that explains how to fix an issue.
 
 ### Review and fix any reported issues
 
@@ -69,13 +69,13 @@ Once the linter has highlighted any issues or errors, review and fix to ensure y
 
 ### Severity overrides
 
-Some OpenAPI definitions produced by platforms like [pygeoapi][11] might struggle to meet every **MUST** requirement. This is often because these issues are outside the consuming team's direct control, as fixes would require upstream contributions or maintaining a fork. To accommodate this, as of version `0.4.0` of the ruleset, a custom rule `override-severity-pygeoapi` has been added to relax the severity of certain rules when an OpenAPI document is identified as being generated by pygeoapi.
+Some OpenAPI definitions produced by platforms like [pygeoapi][6] might struggle to meet every **MUST** requirement. This is often because these issues are outside the consuming team's direct control, as fixes would require upstream contributions or maintaining a fork. To accommodate this, as of version `0.4.0` of the ruleset, a custom rule `override-severity-pygeoapi` has been added to relax the severity of certain rules when an OpenAPI document is identified as being generated by pygeoapi.
 
-See [severity overrides][12] for more information.
+See [severity overrides][7] for more information.
 
 ### CI/CD Github Actions
 
-The following is a sample Github actions job which can be used as an example of setting up linting as part of you CI/CD pipeline.
+The following is a sample Github Actions job which sets up linting as part of your CI/CD pipeline, using the `redocly.yaml` configuration stored in your repository.
 
 <!-- {% raw %} -->
 
@@ -108,67 +108,34 @@ jobs:
         with:
           node-version: "22.x"
           registry-url: "https://npm.pkg.github.com"
-          # Defaults to the user or organization that owns the workflow file
           scope: "@ukhsa-collaboration"
 
-      - run: npm install @ukhsa-collaboration/spectral-rules
+      - name: Install Redocly CLI and UKHSA styleguide
+        run: npm install @redocly/cli @ukhsa-collaboration/api-styleguide
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint OpenAPI specifications
         run: |
-          npx spectral --version
-          npx spectral lint "*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions --show-documentation-url
-
-          # Example: Only lint OpenAPI files
-          # npx spectral lint "@(openapi|swagger|*api)*.{json,yml,yaml}" -r ${{ GITHUB.WORKSPACE }}/node_modules/@ukhsa-collaboration/spectral-rules/.spectral.yaml -f github-actions --show-documentation-url
+          npx redocly lint --config=redocly.yaml --format=github-actions
 ```
 
 <!-- {% endraw %} -->
-
-The above example uses [glob syntax][13] to target only OpenAPI specification files.
-
-The glob pattern `@(openapi|swagger|*api)*.{json,yml,yaml}` matches:
-
-> [!TIP] Matches
->
-> ```text
-> openapi.json
-> something.api.yaml
-> swagger.json
-> ```
-
-The global pattern does not match:
-
-> [!CAUTION] Does Not Match
->
-> ```text
-> /node_modules/openapi.yaml
-> /.git/something.json
-> ```
 
 ### Additional Recommended Tooling
 
 | Tool | Description |
 | - | - |
-| [VS Code Extension][14] | Official spectral VS Code extension provides real time linting / intellisense on your OpenAPI definition. |
-| [Github Action][15] | Official spectral Github action provides ability to lint your OpenAPI definition in CI/CD workflows. |
+| [Redocly CLI][2] | Lint, bundle, and preview OpenAPI definitions locally. |
+| [Redocly VS Code Extension][4] | Redocly linting and navigation from inside your IDE. |
+| [GitHub Action Example][5] | Reference workflow for running `@redocly/cli` in CI. |
 
-Read the [official spectral documentation][16] for more development workflows.
+Read the [Redocly CLI documentation][2] for more development workflows.
 
 [1]: ../api-guidelines/index.md
-[2]: https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all
-[3]: https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules
-[4]: https://github.com/stoplightio/spectral-documentation
-[5]: https://swagger.io/specification/
-[6]: https://docs.stoplight.io/docs/spectral
-[7]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
-[8]: https://meta.stoplight.io/docs/spectral/7895ff1196448-sharing-and-distributing-rulesets#npm
-[9]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
-[10]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token
-[11]: https://pygeoapi.io/
-[12]: ./severity-overrides.md
-[13]: https://github.com/mrmlnc/fast-glob
-[14]: https://marketplace.visualstudio.com/items?itemName=stoplight.spectral
-[15]: https://github.com/marketplace/actions/spectral-linting
-[16]: https://docs.stoplight.io/docs/spectral/ecaa0fd8a950d-workflows
+[2]: https://redocly.com/docs/cli/
+[3]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
+[4]: https://marketplace.visualstudio.com/items?itemName=Redocly.openapi-vs-code
+[5]: https://github.com/Redocly/redocly-cli-action
+[6]: https://pygeoapi.io/
+[7]: ./severity-overrides.md
