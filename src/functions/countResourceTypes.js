@@ -23,9 +23,13 @@ export const extractResourceTypeFromPath = (path) => {
 /**
  * Counts the number of resource types in the target value.
  * @type {Core.RulesetFunction<object, CountResourceTypesOptions>}
+ * @param {object} targetValue
+ * @param {CountResourceTypesOptions} [options]
  */
-export const runRule = (targetValue, { max } = {}) => {
+export const runRule = (targetValue, options = {}) => {
   if (!targetValue || typeof targetValue !== 'object') return [];
+
+  const { max } = options;
 
   /** @type {number} */
   const limit = Number.isFinite(max) ? Number(max) : Infinity;

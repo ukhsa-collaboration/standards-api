@@ -27,6 +27,9 @@ properties:
 /**
  * Asserts that the given schema is a valid Problem JSON schema.
  * @type {Core.RulesetFunction<any, null>}
+ * @param {any} schema
+ * @param {any} _options
+ * @param {any} _context
  */
 export const assertProblemSchema = (schema, _options, _context) => {
   const results = [];
@@ -66,6 +69,9 @@ export const assertProblemSchema = (schema, _options, _context) => {
 /**
  * Checks the schema for problem compliance, including handling combined schemas.
  * @type {Core.RulesetFunction<any, null>}
+ * @param {any} schema
+ * @param {any} _options
+ * @param {any} _context
  */
 const check = (schema, _options, _context) => {
   const combinedSchemas = [...(schema?.anyOf ?? []), ...(schema?.oneOf ?? []), ...(schema?.allOf ?? [])];

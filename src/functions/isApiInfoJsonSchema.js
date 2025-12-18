@@ -47,6 +47,7 @@ properties:
 /**
  * Asserts that the given schema is a valid ApiInfo JSON schema.
  * @type {Core.RulesetFunction<any, null>}
+ * @param {any} schema
  */
 export const assertApiInfoSchema = (schema) => {
 

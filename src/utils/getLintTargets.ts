@@ -26,7 +26,7 @@ export const getLintTargets = (targetValue: unknown, field: Optional<string>): I
         path: field,
         json: targetValue,
         resultType: 'all',
-        callback(result) {
+        callback(result: any) {
           targets.push({
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             path: toPath(result.path.slice(1)),
