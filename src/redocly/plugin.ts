@@ -1,9 +1,12 @@
-import {
-  buildAssertCustomFunction,
-  type AssertResult,
-} from '@redocly/openapi-core/lib/rules/common/assertions/asserts';
-import type { CustomFunction, Plugin } from '@redocly/openapi-core/lib/config/types';
-import type { Location } from '@redocly/openapi-core/lib/ref-utils';
+import type { Location, Plugin } from '@redocly/openapi-core';
+
+type AssertResult = { message: string; location?: Location };
+type CustomFunction = (value: any, options: any, ctx: any) => AssertResult[];
+
+const getLocation = (ctx: any): Location => ctx?.location ?? ctx;
+
+const buildAssertCustomFunction = (fn: CustomFunction): CustomFunction => (value, options, ctx) =>
+  fn.call(null, value, options, getLocation(ctx));
 
 type ProblemDetailMode = 'critical' | 'explicit-security';
 

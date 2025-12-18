@@ -87,6 +87,39 @@ rules:
         - application/json
     where:
       - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+      - subject:
+          type: Response
+          matchParentKeys: "^200$"
+        assertions:
+          defined: true
+      - subject:
+          type: PathItem
+          matchParentKeys: "^/$"
+        assertions:
+          defined: true
+    assertions:
+      ukhsa/apiInfoSchema: {}
+
+  rule/must-use-valid-version-info-schema-pygeoapi:
+    severity: warn
+    message: '{{problems}}'
+    subject:
+      type: MediaType
+      property: schema
+      filterInParentKeys:
+        - application/json
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
+      - subject:
           type: Response
           matchParentKeys: "^200$"
         assertions:
@@ -123,6 +156,12 @@ rules:
     subject:
       type: Info
       property: version
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
     assertions:
       defined: true
       pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"
@@ -160,6 +199,12 @@ rules:
     subject:
       type: Contact
       property: email
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
     assertions:
       defined: true
 
@@ -169,6 +214,12 @@ rules:
     subject:
       type: Info
       property: x-audience
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
     assertions:
       defined: true
       enum:
@@ -183,6 +234,89 @@ rules:
     subject:
       type: Info
       property: x-value-chain
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+    assertions:
+      defined: true
+      enum:
+        - prevent
+        - detect
+        - analyse
+        - respond
+        - cross-cutting
+        - enabling
+
+  rule/must-have-info-version-pygeoapi:
+    severity: warn
+    message: Must have API version defined in `info.version`
+    subject:
+      type: Info
+      property: version
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
+    assertions:
+      defined: true
+      pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"
+
+  rule/must-have-info-contact-email-pygeoapi:
+    severity: warn
+    message: Must have email defined in `info.contact.email`
+    subject:
+      type: Contact
+      property: email
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
+    assertions:
+      defined: true
+
+  rule/must-have-info-api-audience-pygeoapi:
+    severity: warn
+    message: Missing or wrong `info.x-audience`, {{problems}}.
+    subject:
+      type: Info
+      property: x-audience
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
+    assertions:
+      defined: true
+      enum:
+        - company-internal
+        - partner-external
+        - premium-external
+        - public-external
+
+  rule/must-have-info-value-chain-pygeoapi:
+    severity: warn
+    message: "Missing or wrong `info.x-value-chain`, {{problems}}."
+    subject:
+      type: Info
+      property: x-value-chain
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
     assertions:
       defined: true
       enum:
@@ -217,6 +351,28 @@ rules:
     subject:
       type: Server
       property: url
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+    assertions:
+      pattern: "/^https:/"
+
+  rule/must-use-https-protocol-only-pygeoapi:
+    severity: warn
+    message: Servers MUST be `https` and no other protocol is allowed.
+    subject:
+      type: Server
+      property: url
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
     assertions:
       pattern: "/^https:/"
 
@@ -227,6 +383,33 @@ rules:
       type: Parameter
       property: name
     where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+      - subject:
+          type: Parameter
+          property: in
+        assertions:
+          enum:
+            - query
+    assertions:
+      casing: camelCase
+
+  rule/must-use-camel-case-for-query-parameters-pygeoapi:
+    severity: warn
+    message: Query parameters must use lower camel case.
+    subject:
+      type: Parameter
+      property: name
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
       - subject:
           type: Parameter
           property: in
@@ -257,6 +440,27 @@ rules:
     message: Properties must use lower camel case.
     subject:
       type: SchemaProperties
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+    assertions:
+      casing: camelCase
+
+  rule/must-use-camel-case-for-property-names-pygeoapi:
+    severity: warn
+    message: Properties must use lower camel case.
+    subject:
+      type: SchemaProperties
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
     assertions:
       casing: camelCase
 
@@ -311,6 +515,11 @@ rules:
       property: format
     where:
       - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+      - subject:
           type: Schema
           property: type
         assertions:
@@ -327,6 +536,57 @@ rules:
       type: Schema
       property: format
     where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+      - subject:
+          type: Schema
+          property: type
+        assertions:
+          enum:
+            - integer
+    assertions:
+      defined: true
+      pattern: "^(int32|int64|bigint)$"
+
+  rule/must-define-a-format-for-number-types-pygeoapi:
+    severity: warn
+    message: Numeric properties must have valid format specified
+    subject:
+      type: Schema
+      property: format
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
+      - subject:
+          type: Schema
+          property: type
+        assertions:
+          enum:
+            - number
+    assertions:
+      defined: true
+      pattern: "^(float|double|decimal)$"
+
+  rule/must-define-a-format-for-integer-types-pygeoapi:
+    severity: warn
+    message: Numeric properties must have valid format specified
+    subject:
+      type: Schema
+      property: format
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
       - subject:
           type: Schema
           property: type
@@ -398,6 +658,28 @@ rules:
     message: Operation does not contain a default response
     subject:
       type: Responses
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+    assertions:
+      required:
+        - default
+
+  rule/must-specify-default-response-pygeoapi:
+    severity: warn
+    message: Operation does not contain a default response
+    subject:
+      type: Responses
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
     assertions:
       required:
         - default
@@ -408,6 +690,32 @@ rules:
     subject:
       type: MediaTypesMap
     where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+      - subject:
+          type: Response
+          matchParentKeys: "^default$"
+        assertions:
+          defined: true
+    assertions:
+      required:
+        - application/problem+json
+
+  rule/must-use-problem-json-as-default-response-pygeoapi:
+    severity: warn
+    message: Operation must use problem json as default response
+    subject:
+      type: MediaTypesMap
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
       - subject:
           type: Response
           matchParentKeys: "^default$"
@@ -423,6 +731,29 @@ rules:
     subject:
       type: MediaTypesMap
       matchParentKeys: "^(4|5)[0-9Xx]{2}$"
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+    assertions:
+      enum:
+        - application/problem+json
+
+  rule/must-use-problem-json-for-errors-pygeoapi:
+    severity: warn
+    message: Error response must be application/problem+json
+    subject:
+      type: MediaTypesMap
+      matchParentKeys: "^(4|5)[0-9Xx]{2}$"
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
     assertions:
       enum:
         - application/problem+json
@@ -486,6 +817,28 @@ rules:
     subject:
       type: Components
       property: securitySchemes
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          notPattern: "^pygeoapi$"
+    assertions:
+      defined: true
+
+  rule/must-define-security-schemes-pygeoapi:
+    severity: warn
+    message: All APIs MUST have a security scheme defined.
+    subject:
+      type: Components
+      property: securitySchemes
+    where:
+      - subject:
+          type: Info
+          property: x-api-type
+        assertions:
+          defined: true
+          pattern: "^pygeoapi$"
     assertions:
       defined: true
 
