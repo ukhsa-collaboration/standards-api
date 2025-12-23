@@ -1,6 +1,6 @@
 import { lintDocument } from '../__helpers__/redocly-helper';
 
-describe('ukhsa/no-get-request-body', () => {
+describe('ukhsa/must-not-define-request-body-for-get-requests', () => {
   it('flags GET request bodies as errors', async () => {
     const spec = `
 openapi: 3.0.0
@@ -23,15 +23,15 @@ paths:
           description: ok
 `;
 
-    const results = await lintDocument(spec, ['ukhsa/no-get-request-body']);
+    const results = await lintDocument(spec, ['ukhsa/must-not-define-request-body-for-get-requests']);
     expect(results[0]).toMatchObject({
-      ruleId: 'ukhsa/no-get-request-body',
+      ruleId: 'ukhsa/must-not-define-request-body-for-get-requests',
       severity: 'error',
     });
   });
 });
 
-describe('ukhsa/required-problem-responses-critical', () => {
+describe('ukhsa/must-define-critical-problem-responses', () => {
   it('warns when required error responses are missing', async () => {
     const spec = `
 openapi: 3.0.0
@@ -46,9 +46,9 @@ paths:
           description: created
 `;
 
-    const results = await lintDocument(spec, ['ukhsa/required-problem-responses-critical']);
+    const results = await lintDocument(spec, ['ukhsa/must-define-critical-problem-responses']);
     expect(results[0]).toMatchObject({
-      ruleId: 'ukhsa/required-problem-responses-critical',
+      ruleId: 'ukhsa/must-define-critical-problem-responses',
       severity: 'warn',
     });
     expect(results[0].message).toContain('400, 404, 500');
@@ -102,7 +102,7 @@ components:
                 title: Bad Request
 `;
 
-    const results = await lintDocument(spec, ['ukhsa/required-problem-responses-critical']);
+    const results = await lintDocument(spec, ['ukhsa/must-define-critical-problem-responses']);
     expect(results).toHaveLength(0);
   });
 });

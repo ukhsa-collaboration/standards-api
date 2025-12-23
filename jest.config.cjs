@@ -13,7 +13,9 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.ts'],
   testPathIgnorePatterns: ['<rootDir>/src/__tests__/__helpers__'],
   coveragePathIgnorePatterns: ['/node_modules/', '<rootDir>/src/__tests__/__helpers__/'],
-  transformIgnorePatterns: ['/node_modules/(?!(abort-controller|event-target-shim)/.*)'],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(abort-controller|event-target-shim|@redocly/openapi-core)/.*)',
+  ],
   moduleFileExtensions: ['mts', 'mjs', 'ts', 'js', 'json'],
   transform: {
     '^.+\\.m?(t|j)s$': '@swc/jest',

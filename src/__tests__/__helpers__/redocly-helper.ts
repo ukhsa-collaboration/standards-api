@@ -20,12 +20,25 @@ export async function lintDocument(source: string, onlyRules?: string[]) {
   const config = await createConfig(raw, { configPath: CONFIG_PATH });
 
   if (onlyRules && onlyRules.length > 0) {
-    const rules = config.styleguide.rules ?? {};
-    for (const [id, value] of Object.entries(rules)) {
-      if (onlyRules.includes(id)) continue;
-      rules[id] = typeof value === 'string' ? 'off' : { ...(value as any), severity: 'off' };
+    const disableRule = (value: unknown) =>
+      typeof value === 'string' ? 'off' : { ...(value as any), severity: 'off' };
+
+    if (config.styleguide?.rules) {
+      const rules = config.styleguide.rules ?? {};
+      for (const [id, value] of Object.entries(rules)) {
+        if (id === 'assertions' || onlyRules.includes(id)) continue;
+        rules[id] = disableRule(value);
+      }
+      config.styleguide.rules = rules;
+    } else if (config.rules) {
+      for (const [version, rules] of Object.entries(config.rules)) {
+        for (const [id, value] of Object.entries(rules as Record<string, unknown>)) {
+          if (id === 'assertions' || onlyRules.includes(id)) continue;
+          (rules as Record<string, unknown>)[id] = disableRule(value);
+        }
+        (config.rules as Record<string, unknown>)[version] = rules;
+      }
     }
-    config.styleguide.rules = rules;
   }
 
   return lintFromString({

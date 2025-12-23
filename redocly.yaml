@@ -465,7 +465,7 @@ rules:
       casing: camelCase
 
   rule/must-always-return-json-objects-as-top-level-data-structures:
-    severity: error
+    severity: warn
     message: Top-level data structure must be an object
     subject:
       type: MediaType
@@ -802,13 +802,13 @@ rules:
     assertions:
       ukhsa/locationHeader: {}
 
-  ukhsa/required-problem-responses-critical:
+  ukhsa/must-define-critical-problem-responses:
     severity: warn
 
-  ukhsa/required-problem-responses-security:
+  ukhsa/must-define-security-problem-responses:
     severity: warn
 
-  ukhsa/no-get-request-body:
+  ukhsa/must-not-define-request-body-for-get-requests:
     severity: error
 
   rule/must-define-security-schemes:

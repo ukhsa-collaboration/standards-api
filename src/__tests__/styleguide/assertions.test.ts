@@ -195,6 +195,11 @@ describe('plugin assertions', () => {
     expect(plugin.assertions.locationHeader(headers, {}, makeLoc('headersOk'))).toHaveLength(0);
   });
 
+  it('locationHeader skips validation when Location is a $ref', () => {
+    const headers = { Location: { $ref: '#/components/headers/Location' } };
+    expect(plugin.assertions.locationHeader(headers, {}, makeLoc('headersRef'))).toHaveLength(0);
+  });
+
   it('skips validation when assertion inputs are not objects', () => {
     expect(plugin.assertions.objectSchema(undefined, {}, makeLoc())).toHaveLength(0);
     expect(plugin.assertions.problemJsonSchema('oops', {}, makeLoc())).toHaveLength(0);
@@ -236,12 +241,13 @@ describe('plugin assertions', () => {
 });
 
 describe('plugin rules', () => {
-  const runRule = (rule: any, operation: any, root: any = {}) => {
+  const runRule = (rule: any, operation: any, root: any = {}, ctxOverrides: any = {}) => {
     const reports: any[] = [];
     const ctx = {
       key: 'get',
       location: makeLoc('op'),
       report: (r: any) => reports.push(r),
+      ...ctxOverrides,
     };
     if (rule.Root) {
       rule.Root(root);
@@ -252,8 +258,8 @@ describe('plugin rules', () => {
     return reports;
   };
 
-  it('required-problem-responses-critical reports missing response, content, and examples', () => {
-    const rule = plugin.rules.oas3['required-problem-responses-critical']();
+  it('must-define-critical-problem-responses reports missing response, content, and examples', () => {
+    const rule = plugin.rules.oas3['must-define-critical-problem-responses']();
     const reports = runRule(rule, {
       responses: {
         '400': {
@@ -277,8 +283,8 @@ describe('plugin rules', () => {
     );
   });
 
-  it('required-problem-responses-critical reports missing content types', () => {
-    const rule = plugin.rules.oas3['required-problem-responses-critical']();
+  it('must-define-critical-problem-responses reports missing content types', () => {
+    const rule = plugin.rules.oas3['must-define-critical-problem-responses']();
     const reports = runRule(rule, {
       responses: {
         '400': { description: 'bad' },
@@ -290,8 +296,8 @@ describe('plugin rules', () => {
     expect(reports.find((r) => r.message.includes('missing application/problem+json'))).toBeTruthy();
   });
 
-  it('required-problem-responses-critical passes when content and examples present', () => {
-    const rule = plugin.rules.oas3['required-problem-responses-critical']();
+  it('must-define-critical-problem-responses passes when content and examples present', () => {
+    const rule = plugin.rules.oas3['must-define-critical-problem-responses']();
     const reports = runRule(rule, {
       responses: {
         '400': {
@@ -314,8 +320,55 @@ describe('plugin rules', () => {
     expect(reports).toHaveLength(0);
   });
 
-  it('required-problem-responses-security does nothing when security disabled', () => {
-    const rule = plugin.rules.oas3['required-problem-responses-security']();
+  it('must-define-critical-problem-responses resolves $ref responses', () => {
+    const rule = plugin.rules.oas3['must-define-critical-problem-responses']();
+    const resolvedResponse = {
+      content: {
+        'application/problem+json': { schema: {}, examples: { ex: {} } },
+      },
+    };
+    const resolve = jest.fn(() => ({ node: resolvedResponse }));
+    const reports = runRule(
+      rule,
+      {
+        responses: {
+          '400': { $ref: '#/components/responses/Problem400' },
+          '404': { $ref: '#/components/responses/Problem404' },
+          '500': { $ref: '#/components/responses/Problem500' },
+        },
+      },
+      {},
+      {
+        resolve,
+      }
+    );
+    expect(reports).toHaveLength(0);
+    expect(resolve).toHaveBeenCalled();
+  });
+
+  it('must-define-critical-problem-responses falls back when $ref resolves without node', () => {
+    const rule = plugin.rules.oas3['must-define-critical-problem-responses']();
+    const resolve = jest.fn(() => ({}));
+    const reports = runRule(
+      rule,
+      {
+        responses: {
+          '400': { $ref: '#/components/responses/Problem400' },
+          '404': { $ref: '#/components/responses/Problem404' },
+          '500': { $ref: '#/components/responses/Problem500' },
+        },
+      },
+      {},
+      {
+        resolve,
+      }
+    );
+    expect(resolve).toHaveBeenCalled();
+    expect(reports.find((r) => r.message.includes('missing application/problem+json'))).toBeTruthy();
+  });
+
+  it('must-define-security-problem-responses does nothing when security disabled', () => {
+    const rule = plugin.rules.oas3['must-define-security-problem-responses']();
     const reports = runRule(
       rule,
       { responses: {}, security: [] },
@@ -326,8 +379,8 @@ describe('plugin rules', () => {
     expect(reports).toHaveLength(0);
   });
 
-  it('required-problem-responses-security triggers when global security is enabled', () => {
-    const rule = plugin.rules.oas3['required-problem-responses-security']();
+  it('must-define-security-problem-responses triggers when global security is enabled', () => {
+    const rule = plugin.rules.oas3['must-define-security-problem-responses']();
     const reports = runRule(
       rule,
       { responses: {} },
@@ -339,8 +392,8 @@ describe('plugin rules', () => {
     expect(reports[0].message).toContain('401, 403');
   });
 
-  it('required-problem-responses-security handles per-operation security disable with global security set', () => {
-    const rule = plugin.rules.oas3['required-problem-responses-security']();
+  it('must-define-security-problem-responses handles per-operation security disable with global security set', () => {
+    const rule = plugin.rules.oas3['must-define-security-problem-responses']();
     const reports = runRule(
       rule,
       { security: [] },
@@ -352,20 +405,20 @@ describe('plugin rules', () => {
     expect(reports).toHaveLength(0);
   });
 
-  it('no-get-request-body reports on GET request bodies', () => {
-    const rule = plugin.rules.oas3['no-get-request-body']();
+  it('must-not-define-request-body-for-get-requests reports on GET request bodies', () => {
+    const rule = plugin.rules.oas3['must-not-define-request-body-for-get-requests']();
     const reports = runRule(rule, { requestBody: {} });
     expect(reports[0].message).toContain('MUST NOT accept a request body.');
   });
 
-  it('no-get-request-body ignores other methods', () => {
+  it('must-not-define-request-body-for-get-requests ignores other methods', () => {
     const reports: any[] = [];
     const ctx = {
       key: 'post',
       location: makeLoc('op'),
       report: (r: any) => reports.push(r),
     };
-    const rule = plugin.rules.oas3['no-get-request-body']();
+    const rule = plugin.rules.oas3['must-not-define-request-body-for-get-requests']();
     rule.Operation({ requestBody: {} }, ctx);
     expect(reports).toHaveLength(0);
   });
