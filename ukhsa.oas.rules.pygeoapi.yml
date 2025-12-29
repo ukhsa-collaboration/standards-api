@@ -1,0 +1,211 @@
+extends:
+  - ./ukhsa.oas.rules.yml
+rules:
+  override-severity-pygeoapi: 'off'
+  must-define-a-format-for-integer-types:
+    given: $.paths.*.*..schema..properties..[?(@ && @.type=='integer')]
+    severity: warn
+    then:
+      - function: defined
+        field: format
+      - function: pattern
+        functionOptions:
+          match: ^(int32|int64|bigint)$
+        field: format
+    description: '`integer` properties must have a format defined (`int32`, `int64`, or `bigint`).'
+    message: Numeric properties must have valid format specified
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-a-format-for-integer-types/
+  must-define-a-format-for-number-types:
+    given: $.paths.*.*..schema..properties..[?(@ && @.type=='number')]
+    severity: warn
+    then:
+      - function: defined
+        field: format
+      - function: pattern
+        functionOptions:
+          match: ^(float|double|decimal)$
+        field: format
+    description: '`number` properties must have a format defined (`float`, `double`, or `decimal`).'
+    message: Numeric properties must have valid format specified
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-a-format-for-number-types/
+  must-define-security-schemes:
+    given: $..components
+    severity: warn
+    then:
+      field: securitySchemes
+      function: truthy
+    recommended: true
+    description: >-
+      This API definition does not have any security scheme defined, which means the entire API is open to the public.
+      That's probably not what you want, even if all the data is read-only. Setting lower rate limits for the public and
+      letting known consumers use more resources is a handy path to monetization, and helps know who your power users
+      are when changes need feedback or migration, even if not just good practice.
+    message: All APIs MUST have a security scheme defined.
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-define-security-schemes/
+  must-have-info-api-audience:
+    given: $.info
+    severity: warn
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - x-audience
+          properties:
+            x-audience:
+              type: string
+              enum:
+                - company-internal
+                - partner-external
+                - premium-external
+                - public-external
+    recommended: true
+    description: >-
+      The `info` object must have an `x-audience` that matches at least one of these values: company-internal,
+      partner-external, premium-external or public-external.
+    message: Missing or wrong `info.x-audience`, {{error}}.
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-api-audience/
+  must-have-info-contact-email:
+    given: $.info.contact
+    severity: warn
+    then:
+      function: truthy
+      field: email
+    description: >-
+      The `info` object must have a `contact email` property that contains a valid email address for the responsible
+      team.
+    message: Must have email defined in `info.contact.email`
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-contact-email/
+  must-have-info-value-chain:
+    given: $.info
+    severity: warn
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - x-value-chain
+          properties:
+            x-value-chain:
+              type: string
+              enum:
+                - prevent
+                - detect
+                - analyse
+                - respond
+                - cross-cutting
+                - enabling
+    recommended: true
+    description: >-
+      The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect,
+      analyse, respond, cross-cutting or enabling.
+    message: Missing or wrong `info.x-value-chain`, {{error}}.
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-value-chain/
+  must-have-info-version:
+    given: $.info
+    severity: warn
+    then:
+      - function: defined
+        field: version
+      - function: schema
+        functionOptions:
+          schema:
+            type: string
+            pattern: ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+        field: version
+    description: >-
+      The `info` object must have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html)
+      to distinguish API versions.
+    message: Must have API version defined in `info.version`
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-have-info-version/
+  must-specify-default-response:
+    given: $.paths.*.*.responses
+    severity: warn
+    then:
+      function: truthy
+      field: default
+    description: Each `operation` must include a default error response that combines multiple errors.
+    message: Operation does not contain a default response
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-specify-default-response/
+  must-use-camel-case-for-property-names:
+    given: $.paths.*.*['responses','requestBody']..content..schema..properties.*~
+    severity: warn
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+    recommended: true
+    description: Properties must use lower camel case.
+    message: Properties must use lower camel case.
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-camel-case-for-property-names/
+  must-use-camel-case-for-query-parameters:
+    given: $.paths.*.*.parameters[?(@ && @.in=='query')].name
+    severity: warn
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+    recommended: true
+    description: Query parameters must use lower camel case.
+    message: Query parameters must use lower camel case.
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-camel-case-for-query-parameters/
+  must-use-https-protocol-only:
+    given: $.servers..url
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: ^https:/
+    recommended: true
+    description: ALL requests MUST go through `https` protocol only
+    message: Servers MUST be `https` and no other protocol is allowed.
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-https-protocol-only/
+  must-use-problem-json-as-default-response:
+    given: $.paths.*.*.responses.default.content
+    severity: warn
+    then:
+      function: truthy
+      field: application/problem+json
+    description: The content type for the default response must be `application/problem+json`.
+    message: Operation must use problem json as default response
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-problem-json-as-default-response/
+  must-use-problem-json-for-errors:
+    given: >-
+      $.paths.*.*.responses['400','401','403','404','405','406','407','408','409','410','411','412','413','414','415','416','417','418','421','422','423','424','425','426','428','429','431','451','500','501','502','503','504','505','506','507','508','510','511','default'].content.*
+    severity: warn
+    then:
+      function: enumeration
+      functionOptions:
+        values:
+          - application/problem+json
+      field: '@key'
+    description: The content type for 4xx and 5xx status codes must be `application/problem+json`.
+    message: Error response must be application/problem+json
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-problem-json-for-errors/
+  must-use-valid-version-info-schema:
+    given: $.paths["/"].*.responses["200"].content["application/json"]
+    severity: warn
+    resolved: true
+    then:
+      function: isApiInfoJsonSchema
+      field: schema
+    recommended: true
+    description: '`ApiInfo` schema must include this set of minimal required properties and validations.'
+    message: '{{error}}'
+    documentationUrl: >-
+      https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/must-use-valid-version-info-schema/

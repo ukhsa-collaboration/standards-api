@@ -74,6 +74,9 @@ Some OpenAPI definitions produced by platforms like [pygeoapi][11] might struggl
 
 See [severity overrides][12] for more information.
 
+> [!NOTE]
+> Vacuum does not expose other rule definitions to custom JS functions, so `override-severity-pygeoapi` cannot downgrade severities at runtime the same way Spectral can. For Vacuum, use the pygeoapi ruleset (`ukhsa.oas.rules.pygeoapi.yml`) or the wrapper script in `scripts/vacuum-lint.mjs` to select the correct ruleset based on `info.x-api-type`.
+
 ### CI/CD Github Actions
 
 The following is a sample Github actions job which can be used as an example of setting up linting as part of you CI/CD pipeline.
