@@ -6,6 +6,7 @@ on:
 
     branches:
       - main
+      - dependabot-merge
 
 permissions:
   pull-requests: write
@@ -16,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     # Check for success, an associated PR, and the correct target branch
     if: |
-      github.event.pull_request.base.ref == 'main' &&
+      (github.event.pull_request.base.ref == 'main' ||
+       github.event.pull_request.base.ref == 'dependabot-merge') &&
       github.event.pull_request.user.login == 'dependabot[bot]'
 
     steps:
