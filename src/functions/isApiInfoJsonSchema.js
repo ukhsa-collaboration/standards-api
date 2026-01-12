@@ -41,13 +41,9 @@ properties:
 */
 
 /**
- * @import Core from "@stoplight/spectral-core"
- */
-
-/**
  * Asserts that the given schema is a valid ApiInfo JSON schema.
- * @type {Core.RulesetFunction<any, null>}
  * @param {any} schema
+ * @returns {Array<{ message: string }>}
  */
 export const assertApiInfoSchema = (schema) => {
 
@@ -113,15 +109,15 @@ const check = (schema, _options, _context, resolveRef) => {
     return aggregated;
   }
 
-  return assertApiInfoSchema(resolvedSchema, _options, _context);
+  return assertApiInfoSchema(resolvedSchema);
 };
 
 /**
  * Validates if the target value is a valid ApiInfo JSON schema.
- * @type {Core.RulesetFunction<any, null>}
  * @param {any} targetValue - The value to validate.
  * @param {null} _options - Additional options (not used).
- * @param {Core.RulesetFunctionContext} _context - The context.
+ * @param {any} _context - The context.
+ * @returns {Array<{ message: string; path?: (string | number)[] }>}
  */
 export const runRule = (targetValue, _options, _context) => {
   const schema = targetValue?.schema ?? targetValue;

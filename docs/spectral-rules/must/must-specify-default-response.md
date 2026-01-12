@@ -3,7 +3,7 @@
 Each `operation` **MUST** include a default error response that combines multiple errors.
 
 > [!IMPORTANT]
-> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [1].
+> For OpenAPI definitions marked with `info.x-api-type: pygeoapi`, the pygeoapi ruleset downgrades this rule to `warn`. See [1].
 
 ## Invalid Example
 

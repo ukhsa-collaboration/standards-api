@@ -1,11 +1,7 @@
 'use strict';
 
 /**
- * @import Core from "@stoplight/spectral-core"
- */
-
-/**
- * @typedef  {Object} CountResourceTypesOptions
+ * @typedef {Object} CountResourceTypesOptions
  * @property {number} [max] - The maximum number of resource types allowed.
  */
 
@@ -22,9 +18,9 @@ export const extractResourceTypeFromPath = (path) => {
 
 /**
  * Counts the number of resource types in the target value.
- * @type {Core.RulesetFunction<object, CountResourceTypesOptions>}
  * @param {object} targetValue
  * @param {CountResourceTypesOptions} [options]
+ * @returns {Array<{ message: string }>}
  */
 export const runRule = (targetValue, options = {}) => {
   if (!targetValue || typeof targetValue !== 'object') return [];

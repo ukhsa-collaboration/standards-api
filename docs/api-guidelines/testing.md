@@ -6,7 +6,7 @@ order: 9
 
 ## Validation / Linting
 
-**MUST** validate the OpenAPI definition against the OpenAPI Specification and the [UKSHA spectral ruleset][1].
+**MUST** validate the OpenAPI definition against the OpenAPI Specification and the [UKHSA linting ruleset][1].
 
 ## Unit Testing
 
@@ -56,7 +56,7 @@ order: 9
 
 | Tool | Useful For | Open Source Licence |
 | - | - | - |
-| **[Spectral CLI][2]** | Validating your OpenAPI definitions against the OpenAPI Specification and the [UKSHA spectral ruleset][1]. | [Apache 2.0][3] |
+| **[Vacuum CLI][2]** | Validating your OpenAPI definitions against the OpenAPI Specification and the [UKHSA linting ruleset][1]. | [Apache 2.0][3] |
 | **[Prism][4]** | API Mock Servers from OpenAPI definition<br>Contract Testing for API consumers and developers. | [Apache 2.0][3] |
 | **[Pact][5]** | Consumer-Driven Contract Testing to ensure that your API meets the expectations of its consumers. | [MIT][6] |
 | **[Zed Attack Proxy (ZAP)][7]** | Web application vulnerability scanner. | [Apache 2.0][3] |
@@ -64,7 +64,7 @@ order: 9
 There is also a catalog of [OpenAPI Tooling][8] to support API development and validation.
 
 [1]: ../spectral-rules/index.md
-[2]: https://docs.stoplight.io/docs/spectral
+[2]: https://quobix.com/vacuum/
 [3]: https://opensource.org/license/apache-2-0
 [4]: https://stoplight.io/open-source/prism
 [5]: https://docs.pact.io/

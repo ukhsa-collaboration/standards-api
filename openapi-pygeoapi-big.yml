@@ -222,7 +222,7 @@ info:
     - geospatial
     - data
     - api
-  x-api-type: standard
+  x-api-type: pygeoapi
 openapi: 3.0.2
 paths:
   /:
