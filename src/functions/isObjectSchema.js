@@ -1,15 +1,11 @@
 'use strict';
 
 /**
- * @import Core from "@stoplight/spectral-core"
- */
-
-/**
  * Asserts that the given schema is a valid object schema.
- * @type {Core.RulesetFunction<any, null>}
  * @param {any} schema
  * @param {any} _options
  * @param {any} _context
+ * @returns {Array<{ message: string }>}
  */
 export const assertObjectSchema = (schema, _options, _context) => {
   const results = [];
@@ -27,10 +23,10 @@ export const assertObjectSchema = (schema, _options, _context) => {
 
 /**
  * Checks the schema for object compliance, including handling combined schemas.
- * @type {Core.RulesetFunction<any, null>}
  * @param {any} schema
  * @param {any} _options
  * @param {any} _context
+ * @returns {Array<{ message: string }>}
  */
 const check = (schema, _options, _context) => {
   const combinedSchemas = [...(schema?.anyOf ?? []), ...(schema?.oneOf ?? []), ...(schema?.allOf ?? [])];
@@ -51,10 +47,10 @@ const check = (schema, _options, _context) => {
 
 /**
  * Validates if the target value is a valid object schema.
- * @type {Core.RulesetFunction<any, null>}
  * @param {any} targetValue - The value to validate.
  * @param {null} _options - Additional options (not used).
- * @param {Core.RulesetFunctionContext} _context - The context.
+ * @param {any} _context - The context.
+ * @returns {Array<{ message: string }>}
  */
 export const runRule = (targetValue, _options, _context) => {
   if(targetValue === null || typeof targetValue !== "object") {

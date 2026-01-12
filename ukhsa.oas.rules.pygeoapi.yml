@@ -1,7 +1,6 @@
 extends:
   - ./ukhsa.oas.rules.yml
 rules:
-  override-severity-pygeoapi: 'off'
   must-define-a-format-for-integer-types:
     given: $.paths.*.*..schema..properties..[?(@ && @.type=='integer')]
     severity: warn

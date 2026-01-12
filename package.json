@@ -1,15 +1,15 @@
 {
   "name": "@ukhsa-collaboration/spectral-rules",
   "version": "0.4.1",
-  "description": "UKHSA OpenAPI lint ruleset (Spectral-compatible, recommended to run with Vacuum)",
-  "main": ".spectral.yaml",
+  "description": "UKHSA OpenAPI lint ruleset for Vacuum",
+  "main": "ukhsa.oas.rules.yml",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "fmt:md": "remark . --ext .md --output",
     "lint:md": "remark . --ext .md --frail",
-    "pretest": "npm run build",
-    "pretest:watch": "npm run build",
+    "pretest": "npm run build && npm run build:functions:cjs",
+    "pretest:watch": "npm run build && npm run build:functions:cjs",
     "prepare": "husky && git config commit.template .gitmessage",
     "start": "docker run --rm --pull=always -p \"8080:8080\" -v \"./docs:/site/docs/api-design-guidelines\" ghcr.io/ukhsa-collaboration/standards-org:latest",
     "test": "jest --coverage",
@@ -28,12 +28,10 @@
   },
   "keywords": [
     "UKHSA",
-    "spectral",
     "ruleset",
     "vacuum"
   ],
   "dependencies": {
-    "@stoplight/spectral-core": "^1.20.0",
     "@stoplight/spectral-documentation": "^1.3.1",
     "lodash": "^4.17.21"
   },
@@ -41,9 +39,6 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@quobix/vacuum": "^0.20.4",
-    "@stoplight/spectral-functions": "^1.10.1",
-    "@stoplight/spectral-parsers": "^1.0.5",
-    "@stoplight/spectral-ruleset-bundler": "^1.6.3",
     "@swc/core": "^1.15.3",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",

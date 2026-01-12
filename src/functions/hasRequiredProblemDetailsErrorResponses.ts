@@ -20,10 +20,23 @@ If an operation explicitly disables security (`security: []`) or the API has no 
 All responses must conform to the Problem Details standard (RFC 9457).
 */
 
-import type {
-  RulesetFunction,
-  RulesetFunctionContext,
-} from '@stoplight/spectral-core';
+type RulesetFunctionContext = {
+  document?: {
+    data?: {
+      security?: unknown;
+    };
+  };
+  path?: (string | number)[];
+  rule: {
+    severity: number;
+  };
+};
+
+type RulesetFunction<T, O> = (
+  targetVal: T,
+  opts: O,
+  context: RulesetFunctionContext,
+) => Array<{ message: string; path?: (string | number)[] }>;
 
 const REQUIRED_ALWAYS = ['400', '404', '500'] as const;
 const REQUIRED_IF_SECURED = ['401', '403'] as const;
@@ -85,11 +98,11 @@ function validateResponse(
 }
 
 /**
- * Spectral custom function to validate common error responses on operations.
+ * Custom ruleset function to validate common error responses on operations.
  *
  * @param targetVal - The operation being evaluated.
  * @param opts - Function options that adjust which status codes must be present.
- * @param context - The Spectral rule execution context.
+ * @param context - The rule execution context.
  * @returns An array of rule results describing missing or invalid error responses.
  */
 export const runRule: RulesetFunction<OperationObject, Options> = function (
@@ -150,7 +163,6 @@ export const runRule: RulesetFunction<OperationObject, Options> = function (
         message: `Each operation ${level} define Problem Details for: ${requiredStatusCodes.join(
           ', ',
         )}. Issues: ${details}.`,
-        path: [...context.path, 'responses'],
       },
     ];
   } catch (_err) {

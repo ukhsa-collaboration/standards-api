@@ -10,7 +10,7 @@ if (args.length === 0) {
 }
 
 const projectRoot = process.cwd();
-const defaultRuleset = path.resolve(projectRoot, '.spectral.yaml');
+const defaultRuleset = path.resolve(projectRoot, 'ukhsa.oas.rules.yml');
 const pygeoapiRuleset = path.resolve(projectRoot, 'ukhsa.oas.rules.pygeoapi.yml');
 const functionsDir = path.resolve(projectRoot, 'dist-vacuum', 'functions');
 

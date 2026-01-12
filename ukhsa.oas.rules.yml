@@ -8,38 +8,10 @@ documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design
 functions:
   - isApiInfoJsonSchema
   - hasRequiredProblemDetailsErrorResponses
-  - overrideSeverity
 
 functionsDir: dist/functions
 
 rules:
-
-  # Conditional overrides based on API type
-  override-severity-pygeoapi:
-    message: "Adjusting severity for pygeoapi definitions"
-    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/severity-overrides/
-    given: "$"
-    then:
-      function: overrideSeverity
-      functionOptions:
-        target: $.info["x-api-type"]
-        value: pygeoapi
-        rulesToAdjust:
-          must-define-a-format-for-integer-types: warn
-          must-define-a-format-for-number-types: warn
-          must-define-security-schemes: warn
-          must-have-info-api-audience: warn
-          must-have-info-contact-email: warn
-          must-have-info-value-chain: warn
-          must-have-info-version: warn
-          must-specify-default-response: warn
-          must-use-camel-case-for-property-names: warn
-          must-use-camel-case-for-query-parameters: warn
-          must-use-https-protocol-only: warn
-          must-use-problem-json-as-default-response: warn
-          must-use-problem-json-for-errors: warn
-          must-use-valid-version-info-schema: warn
-
   oas3-api-servers: off
   must-have-info-x-api-id: off
   must-always-return-json-objects-as-top-level-data-structures: warn

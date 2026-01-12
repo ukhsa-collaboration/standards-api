@@ -3,7 +3,7 @@
 Query parameters **MUST** use [camel-case][1] strings that match this pattern: `^[a-z][a-z0-9]+(?:[A-Z][a-z0-9]+)*$`.
 
 > [!IMPORTANT]
-> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [2].
+> For OpenAPI definitions marked with `info.x-api-type: pygeoapi`, the pygeoapi ruleset downgrades this rule to `warn`. See [2].
 
 | Name | Description |
 | - | - |
