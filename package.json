@@ -61,6 +61,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.1.0"
   }
 }
