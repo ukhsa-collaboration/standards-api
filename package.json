@@ -42,7 +42,7 @@
     "@stoplight/spectral-functions": "^1.10.1",
     "@stoplight/spectral-parsers": "^1.0.5",
     "@stoplight/spectral-ruleset-bundler": "^1.6.3",
-    "@swc/core": "^1.15.10",
+    "@swc/core": "^1.15.11",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.23",
