@@ -33,7 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiInfo'
+                #$ref: '#/components/schemas/ApiInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -51,7 +51,7 @@ paths:
     get:
       summary: List all test results
       description: List all test results.
-      operationId: getResults
+      #operationId: getResults
       tags:
         - Test Results
       parameters:
