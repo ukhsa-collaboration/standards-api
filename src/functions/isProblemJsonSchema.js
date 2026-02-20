@@ -65,22 +65,28 @@ export const assertProblemSchema = (schema, _options, _context) => {
  * @param {any} schema
  * @param {any} _options
  * @param {any} _context
+ * @param {(schemaNode: any) => any} resolveRef
  * @returns {Array<{ message: string }>}
  */
-const check = (schema, _options, _context) => {
-  const combinedSchemas = [...(schema?.anyOf ?? []), ...(schema?.oneOf ?? []), ...(schema?.allOf ?? [])];
+const check = (schema, _options, _context, resolveRef) => {
+  const resolvedSchema = resolveRef(schema);
+  const combinedSchemas = [
+    ...(resolvedSchema?.anyOf ?? []),
+    ...(resolvedSchema?.oneOf ?? []),
+    ...(resolvedSchema?.allOf ?? []),
+  ].map(resolveRef);
 
   if (combinedSchemas.length > 0) {
     const aggregated = [];
     for (const subSchema of combinedSchemas) {
-      const res = check(subSchema, _options, _context);
+      const res = check(subSchema, _options, _context, resolveRef);
       if (Array.isArray(res)) {
         aggregated.push(...res);
       }
     }
     return aggregated;
   }
-  return assertProblemSchema(schema, _options, _context);
+  return assertProblemSchema(resolvedSchema, _options, _context);
 };
 
 /**
@@ -96,7 +102,9 @@ export const runRule = (targetValue, _options, _context) => {
   }
 
   try {
-    return check(targetValue, _options, _context);
+    /** @param {any} schemaNode */
+    const resolveRef = (schemaNode) => schemaNode;
+    return check(targetValue, _options, _context, resolveRef);
   } catch (/** @type {any} */ex) {
     return [
       {

@@ -67,6 +67,22 @@ interface ValidationIssue {
   issues: string[];
 }
 
+const globalSecurityCache = new WeakMap<object, boolean>();
+
+function isGlobalSecurityActive(documentData: unknown): boolean {
+  if (!documentData || typeof documentData !== 'object') {
+    return false;
+  }
+  const cached = globalSecurityCache.get(documentData);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const data = documentData as { security?: unknown };
+  const active = Array.isArray(data.security) && data.security.length > 0;
+  globalSecurityCache.set(documentData, active);
+  return active;
+}
+
 /**
  * Checks if a response defines application/problem+json or application/problem+xml and includes at least one example.
  *
@@ -89,8 +105,17 @@ function validateResponse(
 
     if (!content) {
       issues.push('missing application/problem+json or application/problem+xml');
-    } else if (!content.examples || Object.keys(content.examples).length === 0) {
+    } else if (!content.examples) {
       issues.push('missing example');
+    } else {
+      let hasExample = false;
+      for (const _key in content.examples) {
+        hasExample = true;
+        break;
+      }
+      if (!hasExample) {
+        issues.push('missing example');
+      }
     }
   }
 
@@ -110,64 +135,58 @@ export const runRule: RulesetFunction<OperationObject, Options> = function (
   opts: Options,
   context: RulesetFunctionContext,
 ) {
-  try {
-    const { responses = {}, security: opSecurity } = targetVal;
-    const globalSecurity = (context.document?.data as { security?: any })?.security;
-    const globalSecurityActive = Array.isArray(globalSecurity) && globalSecurity.length > 0;
-    const path = context.path?.[1] || '';
-    const isRoot = path === '/';
-    const mode = opts?.mode;
+  const { responses = {}, security: opSecurity } = targetVal;
+  const globalSecurityActive = isGlobalSecurityActive(context.document?.data);
+  const mode = opts?.mode;
 
-    let requiredStatusCodes: string[] = [];
-    let shouldRun = false;
+  let requiredStatusCodes: readonly string[] | null = null;
 
-    if (mode === 'critical') {
-      requiredStatusCodes = [...REQUIRED_ALWAYS];
-      shouldRun = true;
+  if (mode === 'critical') {
+    requiredStatusCodes = REQUIRED_ALWAYS;
+  } else if (mode === 'explicit-security') {
+    const securityExplicitlyDisabled = Array.isArray(opSecurity) && opSecurity.length === 0;
+    const securityExplicitlyActive = Array.isArray(opSecurity) && opSecurity.length > 0;
+    const pathValue = context.path?.[1];
+    const isRoot = pathValue === '/';
+    if (securityExplicitlyActive || (!securityExplicitlyDisabled && !isRoot && globalSecurityActive)) {
+      requiredStatusCodes = REQUIRED_IF_SECURED;
     }
-
-    if (mode === 'explicit-security') {
-      const securityExplicitlyDisabled = Array.isArray(opSecurity) && opSecurity.length === 0;
-      const securityExplicitlyActive = Array.isArray(opSecurity) && opSecurity.length > 0;
-      if (securityExplicitlyActive || (!securityExplicitlyDisabled && !isRoot && globalSecurityActive)) {
-        requiredStatusCodes = [...REQUIRED_IF_SECURED];
-        shouldRun = true;
-      }
+  } else if (mode === 'root-inherit') {
+    const pathValue = context.path?.[1];
+    const isRoot = pathValue === '/';
+    const isInheritingGlobalSecurity =
+      isRoot && (opSecurity === undefined || opSecurity === null) && globalSecurityActive;
+    if (isInheritingGlobalSecurity) {
+      requiredStatusCodes = REQUIRED_IF_SECURED;
     }
+  }
 
-    if (mode === 'root-inherit') {
-      const isInheritingGlobalSecurity =
-        isRoot && (opSecurity === undefined || opSecurity === null) && globalSecurityActive;
-
-      if (isInheritingGlobalSecurity) {
-        requiredStatusCodes = [...REQUIRED_IF_SECURED];
-        shouldRun = true;
-      }
-    }
-
-    if (!shouldRun) return [];
-
-    const issues = requiredStatusCodes
-      .map((code) => validateResponse(responses, code))
-      .filter((x): x is ValidationIssue => Boolean(x));
-
-    if (issues.length === 0) return [];
-
-    const level = context.rule.severity === 0 ? 'MUST' : 'SHOULD';
-    const details = issues
-      .map((issue) => `${issue.statusCode} (${issue.issues.join(', ')})`)
-      .join('; ');
-
-    return [
-      {
-        message: `Each operation ${level} define Problem Details for: ${requiredStatusCodes.join(
-          ', ',
-        )}. Issues: ${details}.`,
-      },
-    ];
-  } catch (_err) {
+  if (!requiredStatusCodes) {
     return [];
   }
+
+  const issues: ValidationIssue[] = [];
+  for (let i = 0; i < requiredStatusCodes.length; i += 1) {
+    const issue = validateResponse(responses, requiredStatusCodes[i]);
+    if (issue) {
+      issues.push(issue);
+    }
+  }
+
+  if (issues.length === 0) return [];
+
+  const level = context.rule.severity === 0 ? 'MUST' : 'SHOULD';
+  const details = issues
+    .map((issue) => `${issue.statusCode} (${issue.issues.join(', ')})`)
+    .join('; ');
+
+  return [
+    {
+      message: `Each operation ${level} define Problem Details for: ${requiredStatusCodes.join(
+        ', ',
+      )}. Issues: ${details}.`,
+    },
+  ];
 };
 
 export default runRule;

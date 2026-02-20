@@ -1,5 +1,6 @@
 # **should** have location header in 201 response
 
+Note: Run Vacuum with `--resolve-refs` to resolve `$ref` before rules run. Use `--resolve-nested-refs` to resolve nested `$ref` values relative to their own document context. Both flags still honor `--remote` and `--base` for external lookups.
 `201 Created` responses to `POST` methods **SHOULD** have a `Location` header identifying the location of the newly created resource.
 
 See [RFC9110 Section 10.2.2][1] for more information on the `Location` header.
