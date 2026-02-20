@@ -1,5 +1,6 @@
 # **MUST** use valid version info schema
 
+Note: Run Vacuum with `--resolve-refs` to resolve `$ref` before rules run. Use `--resolve-nested-refs` to resolve nested `$ref` values relative to their own document context. Both flags still honor `--remote` and `--base` for external lookups.
 `ApiInfo` schema **MUST** include this set of minimal required properties and validations:
 
 > [!IMPORTANT]

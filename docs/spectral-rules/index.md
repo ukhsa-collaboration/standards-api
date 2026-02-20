@@ -55,6 +55,10 @@ npx vacuum lint openapi-definition.yml \
   --functions ./node_modules/@ukhsa-collaboration/spectral-rules/dist-vacuum/functions
 ```
 
+If you want Vacuum to resolve every `$ref` before evaluating rules, add `--resolve-refs` (default off). To resolve nested `$ref` values relative to their own document context, add `--resolve-nested-refs`. The global `--resolve-refs` overrides any per-rule `resolveRefs` settings, while still honoring `--remote` and `--base` for external lookups.
+
+To enable optimized JSONPath evaluation, add `--jsonpath-lazy`. You can also enable this per rule with `jsonpathLazy: true` in your ruleset, which mirrors the global flag's behavior.
+
 > [!TIP] Need a JSON report?
 > Use `npx vacuum spectral-report <spec> <report.json>` to generate a report you can post-process in existing tooling.
 

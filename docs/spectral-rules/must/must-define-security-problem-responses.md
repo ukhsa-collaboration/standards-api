@@ -1,5 +1,6 @@
 # **MUST** define 401 and 403 for secured operations
 
+Note: Run Vacuum with `--resolve-refs` to resolve `$ref` before rules run. Use `--resolve-nested-refs` to resolve nested `$ref` values relative to their own document context. Both flags still honor `--remote` and `--base` for external lookups.
 Operations that define their **own non-empty `security` block**\
 **MUST** define responses for:
 

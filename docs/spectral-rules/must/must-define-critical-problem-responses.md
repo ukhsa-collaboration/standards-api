@@ -1,5 +1,6 @@
 # **MUST** define 400, 404, and 500 responses
 
+Note: Run Vacuum with `--resolve-refs` to resolve `$ref` before rules run. Use `--resolve-nested-refs` to resolve nested `$ref` values relative to their own document context. Both flags still honor `--remote` and `--base` for external lookups.
 Every operation **MUST** define 400, 404, and 500 responses and include at least one example.
 This ensures proper client error handling
 as per [RFC 9457][1].

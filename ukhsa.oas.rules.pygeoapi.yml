@@ -199,7 +199,6 @@ rules:
   must-use-valid-version-info-schema:
     given: $.paths["/"].*.responses["200"].content["application/json"]
     severity: warn
-    resolved: true
     then:
       function: isApiInfoJsonSchema
       field: schema
