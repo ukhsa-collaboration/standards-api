@@ -78,9 +78,6 @@ if (!hasFlag(finalArgs, '-r') && !hasFlag(finalArgs, '--ruleset')) {
 if (!hasFlag(finalArgs, '--functions') && !hasFlag(finalArgs, '-f')) {
   finalArgs.push('--functions', functionsDir);
 }
-if (!hasFlag(finalArgs, '--resolve-refs')) {
-  finalArgs.push('--resolve-refs');
-}
 if (!hasFlag(finalArgs, '--resolve-nested-refs')) {
   finalArgs.push('--resolve-nested-refs');
 }
@@ -97,14 +94,16 @@ if (specPath) {
   }
 }
 
+const projectVacuumRoot = path.resolve(projectRoot, 'vacuum', 'vacuum');
 const projectVacuumBin = path.resolve(projectRoot, 'vacuum', 'bin', 'vacuum');
 const customVacuumBin = '/Users/andrii/PycharmProjects/vacuum/vacuum';
 const localVacuumBin = path.resolve(projectRoot, 'node_modules', '.bin', 'vacuum');
-const useProject = fs.existsSync(projectVacuumBin);
+const useProjectRoot = fs.existsSync(projectVacuumRoot);
+const useProjectBin = fs.existsSync(projectVacuumBin);
 const useCustom = fs.existsSync(customVacuumBin);
 const useLocal = fs.existsSync(localVacuumBin);
-const command = useProject ? projectVacuumBin : useCustom ? customVacuumBin : useLocal ? localVacuumBin : 'npx';
-const commandArgs = useProject || useCustom || useLocal ? finalArgs : [projectVacuumBin, ...finalArgs];
+const command = useProjectRoot ? projectVacuumRoot : useProjectBin ? projectVacuumBin : useCustom ? customVacuumBin : useLocal ? localVacuumBin : 'npx';
+const commandArgs = useProjectRoot || useProjectBin || useCustom || useLocal ? finalArgs : [projectVacuumBin, ...finalArgs];
 
 const result = spawnSync(command, commandArgs, { stdio: 'inherit' });
 process.exit(result.status ?? 1);

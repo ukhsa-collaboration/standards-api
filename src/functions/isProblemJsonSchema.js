@@ -91,7 +91,7 @@ const check = (schema, _options, _context, resolveRef) => {
 
 /**
  * Validates if the target value is a valid Problem JSON schema.
- * @param {any} targetValue - The value to validate.
+ * @param {any} targetValue - The value to validate (content entry with schema property, or raw schema).
  * @param {null} _options - Additional options (not used).
  * @param {any} _context - The context.
  * @returns {Array<{ message: string }>}
@@ -101,10 +101,19 @@ export const runRule = (targetValue, _options, _context) => {
     return [];
   }
 
+  // Extract schema from content entry if present, otherwise use targetValue directly
+  // This handles both: content['application/problem+json'] entries (with .schema)
+  // and direct schema objects
+  const schema = targetValue.schema ?? targetValue;
+
+  if (schema === null || typeof schema !== "object") {
+    return [];
+  }
+
   try {
     /** @param {any} schemaNode */
     const resolveRef = (schemaNode) => schemaNode;
-    return check(targetValue, _options, _context, resolveRef);
+    return check(schema, _options, _context, resolveRef);
   } catch (/** @type {any} */ex) {
     return [
       {
