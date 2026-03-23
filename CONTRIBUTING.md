@@ -372,11 +372,11 @@ Resolves issue #123"
 - Place documentation in the appropriate section of the `/docs/` directory.
 - Preview changes locally using `npm start` before submitting.
 
-### Vacuum Rules Development
+### Linting Rules Development
 
 Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in the ruleset format that Vacuum consumes.
 
-- For rule syntax and guidance, see [Write Your First Rule][54].
+- For rule syntax and guidance, see [Custom Rulesets][54].
 
 - UKHSA specific rules are defined in the `ukhsa.oas.rules.yml` file.
 
@@ -544,8 +544,8 @@ Thank you for contributing to improving API design and development practices acr
 [51]: ./.github/workflows/fast-forward-pr-merge-init.md#why-is-this-workflow-needed
 [52]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
 [53]: https://datatracker.ietf.org/doc/html/rfc2119
-[54]: https://docs.stoplight.io/docs/spectral/01baf06bdd05a-create-a-ruleset#write-your-first-rule
-[55]: https://docs.stoplight.io/docs/spectral/9ffa04e052cc1-spectral-cli#error-results
+[54]: https://quobix.com/vacuum/rulesets/custom-rulesets/
+[55]: https://quobix.com/vacuum/rulesets/custom-rulesets/#severity
 [56]: docs/spectral-rules/index.md#how-to-use-the-rules
 [57]: http://localhost:8080/api-design-guidelines/
 [58]: https://github.com/ukhsa-collaboration/standards-org

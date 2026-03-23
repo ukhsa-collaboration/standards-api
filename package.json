@@ -1,7 +1,7 @@
 {
   "name": "@ukhsa-collaboration/spectral-rules",
   "version": "0.4.1",
-  "description": "UKHSA OpenAPI lint ruleset for Vacuum",
+  "description": "UKHSA OpenAPI lint ruleset",
   "main": "ukhsa.oas.rules.yml",
   "type": "module",
   "scripts": {
