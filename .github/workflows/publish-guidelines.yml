@@ -34,7 +34,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.UKHSA_STANDARDS_PUBLISH_DISPATCH_APP_CLIENT_ID }}
+          client-id: ${{ secrets.UKHSA_STANDARDS_PUBLISH_DISPATCH_APP_CLIENT_ID }}
           private-key: ${{ secrets.UKHSA_STANDARDS_PUBLISH_DISPATCH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: standards-org
