@@ -3,9 +3,12 @@ name: Dependabot Auto Merge
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-
     branches:
       - main
+
+env:
+  CODEOWNER_ORG: ukhsa-collaboration
+  CODEOWNER_TEAM: api-standards-team
 
 permissions:
   contents: write
@@ -42,7 +45,7 @@ jobs:
 
       - name: Fetch Dependabot Metadata
         id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -50,7 +53,8 @@ jobs:
         id: attempt-merge
         if: |
           steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' ||
-          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch'
+          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major'
         uses: actions/github-script@v8
         env:
           GITHUB_APP_USERNAME: '${{ steps.auto-merge-token.outputs.app-slug }}[bot]'
@@ -61,8 +65,10 @@ jobs:
             const { owner, repo } = context.repo;
             const pr = context.payload.pull_request;
             const prNumber = pr.number;
-            
-            core.info(`Processing PR #${prNumber}`);
+            const updateType = '${{ steps.dependabot-metadata.outputs.update-type }}';
+            const isMajor = updateType === 'version-update:semver-major';
+
+            core.info(`Processing PR #${prNumber} (${updateType})`);
             core.setOutput('result', 'failed') // Default to failed unless we succeed later
 
             // 2. Polling Loop for Checks
@@ -139,7 +145,8 @@ jobs:
               return;
             }
 
-            // 4. Auto Approve PR if not already approved
+            // 4. For major updates, verify an approved review from a codeowner team member.
+            //    For minor/patch, auto-approve if not already done.
             const { data: reviews } = await github.rest.pulls.listReviews({
               owner,
               repo,
@@ -149,37 +156,75 @@ jobs:
             const botUserName = process.env.GITHUB_APP_USERNAME || 'github-actions[bot]';
             const shortSha = pr.head.sha.slice(0, 7);
 
-            const alreadyApproved = reviews.some((review) =>
-              (review.user.login === botUserName) &&
-              review.commit_id === pr.head.sha &&
-              review.state === 'APPROVED'
-            );
+            if (isMajor) {
+              const approvedReviews = reviews.filter(r =>
+                r.state === 'APPROVED' && r.user.login !== botUserName
+              );
 
-            if (!alreadyApproved) {
-              await github.rest.issues.addLabels({
-                owner,
-                repo,
-                issue_number: prNumber,
-                labels: ['auto-approved']
-              });
+              if (approvedReviews.length === 0) {
+                core.setOutput('result', 'pending');
+                core.info(`Major update: no codeowner approval yet. Waiting for a member of @${process.env.CODEOWNER_ORG}/${process.env.CODEOWNER_TEAM} to approve.`);
+                return;
+              }
 
-              const heading = '## ✅ Dependabot PR Auto Approved';
-              const narration = `Approved automatically because update is **non-major** and all checks have passed.`;
-              const bodySections = [
-                heading,
-                narration,
-                `Results from commit ${shortSha}`
-              ];
+              // Verify at least one approver is a member of the codeowner team.
+              // Uses GITHUB_TOKEN which can read closed (visible) team membership.
+              let hasCodeownerApproval = false;
+              for (const review of approvedReviews) {
+                try {
+                  await github.rest.teams.getMembershipForUserInOrg({
+                    org: process.env.CODEOWNER_ORG,
+                    team_slug: process.env.CODEOWNER_TEAM,
+                    username: review.user.login,
+                  });
+                  core.info(`Codeowner approval found from ${review.user.login}`);
+                  hasCodeownerApproval = true;
+                  break;
+                } catch {
+                  core.info(`${review.user.login} is not a member of api-standards-team, skipping`);
+                }
+              }
 
-              const body = `${bodySections.join('\n\n')}`;
+              if (!hasCodeownerApproval) {
+                core.setOutput('result', 'pending');
+                core.info(`Major update: approvals exist but none from a member of @${process.env.CODEOWNER_ORG}/${process.env.CODEOWNER_TEAM}. Still waiting.`);
+                return;
+              }
 
-              await github.rest.pulls.createReview({
-                owner,
-                repo,
-                pull_number: prNumber,
-                event: 'APPROVE',
-                body: body
-              });
+              core.info('Codeowner approval confirmed. Proceeding with major update merge.');
+            } else {
+              const alreadyApproved = reviews.some((review) =>
+                (review.user.login === botUserName) &&
+                review.commit_id === pr.head.sha &&
+                review.state === 'APPROVED'
+              );
+
+              if (!alreadyApproved) {
+                await github.rest.issues.addLabels({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  labels: ['auto-approved']
+                });
+
+                const heading = '## ✅ Dependabot PR Auto Approved';
+                const narration = `Approved automatically because update is **non-major** and all checks have passed.`;
+                const bodySections = [
+                  heading,
+                  narration,
+                  `Results from commit ${shortSha}`
+                ];
+
+                const body = `${bodySections.join('\n\n')}`;
+
+                await github.rest.pulls.createReview({
+                  owner,
+                  repo,
+                  pull_number: prNumber,
+                  event: 'APPROVE',
+                  body: body
+                });
+              }
             }
 
             // 5. Check if PR is strictly up-to-date (Fast Forward possible)
@@ -277,7 +322,8 @@ jobs:
           always() &&
           steps.attempt-merge.outputs.result != 're-triggered' &&
           (steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' ||
-          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch')
+          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major')
         env:
           MERGE_RESULT: ${{ steps.attempt-merge.outputs.result }}
         with:
@@ -290,13 +336,18 @@ jobs:
             const jobSummaryUrl = `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`;
             const shortSha = pr.head.sha.slice(0, 7);
             const runResult = process.env.MERGE_RESULT?.toLowerCase() ?? '';
+            const isPending = runResult === 'pending';
             const isFailure = runResult === 'failed';
 
             const marker = '<!-- dependabot-merge-comment -->';
-            const heading = isFailure
+            const heading = isPending
+              ? '## ⏳ Dependabot Auto Merge Awaiting Approval'
+              : isFailure
               ? '## ⚠️ Dependabot Auto Merge Failed'
               : '## 🤖 Dependabot Auto Merge Succeeded';
-            const narration = `Results from commit ${shortSha}, view the full [workflow run↗️](${jobSummaryUrl}) for details.`;
+            const narration = isPending
+              ? `This is a **major** version update. All checks have passed, but a member of @${process.env.CODEOWNER_ORG}/${process.env.CODEOWNER_TEAM} must approve before it can be merged automatically.`
+              : `Results from commit ${shortSha}, view the full [workflow run↗️](${jobSummaryUrl}) for details.`;
             const bodySections = [
               heading,
               narration

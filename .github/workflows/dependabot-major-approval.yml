@@ -1,0 +1,85 @@
+name: Dependabot Major PR Approval
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+env:
+  CODEOWNER_ORG: ukhsa-collaboration
+  CODEOWNER_TEAM: api-standards-team
+
+concurrency:
+  group: dependabot-major-approval-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  actions: write
+  pull-requests: read
+
+jobs:
+  trigger-merge-on-approval:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.review.state == 'APPROVED'
+    steps:
+      - name: Fetch Dependabot Metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Re-trigger auto-merge on codeowner approval
+        if: steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major'
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const pr = context.payload.pull_request;
+            const reviewer = context.payload.review.user.login;
+
+            // Verify the approver is a member of the codeowner team
+            try {
+              await github.rest.teams.getMembershipForUserInOrg({
+                org: process.env.CODEOWNER_ORG,
+                team_slug: process.env.CODEOWNER_TEAM,
+                username: reviewer,
+              });
+              core.info(`Codeowner approval confirmed from ${reviewer}`);
+            } catch {
+              core.info(`${reviewer} is not a member of ${process.env.CODEOWNER_ORG}/${process.env.CODEOWNER_TEAM}, skipping re-trigger`);
+              return;
+            }
+
+            // Find the most recent dependabot-auto-merge run for this PR's head commit
+            const { data: runs } = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: 'dependabot-auto-merge.yml',
+              head_sha: pr.head.sha,
+              event: 'pull_request',
+              per_page: 1,
+            });
+
+            if (runs.total_count === 0) {
+              core.setFailed(`No dependabot-auto-merge workflow run found for commit ${pr.head.sha}`);
+              return;
+            }
+
+            const run = runs.workflow_runs[0];
+            core.info(`Found workflow run ${run.id} with status '${run.status}'`);
+
+            if (run.status !== 'completed') {
+              core.info('Workflow run is still in progress — it will pick up the approval naturally, no re-run needed.');
+              return;
+            }
+
+            await github.rest.actions.reRunWorkflow({
+              owner,
+              repo,
+              run_id: run.id,
+            });
+
+            core.info('Re-run triggered successfully. The auto-merge workflow will now pick up the codeowner approval.');
