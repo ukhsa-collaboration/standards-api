@@ -1,12 +1,8 @@
 import type { Config } from 'jest';
-import tsconfig from './tsconfig.json' with { type: "json" };
-import { pathsToModuleNameMapper } from 'ts-jest';
-
-const { compilerOptions } = tsconfig;
 
 const moduleNameMapper = {
   '^(\\.{1,2}/.*)\\.m?js$': '$1',
-  ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  '^src/(.*)$': '<rootDir>/src/$1',
 };
 
 const config: Config = {
@@ -23,7 +19,6 @@ const config: Config = {
     '^.+\\.m?(t|j)s$': '@swc/jest',
   },
   roots: ['<rootDir>'],
-  modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper,
   collectCoverage: true,
   coverageDirectory: 'coverage',

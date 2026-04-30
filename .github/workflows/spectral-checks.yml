@@ -105,7 +105,7 @@ jobs:
         run: npm ci
 
       - name: Run TypeScript tests with coverage
-        run: npm run test -- --coverage
+        run: npm run test
 
       - name: Upload Jest coverage report
         uses: actions/upload-artifact@v7
