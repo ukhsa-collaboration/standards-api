@@ -55,7 +55,7 @@ jobs:
           steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' ||
           steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
           steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           GITHUB_APP_USERNAME: '${{ steps.auto-merge-token.outputs.app-slug }}[bot]'
           GITHUB_APP_EMAIL: '${{ steps.auto-merge-token.outputs.user-id }}+${{ steps.auto-merge-token.outputs.app-slug }}[bot]@users.noreply.github.com'
@@ -303,7 +303,7 @@ jobs:
             }
 
       - name: Comment automerge results
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         if: |
           always() &&
           steps.attempt-merge.conclusion != 'skipped' &&
