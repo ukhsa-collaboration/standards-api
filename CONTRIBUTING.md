@@ -421,18 +421,32 @@ Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in
      ```
   1. Use the Vacuum test helper to run the rule against inline specs:
      ```ts
-     import { runVacuumReport } from '../__helpers__/vacuum.mjs';
+     import testRule from '../__helpers__/vacuum-helper.js';
 
-     const results = runVacuumReport(`
-       openapi: 3.0.0
-       info:
-         title: My API
-         version: 1.0.0
-       paths: {}
-     `);
-
-     const hits = results.parsed.filter((r) => r.code === '<rule-name>');
-     expect(hits.length).toBeGreaterThan(0);
+     testRule('<rule-name>', [
+       {
+         name: 'passes when condition is met',
+         document: `
+           openapi: 3.0.0
+           info:
+             title: My API
+             version: 1.0.0
+           paths: {}
+         `,
+         errors: [],
+       },
+       {
+         name: 'fails when condition is not met',
+         document: `
+           openapi: 3.0.0
+           info:
+             title: Bad API
+             version: 1.0.0
+           paths: {}
+         `,
+         errors: [{ code: '<rule-name>' }],
+       },
+     ]);
      ```
 
 - Run the rule tests:

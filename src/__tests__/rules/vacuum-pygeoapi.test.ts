@@ -3,7 +3,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-const RULESET_PATH = path.resolve(process.cwd(), '.spectral.yaml');
+const RULESET_PATH = path.resolve(process.cwd(), 'ukhsa.oas.rules.pygeoapi.yml');
 const FUNCTIONS_DIR = path.resolve(process.cwd(), 'dist-vacuum', 'functions');
 const SPEC_PATH = path.resolve(process.cwd(), 'openapi-pygeoapi-big.yml');
 

@@ -1,5 +1,9 @@
-import { type IFunctionResult } from '@stoplight/spectral-core';
 import validateProblemSchema from '../../functions/isProblemJsonSchema.js';
+
+interface FunctionResult {
+  message: string;
+  path?: (string | number)[];
+}
 
 describe('is-problem-json-schema', () => {
   it('passes with a fully valid Problem schema', () => {
@@ -14,14 +18,14 @@ describe('is-problem-json-schema', () => {
       }
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(schema);
+    const result: FunctionResult[] = validateProblemSchema(schema);
     expect(result).toEqual([]);
   });
 
   it('fails when top-level type is not object', () => {
     const schema = { type: 'array' };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(schema);
+    const result: FunctionResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes("type 'object'"))).toBe(true);
   });
 
@@ -37,7 +41,7 @@ describe('is-problem-json-schema', () => {
       }
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(schema);
+    const result: FunctionResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('type'))).toBe(true);
   });
 
@@ -53,7 +57,7 @@ describe('is-problem-json-schema', () => {
       }
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(schema);
+    const result: FunctionResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('status'))).toBe(true);
   });
 
@@ -69,7 +73,7 @@ describe('is-problem-json-schema', () => {
       }
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(schema);
+    const result: FunctionResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('detail'))).toBe(true);
     expect(result.some(r => r.message.includes('instance'))).toBe(true);
   });
@@ -80,7 +84,7 @@ describe('is-problem-json-schema', () => {
       properties: {}
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(schema);
+    const result: FunctionResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('type'))).toBe(true);
     expect(result.some(r => r.message.includes('title'))).toBe(true);
     expect(result.some(r => r.message.includes('status'))).toBe(true);
@@ -104,7 +108,7 @@ describe('is-problem-json-schema', () => {
       ]
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(schema);
+    const result: FunctionResult[] = validateProblemSchema(schema);
     expect(result.some(r => r.message.includes('type'))).toBe(true);
   });
 
@@ -116,7 +120,7 @@ describe('is-problem-json-schema', () => {
     });
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
-    const result: IFunctionResult[] = validateProblemSchema(proxy as any);
+    const result: FunctionResult[] = validateProblemSchema(proxy as any);
     expect(result[0].message).toContain('Unexpected crash');
   });
 });

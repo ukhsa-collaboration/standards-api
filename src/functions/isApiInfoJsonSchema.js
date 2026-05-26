@@ -89,19 +89,24 @@ export const assertApiInfoSchema = (schema) => {
   return results;
 };
 
-/** @type {(schema: any, _options: any, _context: any, resolveRef: (schema: any) => any) => any} */
-const check = (schema, _options, _context, resolveRef) => {
-  const resolvedSchema = resolveRef(schema);
+/**
+ * Checks the schema for ApiInfo compliance, including handling combined schemas.
+ * @param {any} schema - The schema object.
+ * @param {any} _options
+ * @param {any} _context
+ * @returns {Array<{ message: string }>}
+ */
+const check = (schema, _options, _context) => {
   const combinedSchemas = [
-    ...(resolvedSchema?.anyOf ?? []),
-    ...(resolvedSchema?.oneOf ?? []),
-    ...(resolvedSchema?.allOf ?? []),
-  ].map(resolveRef);
+    ...(schema?.anyOf ?? []),
+    ...(schema?.oneOf ?? []),
+    ...(schema?.allOf ?? []),
+  ];
 
   if (combinedSchemas.length > 0) {
     const aggregated = [];
     for (const subSchema of combinedSchemas) {
-      const res = check(subSchema, _options, _context, resolveRef);
+      const res = check(subSchema, _options, _context);
       if (Array.isArray(res)) {
         aggregated.push(...res);
       }
@@ -109,7 +114,7 @@ const check = (schema, _options, _context, resolveRef) => {
     return aggregated;
   }
 
-  return assertApiInfoSchema(resolvedSchema);
+  return assertApiInfoSchema(schema);
 };
 
 /**
@@ -120,16 +125,14 @@ const check = (schema, _options, _context, resolveRef) => {
  * @returns {Array<{ message: string; path?: (string | number)[] }>}
  */
 export const runRule = (targetValue, _options, _context) => {
-  const schema = targetValue?.schema ?? targetValue;
-
-  if (schema === null || typeof schema !== "object") {
-    return [];
-  }
-
   try {
-    /** @param {any} schemaNode */
-    const resolveRef = (schemaNode) => schemaNode;
-    return check(schema, _options, _context, resolveRef);
+    const schema = targetValue?.schema ?? targetValue;
+
+    if (schema === null || typeof schema !== "object") {
+      return [];
+    }
+
+    return check(schema, _options, _context);
   } catch (/** @type {any} */ex) {
     return [
       {

@@ -62,31 +62,29 @@ export const assertProblemSchema = (schema, _options, _context) => {
 
 /**
  * Checks the schema for problem compliance, including handling combined schemas.
- * @param {any} schema
+ * @param {any} schema - The schema object.
  * @param {any} _options
  * @param {any} _context
- * @param {(schemaNode: any) => any} resolveRef
  * @returns {Array<{ message: string }>}
  */
-const check = (schema, _options, _context, resolveRef) => {
-  const resolvedSchema = resolveRef(schema);
+const check = (schema, _options, _context) => {
   const combinedSchemas = [
-    ...(resolvedSchema?.anyOf ?? []),
-    ...(resolvedSchema?.oneOf ?? []),
-    ...(resolvedSchema?.allOf ?? []),
-  ].map(resolveRef);
+    ...(schema?.anyOf ?? []),
+    ...(schema?.oneOf ?? []),
+    ...(schema?.allOf ?? []),
+  ];
 
   if (combinedSchemas.length > 0) {
     const aggregated = [];
     for (const subSchema of combinedSchemas) {
-      const res = check(subSchema, _options, _context, resolveRef);
+      const res = check(subSchema, _options, _context);
       if (Array.isArray(res)) {
         aggregated.push(...res);
       }
     }
     return aggregated;
   }
-  return assertProblemSchema(resolvedSchema, _options, _context);
+  return assertProblemSchema(schema, _options, _context);
 };
 
 /**
@@ -97,23 +95,21 @@ const check = (schema, _options, _context, resolveRef) => {
  * @returns {Array<{ message: string }>}
  */
 export const runRule = (targetValue, _options, _context) => {
-  if (targetValue === null || typeof targetValue !== "object") {
-    return [];
-  }
-
-  // Extract schema from content entry if present, otherwise use targetValue directly
-  // This handles both: content['application/problem+json'] entries (with .schema)
-  // and direct schema objects
-  const schema = targetValue.schema ?? targetValue;
-
-  if (schema === null || typeof schema !== "object") {
-    return [];
-  }
-
   try {
-    /** @param {any} schemaNode */
-    const resolveRef = (schemaNode) => schemaNode;
-    return check(schema, _options, _context, resolveRef);
+    if (targetValue === null || typeof targetValue !== "object") {
+      return [];
+    }
+
+    // Extract schema from content entry if present, otherwise use targetValue directly
+    // This handles both: content['application/problem+json'] entries (with .schema)
+    // and direct schema objects
+    const schema = targetValue.schema ?? targetValue;
+
+    if (schema === null || typeof schema !== "object") {
+      return [];
+    }
+
+    return check(schema, _options, _context);
   } catch (/** @type {any} */ex) {
     return [
       {

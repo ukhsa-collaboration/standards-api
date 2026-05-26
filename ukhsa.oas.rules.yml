@@ -346,18 +346,16 @@ rules:
     given: $.info
     severity: info
     then:
-      function: schema
-      functionOptions:
-        schema:
-          type: object
-          required:
-            - x-api-type
-          properties:
-            x-api-type:
-              type: string
-              enum:
-                - standard
-                - pygeoapi
+      - function: defined
+        field: x-api-type
+      - function: schema
+        field: x-api-type
+        functionOptions:
+          schema:
+            type: string
+            enum:
+              - standard
+              - pygeoapi
     recommended: true
     description: 'APIs MAY include info.x-api-type to indicate API category. When present, it MUST be one of: standard, pygeoapi. When omitted, standard is assumed.'
     message: "Missing or wrong 'info.x-api-type'. Assuming 'standard'. Valid values: standard, pygeoapi."
