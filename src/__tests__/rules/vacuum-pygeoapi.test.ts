@@ -16,7 +16,7 @@ function runVacuumSpectralReport(specPath: string) {
     'npx',
     [
       'vacuum',
-      'spectral-report',
+        'spectral-report',
       specPath,
       reportPath,
       '-r',

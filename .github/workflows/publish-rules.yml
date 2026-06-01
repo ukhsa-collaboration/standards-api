@@ -1,10 +1,10 @@
-name: Publish Spectral Rules
+name: Publish Rules
 on:
   workflow_dispatch:
 
 jobs:
-  publish-spectral-rules:
-    name: Publish Spectral Rules
+  publish-rules:
+    name: Publish Rules
     runs-on: ubuntu-latest
 
     permissions:

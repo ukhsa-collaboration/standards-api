@@ -3,6 +3,7 @@ info:
   title: Test Results Api
   version: '1.0.0'
   description: This API is for obtaining or submitting test results.
+  x-api-type: standard
   x-audience: public-external
   x-contains-sensitive-data: false
   x-value-chain: detect

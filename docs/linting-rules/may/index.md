@@ -1,7 +1,7 @@
 ---
 includeInBreadcrumbs: true
 eleventyNavigation:
-  parent: spectral-rules
+  parent: linting-rules
   key: may
 order: 4
 ---

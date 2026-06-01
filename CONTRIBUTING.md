@@ -27,7 +27,7 @@ Thank you for your interest in contributing to the UKHSA API Guidelines! This re
     - [Pull Request Process][21]
   - [Development Guidelines][22]
     - [Documentation Standards][23]
-    - [Vacuum Rules Development][24]
+    - [Linting Rules Development][24]
     - [Testing Guidelines][25]
   - [Viewing the Guidelines Locally][26]
   - [Documentation Deployment][27]
@@ -109,7 +109,7 @@ This generates `.js` files in `./dist` and produces Vacuum wrapper functions in 
 
 - `/docs/` - Documentation content written in Markdown
 - `/docs/api-design-guidelines/` - API design guidelines content
-- `/docs/spectral-rules/` - Documentation for API linting rules
+- `/docs/linting-rules/` - Documentation for API linting rules
 - `/example/` - Example OpenAPI specifications
 - `/src/functions/` - JavaScript functions used by the linting rules
 - `ukhsa.oas.rules.yml` - UKHSA-specific linting rules
@@ -391,9 +391,9 @@ Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in
   | **MAY** | `info` or `hint` |
   | **MAY NOT** | `info` or `hint` |
 
-- Each rule should have a corresponding documentation file in the relevant folder `/docs/spectral-rules/must/`, `/docs/spectral-rules/should/` or `/docs/spectral-rules/may/`.
+- Each rule should have a corresponding documentation file in the relevant folder `/docs/linting-rules/must/`, `/docs/linting-rules/should/` or `/docs/linting-rules/may/`.
 
-- Every rule definition **MUST** set `documentationUrl` so Vacuum outputs can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/<rule-name>/`).
+- Every rule definition **MUST** set `documentationUrl` so Vacuum outputs can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/must/<rule-name>/`).
 
 - Include references to the relevant sections of the API guidelines.
 
@@ -528,7 +528,7 @@ Thank you for contributing to improving API design and development practices acr
 [21]: #pull-request-process
 [22]: #development-guidelines
 [23]: #documentation-standards
-[24]: #vacuum-rules-development
+[24]: #linting-rules-development
 [25]: #testing-guidelines
 [26]: #viewing-the-guidelines-locally
 [27]: #documentation-deployment
@@ -560,7 +560,7 @@ Thank you for contributing to improving API design and development practices acr
 [53]: https://datatracker.ietf.org/doc/html/rfc2119
 [54]: https://quobix.com/vacuum/rulesets/custom-rulesets/
 [55]: https://quobix.com/vacuum/rulesets/custom-rulesets/#severity
-[56]: docs/spectral-rules/index.md#how-to-use-the-rules
+[56]: docs/linting-rules/index.md#how-to-use-the-rules
 [57]: http://localhost:8080/api-design-guidelines/
 [58]: https://github.com/ukhsa-collaboration/standards-org
 [59]: https://semver.org/

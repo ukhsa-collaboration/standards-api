@@ -1,5 +1,19 @@
 import validateCommonErrorResponses from '../../functions/hasRequiredProblemDetailsErrorResponses.js';
-import type { RulesetFunctionContext } from '@stoplight/spectral-core';
+
+type RulesetFunctionContext = {
+  document?: {
+    source?: string;
+    data?: any;
+    diagnostics?: any[];
+    getRangeForJsonPath?: (...args: any[]) => any;
+    trapAccess?: (...args: any[]) => any;
+    [k: string]: any;
+  };
+  path?: Array<string | number>;
+  rule?: any;
+  documentInventory?: any;
+  [k: string]: any;
+};
 
 const baseContext: RulesetFunctionContext = {
   document: {

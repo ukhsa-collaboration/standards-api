@@ -1,5 +1,5 @@
 {
-  "name": "@ukhsa-collaboration/spectral-rules",
+  "name": "@ukhsa-collaboration/openapi-linting-rules",
   "version": "0.4.1",
   "description": "UKHSA OpenAPI lint ruleset",
   "main": "ukhsa.oas.rules.yml",
@@ -29,7 +29,7 @@
   "keywords": [
     "UKHSA",
     "ruleset",
-    "vacuum"
+    "linting"
   ],
   "dependencies": {
     "lodash": "^4.17.21"

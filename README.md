@@ -49,7 +49,7 @@ of the [Open Government 3.0][6] licence.
 TODO
 
 [1]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
-[2]: docs/spectral-rules/index.md#how-to-use-the-rules
+[2]: docs/linting-rules/index.md#how-to-use-the-rules
 [3]: CONTRIBUTING.md
 [4]: LICENCE
 [5]: https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/
