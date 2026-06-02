@@ -26,7 +26,7 @@ describe('is-problem-json-schema', () => {
     const schema = { type: 'array' };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(schema);
-    expect(result.some(r => r.message.includes("type 'object'"))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("Problem json must have type 'object'");
   });
 
   it('fails when "type" is missing format', () => {
@@ -42,7 +42,7 @@ describe('is-problem-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(schema);
-    expect(result.some(r => r.message.includes('type'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("Problem json must have property 'type' with type 'string' and format 'uri-reference'");
   });
 
   it('fails when status is not integer or wrong format', () => {
@@ -58,7 +58,7 @@ describe('is-problem-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(schema);
-    expect(result.some(r => r.message.includes('status'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("Problem json must have property 'status' with type 'integer' and format 'in32'");
   });
 
   it('fails when detail or instance are not strings', () => {
@@ -74,8 +74,9 @@ describe('is-problem-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(schema);
-    expect(result.some(r => r.message.includes('detail'))).toBe(true);
-    expect(result.some(r => r.message.includes('instance'))).toBe(true);
+    const messages = result.map((r) => r.message);
+    expect(messages).toContain("Problem json must have property 'detail' with type 'string'");
+    expect(messages).toContain("Problem json must have property 'instance' with type 'string'");
   });
 
   it('fails when all required fields are completely missing', () => {
@@ -85,11 +86,12 @@ describe('is-problem-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(schema);
-    expect(result.some(r => r.message.includes('type'))).toBe(true);
-    expect(result.some(r => r.message.includes('title'))).toBe(true);
-    expect(result.some(r => r.message.includes('status'))).toBe(true);
-    expect(result.some(r => r.message.includes('detail'))).toBe(true);
-    expect(result.some(r => r.message.includes('instance'))).toBe(true);
+    const messages = result.map((r) => r.message);
+    expect(messages).toContain("Problem json must have property 'type' with type 'string' and format 'uri-reference'");
+    expect(messages).toContain("Problem json must have property 'title' with type 'string'");
+    expect(messages).toContain("Problem json must have property 'status' with type 'integer' and format 'in32'");
+    expect(messages).toContain("Problem json must have property 'detail' with type 'string'");
+    expect(messages).toContain("Problem json must have property 'instance' with type 'string'");
   });
 
   it('handles combined schemas (anyOf)', () => {
@@ -109,7 +111,7 @@ describe('is-problem-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(schema);
-    expect(result.some(r => r.message.includes('type'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("Problem json must have property 'type' with type 'string' and format 'uri-reference'");
   });
 
   it('gracefully handles unexpected errors', () => {
@@ -121,6 +123,7 @@ describe('is-problem-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(proxy as any);
-    expect(result[0].message).toContain('Unexpected crash');
+    expect(result[0]).toBeDefined();
+    expect(result[0].message).toBe('Unexpected crash');
   });
 });

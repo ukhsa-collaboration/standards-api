@@ -54,7 +54,11 @@ describe('has-required-problem-details-error-responses', () => {
       security: [{}],
     };
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
-    expect(result.some((r) => r.message.includes('500'))).toBe(true);
+    expect(result).toEqual([
+      {
+        message: 'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 500 (missing example).',
+      },
+    ]);
   });
 
   it('fails when 401 and 403 are missing and security is enabled', async () => {
@@ -67,8 +71,11 @@ describe('has-required-problem-details-error-responses', () => {
       security: [{}],
     };
     const result = await validateCommonErrorResponses(targetVal, { mode: 'explicit-security' }, baseContext) ?? [];
-    expect(result.some((r) => r.message.includes('401'))).toBe(true);
-    expect(result.some((r) => r.message.includes('403'))).toBe(true);
+    expect(result).toEqual([
+      {
+        message: 'Each operation MUST define Problem Details for: 401, 403. Issues: 401 (missing response); 403 (missing response).',
+      },
+    ]);
   });
 
   it('passes when security is disabled and 401/403 are missing', async () => {
@@ -93,7 +100,11 @@ describe('has-required-problem-details-error-responses', () => {
       security: [{}],
     };
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
-    expect(result.some((r) => r.message.includes('400'))).toBe(true);
+    expect(result).toEqual([
+      {
+        message: 'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing response).',
+      },
+    ]);
   });
 
   it('fails when media type is present but missing both application/problem+json and application/problem+xml', async () => {
@@ -106,7 +117,12 @@ describe('has-required-problem-details-error-responses', () => {
       security: [{}],
     };
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
-    expect(result.some((r) => r.message.includes('missing application/problem'))).toBe(true);
+    expect(result).toEqual([
+      {
+        message:
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json or application/problem+xml); 404 (missing application/problem+json or application/problem+xml); 500 (missing application/problem+json or application/problem+xml).',
+      },
+    ]);
   });
 
   it('fails when response has correct media type but no examples', async () => {
@@ -119,8 +135,12 @@ describe('has-required-problem-details-error-responses', () => {
       security: [{}],
     };
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
-    expect(result.length).toBeGreaterThan(0);
-    expect(result[0].message).toContain('missing example');
+    expect(result).toEqual([
+      {
+        message:
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing example); 404 (missing example); 500 (missing example).',
+      },
+    ]);
   });
 
   it('skips validation when mode is not specified', async () => {
@@ -166,11 +186,12 @@ describe('has-required-problem-details-error-responses', () => {
       security: [{}],
     };
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
-    const messages = result.map((r) => r.message);
-
-    expect(messages.some(msg => msg.includes('400'))).toBe(true);
-    expect(messages.some(msg => msg.includes('404'))).toBe(true);
-    expect(messages.some(msg => msg.includes('500'))).toBe(true);
+    expect(result).toEqual([
+      {
+        message:
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json or application/problem+xml); 404 (missing application/problem+json or application/problem+xml); 500 (missing application/problem+json or application/problem+xml).',
+      },
+    ]);
   });
 
   it('fails when a response object is completely missing for a secured status', async () => {
@@ -183,7 +204,11 @@ describe('has-required-problem-details-error-responses', () => {
       security: [{}],
     };
     const result = await validateCommonErrorResponses(targetVal, { mode: 'explicit-security' }, baseContext) ?? [];
-    expect(result.some((r) => r.message.includes('401'))).toBe(true);
+    expect(result).toEqual([
+      {
+        message: 'Each operation MUST define Problem Details for: 401, 403. Issues: 401 (missing response); 403 (missing response).',
+      },
+    ]);
   });
 
   it('fails gracefully when responses object is missing entirely', async () => {
@@ -194,10 +219,13 @@ describe('has-required-problem-details-error-responses', () => {
 
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
     expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-    expect(result[0].message.toLowerCase()).toContain('400');
-    expect(result[0].message.toLowerCase()).toContain('missing response');
-    
+    expect(result).toEqual([
+      {
+        message:
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing response); 404 (missing response); 500 (missing response).',
+      },
+    ]);
+
   });
 
   it('fails gracefully when response structure is not an object', async () => {
@@ -208,10 +236,13 @@ describe('has-required-problem-details-error-responses', () => {
 
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
     expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-    expect(result[0].message.toLowerCase()).toContain('400');
-    expect(result[0].message.toLowerCase()).toContain('missing response');
-    
+    expect(result).toEqual([
+      {
+        message:
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing response); 404 (missing response); 500 (missing response).',
+      },
+    ]);
+
   });
 
   it('fails gracefully when content of a response is not an object', async () => {
@@ -225,12 +256,15 @@ describe('has-required-problem-details-error-responses', () => {
     };
 
     const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
-    expect(result.length).toBeGreaterThan(0);
-    expect(result[0].message.toLowerCase()).toContain('400');
-    expect(result[0].message.toLowerCase()).toContain('missing application/problem');
-    
+    expect(result).toEqual([
+      {
+        message:
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json or application/problem+xml); 404 (missing response); 500 (missing response).',
+      },
+    ]);
+
   });
 
-  
+
 
 });

@@ -1,6 +1,6 @@
 /**
  * Unit tests for isApiInfoJsonSchema function.
- * 
+ *
  * Note: These tests validate the function's schema validation logic directly.
  * When used with Vacuum, set `resolved: true` in the rule definition
  * so that $ref references are resolved before the function is called.
@@ -41,7 +41,7 @@ describe('is-api-info-json-schema', () => {
     const schema = { type: 'object', properties: { name: {} } };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes('name'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have property 'name' with type 'string' and format 'uri-reference'");
   });
 
   it('fails when version is missing semver pattern', () => {
@@ -62,7 +62,7 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes('semver'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have property 'version' with type 'string' and pattern for semver.");
   });
 
   it('fails when status enum is invalid or missing', () => {
@@ -79,7 +79,7 @@ describe('is-api-info-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes('status'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have property 'status' with x-extensible-enum values: ALPHA, BETA, LIVE, DEPRECATED.");
   });
 
   it('fails when releaseDate is missing format', () => {
@@ -100,7 +100,7 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes('releaseDate'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have property 'releaseDate' with type 'string' and format 'date'");
   });
 
   it('fails when documentation and releaseNotes formats are missing', () => {
@@ -120,8 +120,9 @@ describe('is-api-info-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes('documentation'))).toBe(true);
-    expect(result.some((r) => r.message.includes('releaseNotes'))).toBe(true);
+    const messages = result.map((r) => r.message);
+    expect(messages).toContain("ApiInfo json must have property 'documentation' with type 'string' and format 'uri'");
+    expect(messages).toContain("ApiInfo json must have property 'releaseNotes' with type 'string' and format 'uri'");
   });
 
   it('returns empty array when schema is null', () => {
@@ -148,10 +149,10 @@ describe('is-api-info-json-schema', () => {
         releaseNotes: { type: 'string', format: 'uri' }
       }
     };
-    
+
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes('semver'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have property 'version' with type 'string' and pattern for semver.");
   });
 
   it('fails when x-extensible-enum is missing entirely', () => {
@@ -172,7 +173,7 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes('status'))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have property 'status' with x-extensible-enum values: ALPHA, BETA, LIVE, DEPRECATED.");
   });
 
   it('fails if schema type is not object', () => {
@@ -182,7 +183,7 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result.some((r) => r.message.includes("type 'object'"))).toBe(true);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have type 'object'");
   });
 
   it('validates oneOf schemas', () => {
@@ -298,6 +299,7 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: intentionally testing error handling
     const result: FunctionResult[] = validateApiInfo(proxy);
-    expect(result[0].message).toContain('Unexpected crash');
+    expect(result[0]).toBeDefined();
+    expect(result[0].message).toBe('Unexpected crash');
   });
 });
