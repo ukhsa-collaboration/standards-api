@@ -9,9 +9,9 @@ eleventyNavigation:
 
 ## Overview
 
-A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines][1], ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA. This ruleset is designed to be executed with [Vacuum][2], which avoids the `$ref` performance issues we've seen with other linters on large specs.
+A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines][1], ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA.
 
-As well as the rules described herein, the UKHSA ruleset includes recommended OpenAPI rules and a documentation ruleset. These are common sense rules that ensure an OpenAPI definition adheres to the [OpenAPI specification][3], as well as encourage high quality, rich documentation which is especially important for providing the best possible APIM Developer Portal experience.
+As well as the rules described herein, the UKHSA ruleset includes recommended OpenAPI rules and a documentation ruleset. These are common sense rules that ensure an OpenAPI definition adheres to the [OpenAPI specification][2], as well as encourage high quality, rich documentation which is especially important for providing the best possible APIM Developer Portal experience.
 
 Where rules been adopted from from existing open source API rulesets a link is supplied on the relevant rule page.
 
@@ -19,7 +19,7 @@ Where rules been adopted from from existing open source API rulesets a link is s
 
 ### Install Vacuum
 
-[Vacuum][2] is a fast OpenAPI linter for rulesets like this one. Install Vacuum globally or as a dev dependency.
+[Vacuum][3] is a fast OpenAPI linter for rulesets like this one. Install Vacuum globally or as a dev dependency.
 
 ```sh
 npm install @quobix/vacuum --save-dev
@@ -162,8 +162,8 @@ The global pattern does not match:
 Read the [official Vacuum documentation][4] for more development workflows.
 
 [1]: ../api-guidelines/index.md
-[2]: https://quobix.com/vacuum/
-[3]: https://swagger.io/specification/
+[2]: https://swagger.io/specification/
+[3]: https://quobix.com/vacuum/
 [4]: https://quobix.com/vacuum/installing/
 [5]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package
 [6]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token
