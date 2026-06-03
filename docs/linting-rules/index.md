@@ -11,7 +11,7 @@ eleventyNavigation:
 
 A linting ruleset was created to support API Developers/Providers in achieving the standards described in the [UKHSA API Guidelines][1], ensuring consistency, reliability, and security across all APIs developed within or on behalf of UKHSA.
 
-As well as the rules described herein, the UKHSA ruleset includes recommended OpenAPI rules and a documentation ruleset. These are common sense rules that ensure an OpenAPI definition adheres to the [OpenAPI specification][2], as well as encourage high quality, rich documentation which is especially important for providing the best possible APIM Developer Portal experience.
+As well as the rules described herein, the UKHSA ruleset extends Vacuum's built-in OpenAPI recommended baseline (`vacuum:oas`). These common sense rules help ensure an OpenAPI definition adheres to the [OpenAPI specification][2], and include documentation-focused checks that encourage high quality, rich API descriptions for the best possible APIM Developer Portal experience.
 
 Where rules been adopted from from existing open source API rulesets a link is supplied on the relevant rule page.
 

@@ -1,5 +1,6 @@
 extends:
   - ./zalando.oas.rules.yml
+  - vacuum:oas
 
 documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/
 
