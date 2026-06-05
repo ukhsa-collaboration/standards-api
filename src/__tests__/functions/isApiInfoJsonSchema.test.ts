@@ -125,10 +125,10 @@ describe('is-api-info-json-schema', () => {
     expect(messages).toContain("ApiInfo json must have property 'releaseNotes' with type 'string' and format 'uri'");
   });
 
-  it('returns empty array when schema is null', () => {
+  it('fails when schema is null', () => {
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(null);
-    expect(result).toEqual([]);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have type 'object'");
   });
 
   it('fails when pattern is defined but invalid', () => {
@@ -186,7 +186,7 @@ describe('is-api-info-json-schema', () => {
     expect(result.map((r) => r.message)).toContain("ApiInfo json must have type 'object'");
   });
 
-  it('validates oneOf schemas', () => {
+  it('fails when top-level schema relies only on oneOf branches', () => {
     const schema = {
       oneOf: [
         {
@@ -212,10 +212,10 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result).toEqual([]);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have type 'object'");
   });
 
-  it('validates anyOf schemas', () => {
+  it('fails when top-level schema relies only on anyOf branches', () => {
     const schema = {
       anyOf: [
         {
@@ -241,10 +241,10 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result).toEqual([]);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have type 'object'");
   });
 
-  it('validates allOf schemas', () => {
+  it('fails when top-level schema relies only on allOf branches', () => {
     const schema = {
       allOf: [
         {
@@ -270,7 +270,7 @@ describe('is-api-info-json-schema', () => {
 
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateApiInfo(schema);
-    expect(result).toEqual([]);
+    expect(result.map((r) => r.message)).toContain("ApiInfo json must have type 'object'");
   });
 
   it('handles schemas with invalid oneOf branches', () => {

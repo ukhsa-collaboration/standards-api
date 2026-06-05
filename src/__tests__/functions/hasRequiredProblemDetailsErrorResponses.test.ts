@@ -107,7 +107,7 @@ describe('has-required-problem-details-error-responses', () => {
     ]);
   });
 
-  it('fails when media type is present but missing both application/problem+json and application/problem+xml', async () => {
+  it('fails when media type is present but missing application/problem+json', async () => {
     const targetVal = {
       responses: {
         '400': { content: { 'application/json': { examples: { example1: {} } } } },
@@ -120,7 +120,7 @@ describe('has-required-problem-details-error-responses', () => {
     expect(result).toEqual([
       {
         message:
-          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json or application/problem+xml); 404 (missing application/problem+json or application/problem+xml); 500 (missing application/problem+json or application/problem+xml).',
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json); 404 (missing application/problem+json); 500 (missing application/problem+json).',
       },
     ]);
   });
@@ -130,7 +130,7 @@ describe('has-required-problem-details-error-responses', () => {
       responses: {
         '400': { content: { 'application/problem+json': { examples: {} } } },
         '404': { content: { 'application/problem+json': {} } },
-        '500': { content: { 'application/problem+xml': { examples: {} } } },
+        '500': { content: { 'application/problem+json': { examples: {} } } },
       },
       security: [{}],
     };
@@ -139,6 +139,24 @@ describe('has-required-problem-details-error-responses', () => {
       {
         message:
           'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing example); 404 (missing example); 500 (missing example).',
+      },
+    ]);
+  });
+
+  it('fails when only application/problem+xml is present', async () => {
+    const targetVal = {
+      responses: {
+        '400': { content: { 'application/problem+xml': { examples: { example1: {} } } } },
+        '404': { content: { 'application/problem+xml': { examples: { example1: {} } } } },
+        '500': { content: { 'application/problem+xml': { examples: { example1: {} } } } },
+      },
+      security: [{}],
+    };
+    const result = await validateCommonErrorResponses(targetVal, { mode: 'critical' }, baseContext) ?? [];
+    expect(result).toEqual([
+      {
+        message:
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json); 404 (missing application/problem+json); 500 (missing application/problem+json).',
       },
     ]);
   });
@@ -189,7 +207,7 @@ describe('has-required-problem-details-error-responses', () => {
     expect(result).toEqual([
       {
         message:
-          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json or application/problem+xml); 404 (missing application/problem+json or application/problem+xml); 500 (missing application/problem+json or application/problem+xml).',
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json); 404 (missing application/problem+json); 500 (missing application/problem+json).',
       },
     ]);
   });
@@ -259,7 +277,7 @@ describe('has-required-problem-details-error-responses', () => {
     expect(result).toEqual([
       {
         message:
-          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json or application/problem+xml); 404 (missing response); 500 (missing response).',
+          'Each operation MUST define Problem Details for: 400, 404, 500. Issues: 400 (missing application/problem+json); 404 (missing response); 500 (missing response).',
       },
     ]);
 

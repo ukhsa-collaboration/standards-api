@@ -22,69 +22,42 @@ properties:
 /**
  * Asserts that the given schema is a valid Problem JSON schema.
  * @param {any} schema
- * @param {any} _options
- * @param {any} _context
+ * @param {(string | number)[]} [basePath]
+ * @returns {Array<{ message: string; path?: (string | number)[] }>}
  */
-export const assertProblemSchema = (schema, _options, _context) => {
+export const assertProblemSchema = (schema, basePath = []) => {
   const results = [];
 
   if (schema.type !== 'object') {
-    results.push({ message: "Problem json must have type 'object'" });
+    results.push({ message: "Problem json must have type 'object'", path: [...basePath, 'type'] });
   }
 
   const type = (schema.properties || {}).type || {};
   if (type.type !== 'string' || type.format !== 'uri-reference') {
-    results.push({ message: "Problem json must have property 'type' with type 'string' and format 'uri-reference'" });
+    results.push({ message: "Problem json must have property 'type' with type 'string' and format 'uri-reference'", path: [...basePath, 'properties', 'type'] });
   }
 
   const title = (schema.properties || {}).title || {};
   if (title.type !== 'string') {
-    results.push({ message: "Problem json must have property 'title' with type 'string'" });
+    results.push({ message: "Problem json must have property 'title' with type 'string'", path: [...basePath, 'properties', 'title'] });
   }
 
   const status = (schema.properties || {}).status || {};
   if (status.type !== 'integer' || status.format !== 'int32') {
-    results.push({ message: "Problem json must have property 'status' with type 'integer' and format 'in32'" });
+    results.push({ message: "Problem json must have property 'status' with type 'integer' and format 'int32'", path: [...basePath, 'properties', 'status'] });
   }
 
   const detail = (schema.properties || {}).detail || {};
   if (detail.type !== 'string') {
-    results.push({ message: "Problem json must have property 'detail' with type 'string'" });
+    results.push({ message: "Problem json must have property 'detail' with type 'string'", path: [...basePath, 'properties', 'detail'] });
   }
 
   const instance = (schema.properties || {}).instance || {};
   if (instance.type !== 'string') {
-    results.push({ message: "Problem json must have property 'instance' with type 'string'" });
+    results.push({ message: "Problem json must have property 'instance' with type 'string'", path: [...basePath, 'properties', 'instance'] });
   }
 
   return results;
-};
-
-/**
- * Checks the schema for problem compliance, including handling combined schemas.
- * @param {any} schema - The schema object.
- * @param {any} _options
- * @param {any} _context
- * @returns {Array<{ message: string }>}
- */
-const check = (schema, _options, _context) => {
-  const combinedSchemas = [
-    ...(schema?.anyOf ?? []),
-    ...(schema?.oneOf ?? []),
-    ...(schema?.allOf ?? []),
-  ];
-
-  if (combinedSchemas.length > 0) {
-    const aggregated = [];
-    for (const subSchema of combinedSchemas) {
-      const res = check(subSchema, _options, _context);
-      if (Array.isArray(res)) {
-        aggregated.push(...res);
-      }
-    }
-    return aggregated;
-  }
-  return assertProblemSchema(schema, _options, _context);
 };
 
 /**
@@ -92,24 +65,25 @@ const check = (schema, _options, _context) => {
  * @param {any} targetValue - The value to validate (content entry with schema property, or raw schema).
  * @param {null} _options - Additional options (not used).
  * @param {any} _context - The context.
- * @returns {Array<{ message: string }>}
+ * @returns {Array<{ message: string; path?: (string | number)[] }>}
  */
 export const runRule = (targetValue, _options, _context) => {
   try {
-    if (targetValue === null || typeof targetValue !== "object") {
-      return [];
-    }
-
     // Extract schema from content entry if present, otherwise use targetValue directly
     // This handles both: content['application/problem+json'] entries (with .schema)
     // and direct schema objects
-    const schema = targetValue.schema ?? targetValue;
+    const schema = targetValue?.schema ?? targetValue;
 
     if (schema === null || typeof schema !== "object") {
-      return [];
+      return [
+        {
+          message: "Problem json must have type 'object'",
+          path: Array.isArray(_context?.path) ? _context.path : [],
+        },
+      ];
     }
 
-    return check(schema, _options, _context);
+    return assertProblemSchema(schema, Array.isArray(_context?.path) ? _context.path : []);
   } catch (/** @type {any} */ex) {
     return [
       {

@@ -58,7 +58,7 @@ describe('is-problem-json-schema', () => {
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = validateProblemSchema(schema);
-    expect(result.map((r) => r.message)).toContain("Problem json must have property 'status' with type 'integer' and format 'in32'");
+    expect(result.map((r) => r.message)).toContain("Problem json must have property 'status' with type 'integer' and format 'int32'");
   });
 
   it('fails when detail or instance are not strings', () => {
@@ -89,7 +89,7 @@ describe('is-problem-json-schema', () => {
     const messages = result.map((r) => r.message);
     expect(messages).toContain("Problem json must have property 'type' with type 'string' and format 'uri-reference'");
     expect(messages).toContain("Problem json must have property 'title' with type 'string'");
-    expect(messages).toContain("Problem json must have property 'status' with type 'integer' and format 'in32'");
+    expect(messages).toContain("Problem json must have property 'status' with type 'integer' and format 'int32'");
     expect(messages).toContain("Problem json must have property 'detail' with type 'string'");
     expect(messages).toContain("Problem json must have property 'instance' with type 'string'");
   });

@@ -7,7 +7,7 @@ Every operation MUST include:
   - 400 Bad Request
   - 404 Not Found
   - 500 Internal Server Error
-    → MUST use `application/problem+json` or `application/problem+xml`
+    → MUST use `application/problem+json`
     → MUST include examples
 
 If the API or operation is secured, then also required:
@@ -84,7 +84,7 @@ function isGlobalSecurityActive(documentData: unknown): boolean {
 }
 
 /**
- * Checks if a response defines application/problem+json or application/problem+xml and includes at least one example.
+ * Checks if a response defines application/problem+json and includes at least one example.
  *
  * @param responses - The set of operation responses keyed by HTTP status code.
  * @param code - The HTTP status code being validated.
@@ -99,12 +99,10 @@ function validateResponse(
   if (!response) {
     issues.push('missing response');
   } else {
-    const content =
-      response?.content?.['application/problem+json'] ||
-      response?.content?.['application/problem+xml'];
+    const content = response?.content?.['application/problem+json'];
 
     if (!content) {
-      issues.push('missing application/problem+json or application/problem+xml');
+      issues.push('missing application/problem+json');
     } else if (!content.examples) {
       issues.push('missing example');
     } else {
