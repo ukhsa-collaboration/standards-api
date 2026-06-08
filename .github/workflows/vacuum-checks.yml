@@ -70,7 +70,7 @@ jobs:
         run: npm ci
 
       - name: Build ruleset (TS + legacy JS)
-        run: npm run build
+        run: npm run build && npm run build:functions:cjs
 
       - name: Lint example OpenAPI
         run: |
