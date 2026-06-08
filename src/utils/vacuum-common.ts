@@ -58,6 +58,9 @@ export function detectRefFlags(specPath: string): { hasRemote: boolean; hasRelat
 
 export function buildInvocation(argv: string[] | undefined, projectRoot = process.cwd()): Invocation {
   const args = Array.isArray(argv) ? argv.slice() : [];
+  const commandLikeArgs = args.filter((arg) => !arg.startsWith('-'));
+  const subcommand = commandLikeArgs[0] === 'vacuum' ? commandLikeArgs[1] : commandLikeArgs[0];
+  const shouldAugmentLintArgs = subcommand === 'lint' || subcommand === 'spectral-report';
 
   const defaultRuleset = path.resolve(projectRoot, 'ukhsa.oas.rules.yml');
   const pygeoapiRuleset = path.resolve(projectRoot, 'ukhsa.oas.rules.pygeoapi.yml');
@@ -81,25 +84,27 @@ export function buildInvocation(argv: string[] | undefined, projectRoot = proces
 
   const finalArgs = args.slice();
 
-  if (!hasFlag(finalArgs, '-r') && !hasFlag(finalArgs, '--ruleset')) {
-    finalArgs.push('-r', rulesetPath);
-  }
-  if (!hasFlag(finalArgs, '--functions') && !hasFlag(finalArgs, '-f')) {
-    finalArgs.push('--functions', functionsDir);
-  }
-  if (!hasFlag(finalArgs, '--nested-refs-doc-context')) {
-    finalArgs.push('--nested-refs-doc-context');
-  }
-  if (!hasFlag(finalArgs, '--resolve-all-refs')) {
-    finalArgs.push('--resolve-all-refs');
-  }
-  if (specPath) {
-    const { hasRemote, hasRelative } = detectRefFlags(specPath);
-    if (hasRemote && !hasFlag(finalArgs, '--remote')) {
-      finalArgs.push('--remote');
+  if (shouldAugmentLintArgs) {
+    if (!hasFlag(finalArgs, '-r') && !hasFlag(finalArgs, '--ruleset')) {
+      finalArgs.push('-r', rulesetPath);
     }
-    if (hasRelative && !hasFlag(finalArgs, '--base') && !hasFlag(finalArgs, '-b')) {
-      finalArgs.push('--base', path.dirname(path.resolve(specPath)));
+    if (!hasFlag(finalArgs, '--functions')) {
+      finalArgs.push('--functions', functionsDir);
+    }
+    if (!hasFlag(finalArgs, '--nested-refs-doc-context')) {
+      finalArgs.push('--nested-refs-doc-context');
+    }
+    if (!hasFlag(finalArgs, '--resolve-all-refs')) {
+      finalArgs.push('--resolve-all-refs');
+    }
+    if (specPath) {
+      const { hasRemote, hasRelative } = detectRefFlags(specPath);
+      if (hasRemote && !hasFlag(finalArgs, '--remote')) {
+        finalArgs.push('--remote');
+      }
+      if (hasRelative && !hasFlag(finalArgs, '--base') && !hasFlag(finalArgs, '-b')) {
+        finalArgs.push('--base', path.dirname(path.resolve(specPath)));
+      }
     }
   }
 

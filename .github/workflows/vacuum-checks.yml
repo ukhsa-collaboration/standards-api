@@ -74,8 +74,13 @@ jobs:
 
       - name: Lint example OpenAPI
         run: |
-          node ./scripts/vacuum-lint.mjs vacuum --version || true
-          node ./scripts/vacuum-lint.mjs vacuum lint "./example/*.{json,yml,yaml}" -f github-actions
+          node ./scripts/vacuum-lint.mjs vacuum version || true
+          files=$(find ./example -type f \( -name '*.json' -o -name '*.yml' -o -name '*.yaml' \))
+          if [ -z "$files" ]; then
+            echo "No OpenAPI example files found in ./example"
+            exit 1
+          fi
+          node ./scripts/vacuum-lint.mjs vacuum lint $files -f github-actions
 
   run-typescript-tests:
     name: Run Tests

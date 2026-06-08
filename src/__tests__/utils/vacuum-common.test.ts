@@ -170,4 +170,30 @@ describe('vacuum-common utility', () => {
       rmSync(projectRoot, { recursive: true, force: true });
     }
   });
+
+  it('buildInvocation does not inject lint flags for version command', () => {
+    const projectRoot = makeTempDir('proj-');
+    try {
+      const invocation = buildInvocation(['vacuum', '--version'], projectRoot);
+
+      expect(invocation.command).toBe('npx');
+      expect(invocation.args).toEqual(['vacuum', '--version']);
+    } finally {
+      rmSync(projectRoot, { recursive: true, force: true });
+    }
+  });
+
+  it('buildInvocation still adds --functions when lint uses -f format flag', () => {
+    const projectRoot = makeTempDir('proj-');
+    try {
+      const specPath = path.join(projectRoot, 'spec.yaml');
+      writeFileSync(specPath, 'openapi: 3.0.0', 'utf8');
+
+      const invocation = buildInvocation(['vacuum', 'lint', specPath, '-f', 'github-actions'], projectRoot);
+
+      expect(invocation.args).toContain('--functions');
+    } finally {
+      rmSync(projectRoot, { recursive: true, force: true });
+    }
+  });
 });
