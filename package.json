@@ -37,6 +37,8 @@
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
+    "@emnapi/core": "^1.11.0",
+    "@emnapi/runtime": "^1.11.0",
     "@quobix/vacuum": "0.26.5",
     "@swc/core": "^1.15.40",
     "@swc/jest": "^0.2.39",
