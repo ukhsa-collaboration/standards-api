@@ -27,11 +27,11 @@ Thank you for your interest in contributing to the UKHSA API Guidelines! This re
     - [Pull Request Process][21]
   - [Development Guidelines][22]
     - [Documentation Standards][23]
-    - [Spectral Rules Development][24]
+    - [Linting Rules Development][24]
     - [Testing Guidelines][25]
   - [Viewing the Guidelines Locally][26]
   - [Documentation Deployment][27]
-  - [Spectral Rules Release][28]
+  - [Ruleset Release][28]
     - [1. Update the Version Number][29]
     - [2. Document the Changes][30]
     - [3. Create a Release][31]
@@ -70,17 +70,17 @@ Before you begin, ensure you have the following installed:
 
 | Tool | Version | Description |
 | - | - | - |
-| [Node.js][34] / npm | `Latest LTS` | Required for packaging and testing spectral rules. |
-| [Spectral][35] | `Latest` | Required for developing linting rules for OpenAPI specifications. |
+| [Node.js][34] / npm | `Latest LTS` | Required for packaging and testing the linting ruleset. |
+| [Vacuum][35] | `Latest` | CLI for running the UKHSA linting ruleset. |
 
-You can install npm and Spectral CLI using your system's package manager or download them from their respective websites.
+You can install npm and Vacuum CLI using your system's package manager or download them from their respective websites.
 
 You can verify your installations with:
 
 ```bash
 node --version
 npm --version
-spectral --version
+vacuum --version
 ```
 
 install the required dependencies with the following command:
@@ -97,23 +97,22 @@ To transpile TypeScript files to JavaScript:
 npm run build
 ```
 
-Or directly with:
+Build the Vacuum-compatible functions (used by the linter at runtime) with:
 
 ```bash
-npx tsc && npm run build:copy-legacy
+npm run build:functions:cjs
 ```
 
-This generates `.js` files in the output directory (default: `./dist` or based on tsconfig.json) and copies legacy
-`.js` files into the directory which Spectral is using as the source for functions.
+This generates `.js` files in `./dist` and produces Vacuum wrapper functions in `./dist-vacuum/functions`.
 
 ### Understanding the Repository Structure
 
 - `/docs/` - Documentation content written in Markdown
 - `/docs/api-design-guidelines/` - API design guidelines content
-- `/docs/spectral-rules/` - Documentation for API linting rules
+- `/docs/linting-rules/` - Documentation for API linting rules
 - `/example/` - Example OpenAPI specifications
-- `/functions/` - JavaScript functions used in Spectral rules
-- `ukhsa.oas.rules.yml` - UKHSA-specific Spectral rules
+- `/src/functions/` - JavaScript functions used by the linting rules
+- `ukhsa.oas.rules.yml` - UKHSA-specific linting rules
 - `zalando.oas.rules.yml` - Zalando API guidelines rules
 
 ## Contributing Process
@@ -206,7 +205,7 @@ Subject:
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │       │
-  │       └─⫸ Commit Scope: "spectral" for changes to spectral rules or should be omitted otherwise
+  │       └─⫸ Commit Scope: "ruleset" for changes to linting rules or should be omitted otherwise
   │
   └─⫸ Commit Type: build|docs|feat|fix|perf|refactor|revert|test
 
@@ -373,11 +372,13 @@ Resolves issue #123"
 - Place documentation in the appropriate section of the `/docs/` directory.
 - Preview changes locally using `npm start` before submitting.
 
-### Spectral Rules Development
+### Linting Rules Development
 
-- For documentation on how to create custom spectral rules, see [Write Your First Rule][54] spectral documentation.
+Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in the ruleset format that Vacuum consumes.
 
-- UKHSA specific spectral rules are defined in the `ukhsa.oas.rules.yml` file.
+- For rule syntax and guidance, see [Custom Rulesets][54].
+
+- UKHSA specific rules are defined in the `ukhsa.oas.rules.yml` file.
 
 - Rules should be clearly categorised as **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **MAY**, **MAY NOT** and matched against the appropriate [severity level][55].
 
@@ -390,9 +391,9 @@ Resolves issue #123"
   | **MAY** | `info` or `hint` |
   | **MAY NOT** | `info` or `hint` |
 
-- Each rule should have a corresponding documentation file in the relevant folder `/docs/spectral-rules/must/`, `/docs/spectral-rules/should/` or `/docs/spectral-rules/may/`.
+- Each rule should have a corresponding documentation file in the relevant folder `/docs/linting-rules/must/`, `/docs/linting-rules/should/` or `/docs/linting-rules/may/`.
 
-- Every rule definition **MUST** set `documentationUrl` so Spectral CLI can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/spectral-rules/must/<rule-name>/`).
+- Every rule definition **MUST** set `documentationUrl` so Vacuum outputs can surface a deep link to the matching documentation page (for example `https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/must/<rule-name>/`).
 
 - Include references to the relevant sections of the API guidelines.
 
@@ -405,24 +406,26 @@ Resolves issue #123"
 - Test new rules against the example specifications in the `/example/` directory (you may need to modify the example definition to test your rules).
 
   ```bash
-  spectral lint example/example.1.0.0.oas.yml --show-documentation-url
+  vacuum lint example/example.1.0.0.oas.yml \
+    -r ./ukhsa.oas.rules.yml \
+    --functions ./dist-vacuum/functions
   ```
 
 - Verify that rules produce the expected results for both valid and invalid API definitions.
 
-- Add automated tests for each new Spectral rule:
+- Add automated tests for each new rule:
   1. Define the rule in `ukhsa.oas.rules.yml`.
   1. Create a Jest test file in:
      ```text
-     src/__tests__/rules/<rule-name>.spec.ts
+     src/__tests__/rules/<rule-name>.test.ts
      ```
-  1. Use the testRule helper from src/**tests**/**helpers**/helper.ts to define one or more inline scenarios:
+  1. Use the Vacuum test helper to run the rule against inline specs:
      ```ts
-     import testRule from './__helpers__/helper';
+     import testRule from '../__helpers__/vacuum-helper.js';
 
      testRule('<rule-name>', [
        {
-         name: 'Valid spec passes',
+         name: 'passes when condition is met',
          document: `
            openapi: 3.0.0
            info:
@@ -430,21 +433,19 @@ Resolves issue #123"
              version: 1.0.0
            paths: {}
          `,
-         errors: []
+         errors: [],
        },
        {
-         name: 'Invalid spec fails',
+         name: 'fails when condition is not met',
          document: `
            openapi: 3.0.0
            info:
-             title: My API
+             title: Bad API
              version: 1.0.0
            paths: {}
          `,
-         errors: [
-           { message: '<expected error message>' }
-         ]
-       }
+         errors: [{ code: '<rule-name>' }],
+       },
      ]);
      ```
 
@@ -474,9 +475,9 @@ The documentation is continuously deployed from the `main` branch by GitHub Acti
 
 When documentation changes are merged into the `main` branch, the documentation site is automatically updated and re-published on GitHub Pages.
 
-## Spectral Rules Release
+## Ruleset Release
 
-When updating spectral rules, follow these steps to ensure proper release and distribution:
+When updating rules, follow these steps to ensure proper release and distribution:
 
 ### 1. Update the Version Number
 
@@ -500,7 +501,7 @@ When updating spectral rules, follow these steps to ensure proper release and di
 - [Tag the release][60] with the version number.
 
 > [!NOTE]
-> Only maintainers with the appropriate permissions can publish new releases of the spectral rules npm package.
+> Only maintainers with the appropriate permissions can publish new releases of the ruleset npm package.
 
 Thank you for contributing to improving API design and development practices across the UKHSA!
 
@@ -527,18 +528,18 @@ Thank you for contributing to improving API design and development practices acr
 [21]: #pull-request-process
 [22]: #development-guidelines
 [23]: #documentation-standards
-[24]: #spectral-rules-development
+[24]: #linting-rules-development
 [25]: #testing-guidelines
 [26]: #viewing-the-guidelines-locally
 [27]: #documentation-deployment
-[28]: #spectral-rules-release
+[28]: #ruleset-release
 [29]: #1-update-the-version-number
 [30]: #2-document-the-changes
 [31]: #3-create-a-release
 [32]: ./CODE_OF_CONDUCT.md
 [33]: https://help.github.com/articles/fork-a-repo/
 [34]: https://nodejs.org/en/download/
-[35]: https://docs.stoplight.io/docs/spectral/b8391e051b7d8-installation
+[35]: https://quobix.com/vacuum/installing/
 [36]: https://github.com/ukhsa-collaboration/standards-api/issues
 [37]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
 [38]: https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments
@@ -557,9 +558,9 @@ Thank you for contributing to improving API design and development practices acr
 [51]: ./.github/workflows/fast-forward-pr-merge-init.md#why-is-this-workflow-needed
 [52]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
 [53]: https://datatracker.ietf.org/doc/html/rfc2119
-[54]: https://docs.stoplight.io/docs/spectral/01baf06bdd05a-create-a-ruleset#write-your-first-rule
-[55]: https://docs.stoplight.io/docs/spectral/9ffa04e052cc1-spectral-cli#error-results
-[56]: docs/spectral-rules/index.md#how-to-use-the-rules
+[54]: https://quobix.com/vacuum/rulesets/custom-rulesets/
+[55]: https://quobix.com/vacuum/rulesets/custom-rulesets/#severity
+[56]: docs/linting-rules/index.md#how-to-use-the-rules
 [57]: http://localhost:8080/api-design-guidelines/
 [58]: https://github.com/ukhsa-collaboration/standards-org
 [59]: https://semver.org/

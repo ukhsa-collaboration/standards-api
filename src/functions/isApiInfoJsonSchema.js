@@ -41,92 +41,94 @@ properties:
 */
 
 /**
- * @import Core from "@stoplight/spectral-core"
- */
-
-/**
  * Asserts that the given schema is a valid ApiInfo JSON schema.
- * @type {Core.RulesetFunction<any, null>}
+ * @param {any} schema
+ * @param {(string | number)[]} [basePath]
+ * @returns {Array<{ message: string; path?: (string | number)[] }>}
  */
-const assertApiInfoSchema = (schema) => {
+export const assertApiInfoSchema = (schema, basePath = []) => {
 
   const results = [];
 
   if (schema.type !== 'object') {
-    results.push({ message: "ApiInfo json must have type 'object'" });
+    results.push({ message: "ApiInfo json must have type 'object'", path: [...basePath, 'type'] });
   }
 
   const name = (schema.properties || {}).name || {};
   if (name.type !== 'string') {
-    results.push({ message: "ApiInfo json must have property 'name' with type 'string' and format 'uri-reference'" });
+    results.push({
+      message: "ApiInfo json must have property 'name' with type 'string' and format 'uri-reference'",
+      path: [...basePath, 'properties', 'name', 'type'],
+    });
   }
 
   const version = (schema.properties || {}).version || {};
   const pattern = "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
 
   if (version.type !== 'string' || version.pattern !== pattern) {
-    results.push({ message: "ApiInfo json must have property 'version' with type 'string' and pattern for semver." });
+    results.push({
+      message: "ApiInfo json must have property 'version' with type 'string' and pattern for semver.",
+      path: [...basePath, 'properties', 'version'],
+    });
   }
 
   const status = (schema.properties || {}).status || {};
   const requiredStatus = ["ALPHA", "BETA", "LIVE", "DEPRECATED"];
   if (status.type !== 'string' || !status["x-extensible-enum"] || !requiredStatus.every((value) => status["x-extensible-enum"].includes(value))) {
-    results.push({ message: "ApiInfo json must have property 'status' with x-extensible-enum values: ALPHA, BETA, LIVE, DEPRECATED." });
+    results.push({
+      message: "ApiInfo json must have property 'status' with x-extensible-enum values: ALPHA, BETA, LIVE, DEPRECATED.",
+      path: [...basePath, 'properties', 'status'],
+    });
   }
 
   const releaseDate = (schema.properties || {}).releaseDate || {};
   if (releaseDate.type !== 'string' || releaseDate.format !== 'date') {
-    results.push({ message: "ApiInfo json must have property 'releaseDate' with type 'string' and format 'date'" });
+    results.push({
+      message: "ApiInfo json must have property 'releaseDate' with type 'string' and format 'date'",
+      path: [...basePath, 'properties', 'releaseDate'],
+    });
   }
 
   const documentation = (schema.properties || {}).documentation || {};
   if (documentation.type !== 'string' || documentation.format !== 'uri') {
-    results.push({ message: "ApiInfo json must have property 'documentation' with type 'string' and format 'uri'" });
+    results.push({
+      message: "ApiInfo json must have property 'documentation' with type 'string' and format 'uri'",
+      path: [...basePath, 'properties', 'documentation'],
+    });
   }
 
   const releaseNotes = (schema.properties || {}).releaseNotes || {};
   if (releaseNotes.type !== 'string' || releaseNotes.format !== 'uri') {
-    results.push({ message: "ApiInfo json must have property 'releaseNotes' with type 'string' and format 'uri'" });
+    results.push({
+      message: "ApiInfo json must have property 'releaseNotes' with type 'string' and format 'uri'",
+      path: [...basePath, 'properties', 'releaseNotes'],
+    });
   }
 
   return results;
 };
 
 /**
- * Checks the API Info JSON schema for compliance.
- * @type {Core.RulesetFunction<any, null>}
- */
-const check = (schema, _options, _context) => {
-  const combinedSchemas = [...(schema?.anyOf ?? []), ...(schema?.oneOf ?? []), ...(schema?.allOf ?? [])];
-
-  if (combinedSchemas.length > 0) {
-    const aggregated = [];
-    for (const subSchema of combinedSchemas) {
-      const res = check(subSchema, _options, _context);
-      if (Array.isArray(res)) {
-        aggregated.push(...res);
-      }
-    }
-    return aggregated;
-  }
-
-  return assertApiInfoSchema(schema, _options, _context);
-};
-
-/**
  * Validates if the target value is a valid ApiInfo JSON schema.
- * @type {Core.RulesetFunction<any, null>}
  * @param {any} targetValue - The value to validate.
  * @param {null} _options - Additional options (not used).
- * @param {Core.RulesetFunctionContext} _context - The context.
+ * @param {any} _context - The context.
+ * @returns {Array<{ message: string; path?: (string | number)[] }>}
  */
-export default (targetValue, _options, _context) => {
-  if (targetValue === null || typeof targetValue !== "object") {
-    return [];
-  }
-
+export const runRule = (targetValue, _options, _context) => {
   try {
-    return check(targetValue, _options, _context);
+    const schema = targetValue?.schema ?? targetValue;
+
+    if (schema === null || typeof schema !== "object") {
+      return [
+        {
+          message: "ApiInfo json must have type 'object'",
+          path: Array.isArray(_context?.path) ? _context.path : [],
+        },
+      ];
+    }
+
+    return assertApiInfoSchema(schema, Array.isArray(_context?.path) ? _context.path : []);
   } catch (/** @type {any} */ex) {
     return [
       {
@@ -135,3 +137,5 @@ export default (targetValue, _options, _context) => {
     ];
   }
 };
+
+export default runRule;

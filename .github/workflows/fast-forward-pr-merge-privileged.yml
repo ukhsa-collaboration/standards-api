@@ -312,7 +312,6 @@ jobs:
               - 'src/**'
               - 'example/**'
               - '__tests__/**'
-              - '.spectral.yaml'
               - '*.oas.rules.*'
               - 'package.json'
               - 'tsconfig.json'
@@ -328,13 +327,13 @@ jobs:
           echo "Triggering 'Publish Guidelines Dispatch' workflow"
           gh workflow run publish-guidelines.yml --ref main
 
-      - name: Triggering 'Spectral Checks' workflows
+      - name: Triggering 'Vacuum Checks' workflows
         if: ${{ steps.changes.outputs.ci == 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Triggering 'Spectral Checks' workflows"
-          gh workflow run spectral-checks.yml --ref main
+          echo "Triggering 'Vacuum Checks' workflows"
+          gh workflow run vacuum-checks.yml --ref main
 
       - name: Triggering Standard CI workflows
         env:

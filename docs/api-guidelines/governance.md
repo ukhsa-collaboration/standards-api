@@ -6,8 +6,8 @@ order: 11
 
 TODO
 
-- **Approval Process**: Guidelines for reviewing and changes to the guidelines or spectral rules.
+- **Approval Process**: Guidelines for reviewing and changes to the guidelines or linting rules.
 - **Governance automation**: Using automated tools (linters, validators) to ensure compliance with the guidelines.
-  - Specteral Rules
+  - Linting rules
   - PR process
 - **Change Management**: Version control and change request procedures.

@@ -1,19 +1,20 @@
 {
-  "name": "@ukhsa-collaboration/spectral-rules",
+  "name": "@ukhsa-collaboration/openapi-linting-rules",
   "version": "0.4.1",
-  "description": "UKHSA Spectral ruleset",
-  "main": ".spectral.yaml",
+  "description": "UKHSA OpenAPI lint ruleset",
+  "main": "ukhsa.oas.rules.yml",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "fmt:md": "remark . --ext .md --output",
     "lint:md": "remark . --ext .md --frail",
-    "pretest": "npm run build",
-    "pretest:watch": "npm run build",
+    "pretest": "npm run build && npm run build:functions:cjs",
+    "pretest:watch": "npm run build && npm run build:functions:cjs",
     "prepare": "husky && git config commit.template .gitmessage",
     "start": "docker run --rm --pull=always -p \"8080:8080\" -v \"./docs:/site/docs/api-design-guidelines\" ghcr.io/ukhsa-collaboration/standards-org:latest",
     "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build:functions:cjs": "tsc -p tsconfig.vacuum.json && node scripts/build-vacuum-functions.mjs"
   },
   "repository": {
     "type": "git",
@@ -27,25 +28,24 @@
   },
   "keywords": [
     "UKHSA",
-    "spectral",
-    "ruleset"
+    "ruleset",
+    "linting"
   ],
   "dependencies": {
-    "@stoplight/spectral-core": "^1.23.0",
-    "@stoplight/spectral-documentation": "^1.3.1",
-    "lodash": "^4.18.1"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
-    "@stoplight/spectral-cli": "^6.16.0",
-    "@stoplight/spectral-functions": "^1.10.2",
-    "@stoplight/spectral-parsers": "^1.0.5",
-    "@stoplight/spectral-ruleset-bundler": "^1.7.0",
+    "@emnapi/core": "^1.11.0",
+    "@emnapi/runtime": "^1.11.0",
+    "@quobix/vacuum": "0.26.5",
     "@swc/core": "^1.15.40",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.24",
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.21",
+    "@types/node": "^25.9.1",
     "cpx2": "^9.0.0",
     "husky": "^9.1.7",
     "jest": "^30.4.2",

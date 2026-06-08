@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "bundler",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "types": ["node"],
+    "outDir": "./dist-vacuum/cjs",
+    "rootDir": "src",
+    "declaration": false
+  },
+  "include": ["src/functions/**/*"],
+  "exclude": ["**/__tests__/**"]
+}

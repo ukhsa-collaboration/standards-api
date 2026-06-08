@@ -1,5 +1,7 @@
-import { DiagnosticSeverity } from '@stoplight/types';
-import testRule from '../__helpers__/helper.mjs';
+import testRule from '../__helpers__/vacuum-helper.js';
+
+// Vacuum severity values: 0=error, 1=warning, 2=info, 3=hint
+const DiagnosticSeverity = { Error: 0, Warning: 1, Information: 2, Hint: 3 };
 
 testRule(['may-have-info-x-api-type'], [
   {

@@ -12,7 +12,7 @@ These guidelines will ensure that all APIs follow accepted design, security and 
 
 You will find the documentation in markdown form in the `docs/` directory, you can also view the [documentation site][1] for a friendly searchable format.
 
-As part of the above this repository provides the spectral rules to help developers align their OpenAPI definition with the standards laid out in these guidelines.
+As part of the above this repository provides linting rules to help developers align their OpenAPI definition with the standards laid out in these guidelines. The rules are designed to run with [Vacuum](https://quobix.com/vacuum/) for better performance and stability on large specs.
 
 ### When to use these guidelines
 
@@ -49,7 +49,7 @@ of the [Open Government 3.0][6] licence.
 TODO
 
 [1]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
-[2]: docs/spectral-rules/index.md#how-to-use-the-rules
+[2]: docs/linting-rules/index.md#how-to-use-the-rules
 [3]: CONTRIBUTING.md
 [4]: LICENCE
 [5]: https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/
