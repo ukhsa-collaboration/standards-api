@@ -12,6 +12,7 @@ rules:
     'test'
   ]]
   scope-enum: [2, 'always', [
-    'linting-rules'
+    'linting-rules',
+    'spectral'
   ]]
   scope-empty: [0, 'never']
