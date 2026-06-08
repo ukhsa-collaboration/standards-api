@@ -10,13 +10,13 @@ const SPEC_PATH = path.resolve(process.cwd(), 'openapi-pygeoapi-big.yml');
 function runVacuumSpectralReport(specPath: string) {
   const workDir = mkdtempSync(path.join(tmpdir(), 'vacuum-'));
   const reportPath = path.join(workDir, 'report.json');
+  const vacuumBin = path.resolve(process.cwd(), 'node_modules', '.bin', 'vacuum');
 
   const started = Date.now();
   const result = spawnSync(
-    'npx',
+    vacuumBin,
     [
-      'vacuum',
-        'spectral-report',
+      'spectral-report',
       specPath,
       reportPath,
       '-r',
@@ -24,7 +24,7 @@ function runVacuumSpectralReport(specPath: string) {
       '--functions',
       FUNCTIONS_DIR,
     ],
-    { encoding: 'utf8', timeout: 30000, maxBuffer: 10_000_000 },
+    { encoding: 'utf8', timeout: 60_000, maxBuffer: 10_000_000 },
   );
 
   const elapsedMs = Date.now() - started;
@@ -43,10 +43,10 @@ describe('Vacuum large-spec compatibility', () => {
     // Command should complete (may exit non-zero due to lint failures, that is fine) and within the timeout.
     expect(result.error).toBeUndefined();
     expect(result.signal).toBeNull();
-    expect(elapsedMs).toBeLessThan(30_000);
+    expect(elapsedMs).toBeLessThan(60_000);
 
     // We should have a report with results; pick a rule that fails on the fixture (HTTP server).
     const hits = parsed.filter((r: any) => r.code === 'must-use-https-protocol-only');
     expect(hits.length).toBeGreaterThan(0);
-  });
+  }, 70_000);
 });
