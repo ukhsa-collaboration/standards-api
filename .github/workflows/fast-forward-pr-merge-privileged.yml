@@ -84,14 +84,16 @@ jobs:
     # 2. The workflow run was successful.
     # 3. The pull request was labeled with 'fast-forward'.
     # 4. The pull request is still open and not closed.
-    if: |
-      ${{ github.event.workflow_run.event == 'pull_request' }} &&
-      ${{ github.event.workflow_run.conclusion == 'success' }} &&
-      ${{ fromJson(needs.import-event.outputs.trigger_event).pull_request }} &&
-      ${{ fromJson(needs.import-event.outputs.trigger_event).action == 'labeled' }} &&
-      ${{ fromJson(needs.import-event.outputs.trigger_event).label.name == 'fast-forward' }} &&
-      ${{ !fromJson(needs.import-event.outputs.trigger_event).pull_request.closed_at }} &&
-      ${{ fromJson(needs.import-event.outputs.trigger_event).pull_request.state == 'open' }}
+    if: >-
+      ${{
+        github.event.workflow_run.event == 'pull_request' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        fromJson(needs.import-event.outputs.trigger_event).pull_request &&
+        fromJson(needs.import-event.outputs.trigger_event).action == 'labeled' &&
+        fromJson(needs.import-event.outputs.trigger_event).label.name == 'fast-forward' &&
+        !fromJson(needs.import-event.outputs.trigger_event).pull_request.closed_at &&
+        fromJson(needs.import-event.outputs.trigger_event).pull_request.state == 'open'
+      }}
 
     runs-on: ubuntu-latest
 
@@ -217,24 +219,24 @@ jobs:
           if [ "$MERGEABLE_STATUS" = "clean" ]; then
             git config --global user.email "<>"
             git config --global user.name "GitHub Actions"
-            git fetch origin +refs/$HEAD_BRANCH:refs/heads/$HEAD_BRANCH
-            git checkout $HEAD_BRANCH
-            git pull origin $HEAD_BRANCH
-            git checkout $BASE_BRANCH
-            git pull origin $BASE_BRANCH
-            git rebase $HEAD_BRANCH
-            git remote set-url origin $REMOTE_URL
-            git push origin $BASE_BRANCH
+            git fetch origin "+refs/$HEAD_BRANCH:refs/heads/$HEAD_BRANCH"
+            git checkout "$HEAD_BRANCH"
+            git pull origin "$HEAD_BRANCH"
+            git checkout "$BASE_BRANCH"
+            git pull origin "$BASE_BRANCH"
+            git rebase "$HEAD_BRANCH"
+            git remote set-url origin "$REMOTE_URL"
+            git push origin "$BASE_BRANCH"
             {
               echo 'message<<EOF'
-              echo "${{ env.SUCCESS_MESSAGE }}"
+              echo "$SUCCESS_MESSAGE"
               echo EOF
             } >> "$GITHUB_OUTPUT"
             echo "merged=true" >> "$GITHUB_OUTPUT"
           else
             {
               echo 'message<<EOF'
-              echo "${{ env.ERROR_MESSAGE }}"
+              echo "$ERROR_MESSAGE"
               echo EOF
             } >> "$GITHUB_OUTPUT"
              echo "merged=false" >> "$GITHUB_OUTPUT"
@@ -312,7 +314,6 @@ jobs:
               - 'src/**'
               - 'example/**'
               - '__tests__/**'
-              - '.spectral.yaml'
               - '*.oas.rules.*'
               - 'package.json'
               - 'tsconfig.json'
@@ -328,13 +329,13 @@ jobs:
           echo "Triggering 'Publish Guidelines Dispatch' workflow"
           gh workflow run publish-guidelines.yml --ref main
 
-      - name: Triggering 'Spectral Checks' workflows
+      - name: Triggering 'OpenAPI Checks' workflow
         if: ${{ steps.changes.outputs.ci == 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Triggering 'Spectral Checks' workflows"
-          gh workflow run spectral-checks.yml --ref main
+          echo "Triggering 'OpenAPI Checks' workflow"
+          gh workflow run openapi-checks.yml --ref main
 
       - name: Triggering Standard CI workflows
         env:

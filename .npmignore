@@ -1,5 +1,5 @@
 *
 !dist/functions/*.{js,d.ts}
 !dist/utils/*.{js,d.ts}
-!.spectral.yaml
+!scripts/vacuum-lint.mjs
 !*.oas.rules.yml

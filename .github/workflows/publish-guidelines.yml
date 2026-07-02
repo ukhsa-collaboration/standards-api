@@ -43,12 +43,15 @@ jobs:
       - name: Dispatch publish workflow in standards-org
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          TARGET_REPOSITORY: ${{ github.repository_owner }}/standards-org
+          HMAC_BODY: ${{ steps.hmac.outputs.body }}
+          HMAC_SIG: ${{ steps.hmac.outputs.sig }}
         run: |
           echo "Triggering publish workflow in standards-org"
           gh workflow run publish-guidelines.yml \
-            -R ${{ github.repository_owner }}/standards-org \
+            -R "$TARGET_REPOSITORY" \
             --ref main \
             -f upstream_repo="${GITHUB_REPOSITORY}" \
             -f upstream_sha="${GITHUB_SHA}" \
-            -f hmac_body="${{ steps.hmac.outputs.body }}" \
-            -f hmac_sig="${{ steps.hmac.outputs.sig }}"
+            -f hmac_body="$HMAC_BODY" \
+            -f hmac_sig="$HMAC_SIG"

@@ -1,10 +1,10 @@
-name: Publish Spectral Rules
+name: Publish Rules
 on:
   workflow_dispatch:
 
 jobs:
-  publish-spectral-rules:
-    name: Publish Spectral Rules
+  publish-rules:
+    name: Publish Rules
     runs-on: ubuntu-latest
 
     permissions:
@@ -25,8 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build ruleset (TS + legacy JS)
+      - name: Build ruleset and Vacuum functions
         run: npm run build
+
+      - name: Validate npm package contents
+        run: npm pack --dry-run
 
       - name: Publish to GitHub Packages
         run: npm publish

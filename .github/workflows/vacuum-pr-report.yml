@@ -1,0 +1,57 @@
+name: Vacuum PR Report
+
+on:
+  workflow_call:
+    inputs:
+      scan_path:
+        description: Glob pattern for OpenAPI files to lint.
+        required: false
+        default: 'example/*.{json,yml,yaml}'
+        type: string
+      node_version:
+        description: Node.js version used to build and run the ruleset.
+        required: false
+        default: '22.x'
+        type: string
+      validate_pack:
+        description: Whether to run npm pack --dry-run before linting.
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  vacuum:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ruleset and Vacuum functions
+        run: npm run build
+
+      - name: Validate npm package contents
+        if: ${{ inputs.validate_pack }}
+        run: npm pack --dry-run
+
+      - name: Run official Vacuum action
+        uses: pb33f/vacuum-action@v2
+        with:
+          openapi_path: ${{ inputs.scan_path }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ruleset: ukhsa.oas.rules.yml
+          fail_on_error: true
+          print_logs: true
