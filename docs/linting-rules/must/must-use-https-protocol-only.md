@@ -3,7 +3,7 @@
 Servers **MUST** be `https` and no other protocol is allowed.
 
 > [!IMPORTANT]
-> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [1].
+> For OpenAPI definitions marked with `info.x-api-type: pygeoapi`, the paired `-pygeoapi` sibling rule fires at `warn` instead. See [1].
 
 ## Invalid Example
 

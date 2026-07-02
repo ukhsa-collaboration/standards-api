@@ -32,8 +32,8 @@ eleventyNavigation:
   </section>
   <section class="govuk-grid-column-one-third-from-desktop">
     <h2 class="govuk-heading-m govuk-!-margin-bottom-2">
-      <a class="govuk-link govuk-link--no-visited-state" href="./spectral-rules/">
-        Spectral Rules
+      <a class="govuk-link govuk-link--no-visited-state" href="./linting-rules/">
+        Linting Rules
       </a>
     </h2>
     <p class="govuk-body">

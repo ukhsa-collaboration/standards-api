@@ -3,7 +3,7 @@
 `number` properties **MUST** have a format defined (`float`, `double`, or `decimal`).
 
 > [!IMPORTANT]
-> For openapi definitions marked with `info.x-api-type: pygeoapi`, this rule’s severity is automatically set to `warn` by the `override-severity-pygeoapi` rule. See [1].
+> For OpenAPI definitions marked with `info.x-api-type: pygeoapi`, the paired `-pygeoapi` sibling rule fires at `warn` instead. See [1].
 
 ## Invalid Example
 

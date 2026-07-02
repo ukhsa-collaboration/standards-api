@@ -1,5 +1,5 @@
 {
-  "sectionKey": "spectral-rules",
+  "sectionKey": "linting-rules",
   "layout": "sub-navigation",
   "caption": "SHOULD"
 }

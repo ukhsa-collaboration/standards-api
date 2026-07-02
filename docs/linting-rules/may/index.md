@@ -1,0 +1,11 @@
+---
+includeInBreadcrumbs: true
+eleventyNavigation:
+  parent: linting-rules
+  key: may
+order: 4
+---
+
+# MAY
+
+Linting rules categorised as **MAY** highlight optional practices. They can be adopted when they add value or context, and teams should weigh them based on preference, consumer needs, or implementation constraints.

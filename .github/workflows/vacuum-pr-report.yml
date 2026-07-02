@@ -47,11 +47,69 @@ jobs:
         if: ${{ inputs.validate_pack }}
         run: npm pack --dry-run
 
-      - name: Run official Vacuum action
-        uses: pb33f/vacuum-action@v2
+      - name: Run Vacuum lint and capture PR report
+        id: vacuum
+        env:
+          SCAN_PATH: ${{ inputs.scan_path }}
+        run: |
+          set -euo pipefail
+
+          report_path="${RUNNER_TEMP}/vacuum-report.md"
+
+          shopt -s nullglob
+          eval "spec_files=( ${SCAN_PATH} )"
+
+          if [ "${#spec_files[@]}" -eq 0 ]; then
+            echo "No OpenAPI files matched: ${SCAN_PATH}" >&2
+            exit 1
+          fi
+
+          set +e
+          report_content="$(node scripts/vacuum-lint.mjs lint --pipeline-output "${spec_files[@]}")"
+          lint_exit_code=$?
+          set -e
+
+          report_body="$(printf '%s\n' "${report_content}" | awk 'seen || /^#/{seen=1; print}')"
+          if [ -z "${report_body}" ]; then
+            report_body="${report_content}"
+          fi
+
+          {
+            echo "<!-- vacuum-lint-report -->"
+            echo
+            printf '%s\n' "${report_body}"
+          } >"${report_path}"
+
+          echo "report_path=${report_path}" >> "$GITHUB_OUTPUT"
+          echo "lint_exit_code=${lint_exit_code}" >> "$GITHUB_OUTPUT"
+
+          if [ -s "${report_path}" ]; then
+            echo "has_report=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_report=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Find existing Vacuum lint comment
+        id: find-comment
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        uses: peter-evans/find-comment@v3
         with:
-          openapi_path: ${{ inputs.scan_path }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          ruleset: ukhsa.oas.rules.yml
-          fail_on_error: true
-          print_logs: true
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: github-actions[bot]
+          body-includes: <!-- vacuum-lint-report -->
+
+      - name: Create or update Vacuum report comment
+        if: ${{ always() && github.event_name == 'pull_request' && steps.vacuum.outputs.has_report == 'true' }}
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          body-path: ${{ steps.vacuum.outputs.report_path }}
+          edit-mode: replace
+
+      - name: Fail workflow on Vacuum findings
+        if: ${{ steps.vacuum.outputs.lint_exit_code != '0' }}
+        run: |
+          echo "Vacuum lint failed with exit code ${{ steps.vacuum.outputs.lint_exit_code }}." >&2
+          exit 1
