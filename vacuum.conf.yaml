@@ -1,0 +1,4 @@
+ruleset: ./ukhsa.oas.rules.yml
+functions: ./dist/functions
+resolve-all-refs: true
+nested-refs-doc-context: true

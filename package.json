@@ -1,16 +1,20 @@
 {
-  "name": "@ukhsa-collaboration/spectral-rules",
-  "version": "0.4.1",
-  "description": "UKHSA Spectral ruleset",
-  "main": ".spectral.yaml",
+  "name": "@ukhsa-collaboration/openapi-linting-rules",
+  "version": "1.0.0",
+  "description": "UKHSA OpenAPI lint ruleset",
+  "main": "ukhsa.oas.rules.yml",
   "type": "module",
+  "bin": {
+    "ukhsa-vacuum-lint": "./scripts/vacuum-lint.mjs"
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run build:functions:cjs",
+    "build:functions:cjs": "tsc -p tsconfig.vacuum.json && node scripts/build-vacuum-functions.mjs",
     "fmt:md": "remark . --ext .md --output",
     "lint:md": "remark . --ext .md --frail",
+    "prepare": "husky && git config commit.template .gitmessage",
     "pretest": "npm run build",
     "pretest:watch": "npm run build",
-    "prepare": "husky && git config commit.template .gitmessage",
     "start": "docker run --rm --pull=always -p \"8080:8080\" -v \"./docs:/site/docs/api-design-guidelines\" ghcr.io/ukhsa-collaboration/standards-org:latest",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
@@ -27,25 +31,22 @@
   },
   "keywords": [
     "UKHSA",
-    "spectral",
-    "ruleset"
+    "ruleset",
+    "linting"
   ],
   "dependencies": {
-    "@stoplight/spectral-core": "^1.23.0",
-    "@stoplight/spectral-documentation": "^1.3.1",
-    "lodash": "^4.18.1"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.0",
     "@commitlint/config-conventional": "^21.0.2",
-    "@stoplight/spectral-cli": "^6.16.1",
-    "@stoplight/spectral-functions": "^1.10.5",
-    "@stoplight/spectral-parsers": "^1.0.5",
-    "@stoplight/spectral-ruleset-bundler": "^1.7.0",
+    "@quobix/vacuum": "0.26.5",
     "@swc/core": "^1.15.43",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.24",
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.21",
+    "@types/node": "^25.9.1",
     "cpx2": "^9.0.0",
     "husky": "^9.1.7",
     "jest": "^30.4.2",
