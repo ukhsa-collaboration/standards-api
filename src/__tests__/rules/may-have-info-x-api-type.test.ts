@@ -1,5 +1,4 @@
-import { DiagnosticSeverity } from '@stoplight/types';
-import testRule from '../__helpers__/helper.mjs';
+import testRule, { DiagnosticSeverity } from '../__helpers__/vacuum-helper.js';
 
 testRule(['may-have-info-x-api-type'], [
   {

@@ -1,5 +1,4 @@
-import { DiagnosticSeverity } from '@stoplight/types';
-import testRule, { expectRulesetFileExists } from '../__helpers__/helper.mjs';
+import testRule, { DiagnosticSeverity, expectRulesetFileExists } from '../__helpers__/vacuum-helper.js';
 
 describe('ruleset file', () => {
   it('exists', () => expectRulesetFileExists());
@@ -48,7 +47,8 @@ paths: {}
     errors: [
       {
         severity: DiagnosticSeverity.Warning,
-        path: ['info', 'x-contains-sensitive-data'],
+        // Vacuum reports path as ["info", "0"] for schema validation errors
+        path: ['info', '0'],
         message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
       },
     ],
