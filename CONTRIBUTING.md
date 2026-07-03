@@ -268,7 +268,7 @@ Resolves issue #123"
 
 1. **Push your changes** to your branch/fork:
 
-   If its your fist push to the branch you can use:
+   If its your first push to the branch you can use:
 
    ```bash
    git push -u origin your-branch-name
@@ -459,7 +459,7 @@ Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in
 The documentation is organised into various markdown files under the `docs/` directory. You can navigate and edit these files directly. To preview the documentation as it will appear on the website:
 
 ```bash
-npm run serve
+npm run start
 ```
 
 This uses docker to host your docs under the hood.
