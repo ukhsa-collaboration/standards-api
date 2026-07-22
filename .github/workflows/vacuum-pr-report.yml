@@ -100,7 +100,7 @@ jobs:
 
       - name: Create or update Vacuum report comment
         if: ${{ always() && github.event_name == 'pull_request' && steps.vacuum.outputs.has_report == 'true' }}
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
