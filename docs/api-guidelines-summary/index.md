@@ -91,7 +91,7 @@ These are the core high level principles to follow when designing, building, tes
 - Follow the [Technology Governance Schedule and Audit Trail][17] process before onboarding a new solution into the APIM Platform.
 - Ensure [API Onboarding][18] requirements are met.
 
-[1]: https://confluence.collab.test-and-trace.nhs.uk/display/BRP/API+Management+Solution+Design#APIManagementSolutionDesign-AzureAPI-M
+[1]: https://ukhsa.atlassian.net/wiki/spaces/EAE/pages/175115856/API+Management+Solution+Design+-+MVP
 [2]: ../api-guidelines/index.md
 [3]: https://www.api.gov.uk/#uk-public-sector-apis
 [4]: https://www.gov.uk/guidance/gds-api-technical-and-data-standards#design-your-api-first
@@ -108,4 +108,4 @@ These are the core high level principles to follow when designing, building, tes
 [15]: ../api-guidelines/performance-reliability-monitoring/index.md
 [16]: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/
 [17]: https://confluence.collab.test-and-trace.nhs.uk/display/AT/Technology+Governance+Schedule+and+Audit+Trail
-[18]: https://confluence.collab.test-and-trace.nhs.uk/display/BRP/API+Onboarding
+[18]: https://ukhsa.atlassian.net/wiki/spaces/EAE/pages/423494447/API+Onboarding+into+APIM+Developer
