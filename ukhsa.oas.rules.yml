@@ -7,6 +7,7 @@ documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design
 functions:
   - isApiInfoJsonSchema
   - hasRequiredProblemDetailsErrorResponses
+  - hasUriVersioning
 
 functionsDir: dist/functions
 
@@ -15,6 +16,11 @@ rules:
   must-have-info-x-api-id: off
   must-always-return-json-objects-as-top-level-data-structures: warn
   should-not-use-api-as-base-path: off
+
+  # Inherited from zalando.oas.rules.yml but contradicts UKHSA's own
+  # guidance, which mandates URI versioning (see must-use-uri-versioning
+  # below and /docs/api-guidelines/versioning-and-deprecation.md).
+  must-not-use-uri-versioning: off
 
   # MUST Properties must use lower camel case.
   # => /docs/linting-rules/must/must-use-camel-case-for-property-names.md
@@ -475,6 +481,18 @@ rules:
     description: The `info` object must have a `version` property that follows [semantic rules](http://semver.org/spec/v2.0.0.html) to distinguish API versions.
     message: Must have API version defined in `info.version`
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/must/must-have-info-version/
+
+  # MUST use URI (path-based) versioning.
+  # => /docs/linting-rules/must/must-use-uri-versioning.md
+
+  must-use-uri-versioning:
+    given: $
+    severity: error
+    then:
+      function: hasUriVersioning
+    description: Path must contain a `MAJOR` version segment (e.g. `v1`), either in the path itself or consistently across all `servers[].url`.
+    message: '{{error}}'
+    documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/must/must-use-uri-versioning/
 
   # pygeoapi siblings — each inherits the strict definition but flips the
   # gate to `=== "pygeoapi"` and downgrades severity to `warn`.
