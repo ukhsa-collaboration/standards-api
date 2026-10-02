@@ -46,7 +46,7 @@
     "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.17.25",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "cpx2": "^9.0.3",
     "husky": "^9.1.7",
     "jest": "^30.5.2",
