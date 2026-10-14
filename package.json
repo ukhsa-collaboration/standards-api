@@ -27,7 +27,7 @@
   "license": "MIT",
   "engines": {
     "npm": ">=10",
-    "node": ">=22.21.0 <23"
+    "node": ">=24.16.0 <25"
   },
   "keywords": [
     "UKHSA",
@@ -38,31 +38,31 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.2.4",
+    "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.0.2",
-    "@quobix/vacuum": "0.30.6",
-    "@swc/core": "^1.16.18",
+    "@quobix/vacuum": "0.35.4",
+    "@swc/core": "^1.16.12",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/lodash": "^4.17.26",
-    "@types/node": "^26.6.5",
+    "@types/lodash": "^4.17.25",
+    "@types/node": "^26.6.4",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "cpx2": "^9.0.3",
     "husky": "^9.1.7",
     "jest": "^30.5.2",
     "jest-junit": "^17.0.0",
-    "js-yaml": "^5.5.0",
+    "js-yaml": "^5.4.2",
     "remark-cli": "^12.0.1",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-preset-lint-consistent": "^6.0.1",
     "remark-preset-lint-recommended": "^7.0.1",
     "remark-renumber-references": "^3.0.0",
-    "ts-jest": "^29.4.15",
+    "ts-jest": "^29.4.14",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.15",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "@typescript/native": "npm:typescript@^7.0.2",
     "unist-util-visit": "^5.1.0"
   }
 }

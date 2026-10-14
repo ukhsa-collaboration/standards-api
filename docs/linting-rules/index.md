@@ -149,7 +149,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "22.x"
+          node-version: "24.x"
           registry-url: "https://npm.pkg.github.com"
           # Defaults to the user or organization that owns the workflow file
           scope: "@ukhsa-collaboration"
@@ -205,10 +205,10 @@ If you use that stricter example in bash, enable extended globbing first with `s
 
 ### Official GitHub Action Example
 
-If you want the quickest GitHub Actions integration for a single OpenAPI file, use the official Vacuum action directly:
+The official Vacuum action supports a single OpenAPI path or a native Vacuum glob, including brace and recursive patterns:
 
 ```yaml
-name: Lint OpenAPI spec with vacuum
+name: Lint OpenAPI specs with Vacuum
 
 on:
   pull_request:
@@ -230,7 +230,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           cache: npm
 
       - name: Install dependencies
@@ -242,14 +242,21 @@ jobs:
       - name: Run official Vacuum action
         uses: pb33f/vacuum-action@v2
         with:
-          openapi_path: example/example.1.0.0.oas.yml
+          openapi_path: 'example/*.{json,yml,yaml}'
           ruleset: ukhsa.oas.rules.yml
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          vacuum_version: v0.33.0
+          github_token: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && secrets.GITHUB_TOKEN || '' }}
           fail_on_error: true
+          minimum_score: 70
           print_logs: true
+          step_summary: true
 ```
 
-This path is operationally simple and posts a Markdown report comment on pull requests. It does not create inline file annotations in the GitHub diff view. The action expects a concrete file path; if you need to lint multiple files, run `npx vacuum lint` in a shell step instead so your shell can expand the file pattern before Vacuum starts.
+The action passes the pattern directly to Vacuum, so shell glob expansion is not required. Each matched specification must meet `minimum_score`, and lint errors fail the action when `fail_on_error` is `true`.
+
+Reports can be printed in the workflow logs, appended to the job summary, and created or updated as a pull request comment. Supplying an empty token skips the comment, which allows linting to continue safely for pull requests from forks where the token is read-only.
+
+When Vacuum produces a report, the action preserves it and publishes the configured feedback before failing the lint step. An unmatched glob or command startup error fails without publishing a misleading report.
 
 Read the [official Vacuum documentation][5] for more development workflows.
 
