@@ -86,7 +86,7 @@ rules:
             - public-external
     recommended: true
     description: 'The `info` object must have an `x-audience` that matches at least one of these values: company-internal, partner-external, premium-external or public-external.'
-    message: 'Missing or wrong `info.x-audience`, {{error}}.'
+    message: "Missing or wrong `info.x-audience`, value must be one of 'company-internal', 'partner-external', 'premium-external', 'public-external'."
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/must/must-have-info-api-audience/
 
   # MUST Path must start with a slash and must not end with a slash.
@@ -179,7 +179,7 @@ rules:
             - enabling
     recommended: true
     description: 'The `info` object must have an `x-value-chain` that matches at least one of these values: prevent, detect, analyse, respond, cross-cutting or enabling.'
-    message: 'Missing or wrong `info.x-value-chain`, {{error}}.'
+    message: "Missing or wrong `info.x-value-chain`, value must be one of 'prevent', 'detect', 'analyse', 'respond', 'cross-cutting', 'enabling'."
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/must/must-have-info-value-chain/
 
   # MUST ALL requests MUST go through `https` protocol only

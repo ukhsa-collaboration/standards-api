@@ -8,7 +8,7 @@ on:
       - 'src/**'
       - 'example/**'
       - '__tests__/**'
-      - 'vacuum.config.yaml'
+      - 'vacuum.conf.yaml'
       - '*.oas.rules.*'
       - 'package.json'
       - 'tsconfig.json'
@@ -40,7 +40,7 @@ jobs:
               - 'src/**'
               - 'example/**'
               - '__tests__/**'
-              - 'vacuum.config.yaml'
+              - 'vacuum.conf.yaml'
               - '*.oas.rules.*'
               - 'package.json'
               - 'tsconfig.json'
@@ -50,14 +50,42 @@ jobs:
     name: Lint Example OpenAPI
     needs: changes
     if: ${{ needs.changes.outputs.run_ci == 'true' }}
+    runs-on: ubuntu-latest
+
     permissions:
       contents: read
       pull-requests: write
-    uses: ./.github/workflows/vacuum-pr-report.yml
-    with:
-      scan_path: 'example/*.{json,yml,yaml}'
-      node_version: '22.x'
-      validate_pack: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ruleset and Vacuum functions
+        run: npm run build
+
+      - name: Validate npm package contents
+        run: npm pack --dry-run
+
+      - name: Lint example OpenAPI specifications
+        uses: pb33f/vacuum-action@v2
+        with:
+          openapi_path: 'example/*.{json,yml,yaml}'
+          ruleset: ukhsa.oas.rules.yml
+          vacuum_version: v0.33.0
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: true
+          minimum_score: 70
+          print_logs: true
+          step_summary: true
 
   run-typescript-tests:
     name: Run Tests
@@ -78,7 +106,7 @@ jobs:
       - name: Use Node.js LTS
         uses: actions/setup-node@v7
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           cache: 'npm'
 
       - name: Install dependencies

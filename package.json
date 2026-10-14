@@ -27,7 +27,7 @@
   "license": "MIT",
   "engines": {
     "npm": ">=10",
-    "node": ">=22.21.0 <23"
+    "node": ">=24.16.0 <25"
   },
   "keywords": [
     "UKHSA",
@@ -40,7 +40,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.0.2",
-    "@quobix/vacuum": "0.30.6",
+    "@quobix/vacuum": "0.33.0",
     "@swc/core": "^1.16.12",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
