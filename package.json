@@ -40,7 +40,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.0.2",
-    "@quobix/vacuum": "0.30.6",
+    "@quobix/vacuum": "0.35.4",
     "@swc/core": "^1.16.18",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
