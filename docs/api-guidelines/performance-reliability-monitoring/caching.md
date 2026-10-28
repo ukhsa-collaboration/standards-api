@@ -350,7 +350,7 @@ sequenceDiagram
     
     Note over Cache: Cache entry created with<br>max-age=3600
     
-    rect rgb(200, 250, 200)
+    rect rgb(207, 228, 220)
     Note right of Cache: Within TTL period
     Client->>Cache: Request resource
     Cache-->>Client: Return cached resource
@@ -358,7 +358,7 @@ sequenceDiagram
     
     Note over Cache: After 3600 seconds<br>cache entry expires
     
-    rect rgb(250, 230, 200)
+    rect rgb(253, 228, 215)
     Note right of Cache: After TTL period
     Client->>Cache: Request resource
     Cache-->>API: Forward request (cache miss)
@@ -491,10 +491,13 @@ flowchart TD
     E --> I[Example: Price Data]
     F --> J[Example: User Preferences]
     
-    style C fill:#d4edda
-    style D fill:#d4edda
-    style E fill:#fff3cd
-    style F fill:#f8d7da
+    classDef good fill:#cfe4dc,stroke:#0f7a52
+    classDef caution fill:#fff8cc,stroke:#bfa600
+    classDef bad fill:#f4d7d7,stroke:#ca3535
+
+    class C,D good
+    class E caution
+    class F bad
 ```
 
 ### Cache Key Strategies
@@ -521,15 +524,11 @@ graph LR
         G["result_xyz"] --> H["cache_456"]
     end
     
-    style A fill:#d4edda,stroke:#c3e6cb
-    style B fill:#d4edda,stroke:#c3e6cb
-    style C fill:#d4edda,stroke:#c3e6cb
-    style D fill:#d4edda,stroke:#c3e6cb
+    classDef good fill:#cfe4dc,stroke:#0f7a52
+    classDef bad fill:#f4d7d7,stroke:#ca3535
 
-    style E fill:#f8d7da,stroke:#f5c6cb
-    style F fill:#f8d7da,stroke:#f5c6cb
-    style G fill:#f8d7da,stroke:#f5c6cb
-    style H fill:#f8d7da,stroke:#f5c6cb
+    class A,B,C,D good
+    class E,F,G,H bad
 ```
 
 ## Performance Metrics

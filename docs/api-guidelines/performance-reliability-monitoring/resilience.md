@@ -167,9 +167,9 @@ flowchart TD
     HALF -->|Success| CLOSED
     HALF -->|Failure| OPEN
     
-    classDef closed fill:#59b259,stroke:#004d00,color:#fff
-    classDef open fill:#ff6666,stroke:#800000,color:#fff
-    classDef half fill:#ffcc00,stroke:#cc8800,color:#000
+    classDef closed fill:#0f7a52,stroke:#0b5c3e,color:#fff
+    classDef open fill:#ca3535,stroke:#982828,color:#fff
+    classDef half fill:#ffdd00,stroke:#bfa600,color:#0b0c0c
     
     class CLOSED closed
     class OPEN open
@@ -322,7 +322,7 @@ graph TD
         Pool
     end
     
-    classDef overloaded fill:#FF6347,stroke:#8B0000;
+    classDef overloaded fill:#f4d7d7,stroke:#ca3535;
     class Pool,Service1,Service2,Service3 overloaded
     
     %% Note: When Search Service fails,
@@ -355,7 +355,7 @@ graph TD
     end
     
 
-    classDef failed fill:#FF6347,stroke:#8B0000;
+    classDef failed fill:#f4d7d7,stroke:#ca3535;
     class Service3,Pool3 failed
 
     
