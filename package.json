@@ -47,6 +47,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.17.26",
     "@types/node": "^26.6.5",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "cpx2": "^9.0.3",
     "husky": "^9.1.7",
     "jest": "^30.5.2",
@@ -62,7 +63,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.23.15",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "@typescript/native": "npm:typescript@^7.0.2",
     "unist-util-visit": "^5.1.0"
   }
 }
