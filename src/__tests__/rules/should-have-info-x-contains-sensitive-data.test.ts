@@ -28,8 +28,9 @@ paths: {}
 `,
     errors: [
       {
-        severity: DiagnosticSeverity.Warning, // or 1
-        path: ['info'],
+        severity: DiagnosticSeverity.Warning,
+        // Vacuum 0.35 reports the source range of `info`, but no result path
+        // can point to a property that does not exist.
         message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
       },
     ],

@@ -8,7 +8,7 @@ on:
       - 'src/**'
       - 'example/**'
       - '__tests__/**'
-      - 'vacuum.config.yaml'
+      - 'vacuum.conf.yaml'
       - '*.oas.rules.*'
       - 'package.json'
       - 'tsconfig.json'
@@ -40,7 +40,7 @@ jobs:
               - 'src/**'
               - 'example/**'
               - '__tests__/**'
-              - 'vacuum.config.yaml'
+              - 'vacuum.conf.yaml'
               - '*.oas.rules.*'
               - 'package.json'
               - 'tsconfig.json'
@@ -50,14 +50,47 @@ jobs:
     name: Lint Example OpenAPI
     needs: changes
     if: ${{ needs.changes.outputs.run_ci == 'true' }}
+    runs-on: ubuntu-latest
+
     permissions:
       contents: read
       pull-requests: write
-    uses: ./.github/workflows/vacuum-pr-report.yml
-    with:
-      scan_path: 'example/*.{json,yml,yaml}'
-      node_version: '22.x'
-      validate_pack: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ruleset and Vacuum functions
+        run: npm run build
+
+      - name: Validate npm package contents
+        run: npm pack --dry-run
+
+      # vacuum-action@v2 cannot be used in this organisation because the
+      # composite action embeds peter-evans actions that are not allowlisted.
+      # Use the same official Vacuum image directly so linting remains pinned
+      # to the reviewed release without introducing prohibited nested actions.
+      - name: Lint example OpenAPI specifications
+        run: |
+          docker run --rm \
+            --volume "${PWD}:/work" \
+            --workdir /work \
+            dshanley/vacuum:v0.35.4 \
+            lint example/example.1.0.0.oas.yml \
+            --ruleset ukhsa.oas.rules.yml \
+            --functions dist/functions \
+            --resolve-all-refs \
+            --nested-refs-doc-context \
+            --no-style
 
   run-typescript-tests:
     name: Run Tests
@@ -78,7 +111,7 @@ jobs:
       - name: Use Node.js LTS
         uses: actions/setup-node@v7
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           cache: 'npm'
 
       - name: Install dependencies
