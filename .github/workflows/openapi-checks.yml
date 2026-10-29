@@ -78,7 +78,7 @@ jobs:
       - name: Lint example OpenAPI specifications
         uses: pb33f/vacuum-action@v2
         with:
-          openapi_path: 'example/*.{json,yml,yaml}'
+          openapi_path: example/example.1.0.0.oas.yml
           ruleset: ukhsa.oas.rules.yml
           vacuum_version: v0.35.4
           github_token: ${{ secrets.GITHUB_TOKEN }}
