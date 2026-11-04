@@ -56,7 +56,7 @@ jobs:
     uses: ./.github/workflows/vacuum-pr-report.yml
     with:
       scan_path: 'example/*.{json,yml,yaml}'
-      node_version: '22.x'
+      node_version: '24.x'
       validate_pack: true
 
   run-typescript-tests:
@@ -78,7 +78,7 @@ jobs:
       - name: Use Node.js LTS
         uses: actions/setup-node@v7
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           cache: 'npm'
 
       - name: Install dependencies

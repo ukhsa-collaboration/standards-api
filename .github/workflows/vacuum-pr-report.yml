@@ -11,7 +11,7 @@ on:
       node_version:
         description: Node.js version used to build and run the ruleset.
         required: false
-        default: '22.x'
+        default: '24.x'
         type: string
       validate_pack:
         description: Whether to run npm pack --dry-run before linting.

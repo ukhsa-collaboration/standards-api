@@ -29,7 +29,7 @@ paths: {}
     errors: [
       {
         severity: DiagnosticSeverity.Warning, // or 1
-        path: ['info'],
+        path: null, // vacuum >=0.36: `defined` on a wholly absent field reports path: null
         message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
       },
     ],
@@ -47,8 +47,7 @@ paths: {}
     errors: [
       {
         severity: DiagnosticSeverity.Warning,
-        // Vacuum reports path as ["info", "0"] for schema validation errors
-        path: ['info', '0'],
+        path: ['info', '0'], // schema validation errors keep the full path
         message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
       },
     ],
