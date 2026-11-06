@@ -84,7 +84,7 @@ jobs:
           docker run --rm \
             --volume "${PWD}:/work" \
             --workdir /work \
-            dshanley/vacuum:v0.35.4 \
+            dshanley/vacuum:v0.36.2 \
             lint example/example.1.0.0.oas.yml \
             --ruleset ukhsa.oas.rules.yml \
             --functions dist/functions \

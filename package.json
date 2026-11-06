@@ -26,8 +26,8 @@
   "homepage": "https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/",
   "license": "MIT",
   "engines": {
-    "npm": ">=10",
-    "node": ">=24.16.0 <25"
+    "npm": ">=11",
+    "node": ">=24.22.2 <25"
   },
   "keywords": [
     "UKHSA",
@@ -40,12 +40,12 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.0.2",
-    "@quobix/vacuum": "0.35.4",
-    "@swc/core": "^1.16.18",
+    "@quobix/vacuum": "0.36.2",
+    "@swc/core": "^1.16.20",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/lodash": "^4.17.26",
+    "@types/lodash": "^4.17.27",
     "@types/node": "^26.6.5",
     "cpx2": "^9.0.3",
     "husky": "^9.1.7",
@@ -63,6 +63,6 @@
     "tsx": "^4.23.15",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.2.0"
   }
 }
