@@ -20,6 +20,16 @@ properties:
 */
 
 /**
+ * Checks whether a property schema allows the given type. OpenAPI 3.1 writes a
+ * nullable value as a type array, such as `["null", "string"]`.
+ * @param {any} schema
+ * @param {string} name
+ * @returns {boolean}
+ */
+const allowsType = (schema, name) =>
+  schema.type === name || (Array.isArray(schema.type) && schema.type.includes(name));
+
+/**
  * Asserts that the given schema is a valid Problem JSON schema.
  * @param {any} schema
  * @param {(string | number)[]} [basePath]
@@ -33,27 +43,27 @@ export const assertProblemSchema = (schema, basePath = []) => {
   }
 
   const type = (schema.properties || {}).type || {};
-  if (type.type !== 'string' || type.format !== 'uri-reference') {
+  if (!allowsType(type, 'string') || type.format !== 'uri-reference') {
     results.push({ message: "Problem json must have property 'type' with type 'string' and format 'uri-reference'", path: [...basePath, 'properties', 'type'] });
   }
 
   const title = (schema.properties || {}).title || {};
-  if (title.type !== 'string') {
+  if (!allowsType(title, 'string')) {
     results.push({ message: "Problem json must have property 'title' with type 'string'", path: [...basePath, 'properties', 'title'] });
   }
 
   const status = (schema.properties || {}).status || {};
-  if (status.type !== 'integer' || status.format !== 'int32') {
+  if (!allowsType(status, 'integer') || status.format !== 'int32') {
     results.push({ message: "Problem json must have property 'status' with type 'integer' and format 'int32'", path: [...basePath, 'properties', 'status'] });
   }
 
   const detail = (schema.properties || {}).detail || {};
-  if (detail.type !== 'string') {
+  if (!allowsType(detail, 'string')) {
     results.push({ message: "Problem json must have property 'detail' with type 'string'", path: [...basePath, 'properties', 'detail'] });
   }
 
   const instance = (schema.properties || {}).instance || {};
-  if (instance.type !== 'string') {
+  if (!allowsType(instance, 'string')) {
     results.push({ message: "Problem json must have property 'instance' with type 'string'", path: [...basePath, 'properties', 'instance'] });
   }
 

@@ -2,6 +2,8 @@
 
 `Problem` schema **MUST** include this set of minimal required properties and validations:
 
+In OpenAPI 3.1 a property **MAY** use a type array that includes the required type, such as `type: [string, 'null']`. The `Problem` schema itself **MUST** have `type: object`.
+
 ## Valid Example
 
 ```yaml
