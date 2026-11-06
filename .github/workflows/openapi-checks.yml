@@ -75,22 +75,13 @@ jobs:
       - name: Validate npm package contents
         run: npm pack --dry-run
 
-      # vacuum-action@v2 cannot be used in this organisation because the
-      # composite action embeds peter-evans actions that are not allowlisted.
-      # Use the same official Vacuum image directly so linting remains pinned
-      # to the reviewed release without introducing prohibited nested actions.
       - name: Lint example OpenAPI specifications
-        run: |
-          docker run --rm \
-            --volume "${PWD}:/work" \
-            --workdir /work \
-            dshanley/vacuum:v0.36.2 \
-            lint example/example.1.0.0.oas.yml \
-            --ruleset ukhsa.oas.rules.yml \
-            --functions dist/functions \
-            --resolve-all-refs \
-            --nested-refs-doc-context \
-            --no-style
+        uses: pb33f/vacuum-action@v2.1.0
+        with:
+          openapi_path: example/example.1.0.0.oas.yml
+          ruleset: ukhsa.oas.rules.yml
+          vacuum_version: v0.36.2
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   run-typescript-tests:
     name: Run Tests
