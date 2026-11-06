@@ -48,11 +48,40 @@ ${indented}
           return { name: '${name}', description: '' };
         };
 
+  // Functions return Spectral-style path arrays, but Vacuum decodes a result's path as a
+  // JSONPath string and rejects the whole result set otherwise. An empty path is dropped so
+  // Vacuum falls back to the location the rule's \`given\` matched.
+  var toJsonPath = function (segments) {
+    return '$' + segments
+      .map(function (segment) {
+        if (typeof segment === 'number') {
+          return '[' + segment + ']';
+        }
+        var key = String(segment);
+        return /^[A-Za-z_][A-Za-z0-9_]*$/.test(key)
+          ? '.' + key
+          : "['" + key.replace(/\\\\/g, '\\\\\\\\').replace(/'/g, "\\\\'") + "']";
+      })
+      .join('');
+  };
+
   globalThis.runRule = function (input) {
     var opts =
       (typeof context === 'object' && context && context.ruleAction && context.ruleAction.functionOptions) || {};
     var ctx = typeof context === 'undefined' ? {} : context;
-    return typeof fn === 'function' ? fn(input, opts, ctx) : [];
+    var results = typeof fn === 'function' ? fn(input, opts, ctx) : [];
+    return (results || []).map(function (result) {
+      if (!result || !Array.isArray(result.path)) {
+        return result;
+      }
+      var converted = Object.assign({}, result);
+      if (result.path.length > 0) {
+        converted.path = toJsonPath(result.path);
+      } else {
+        delete converted.path;
+      }
+      return converted;
+    });
   };
 
   globalThis['${name}'] = globalThis.runRule;
