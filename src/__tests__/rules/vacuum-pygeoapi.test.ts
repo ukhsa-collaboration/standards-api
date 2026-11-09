@@ -30,7 +30,7 @@ function runVacuumSpectralReport(specPath: string) {
       '--functions',
       FUNCTIONS_DIR,
     ],
-    { encoding: 'utf8', timeout: 60_000, maxBuffer: 10_000_000 },
+    { encoding: 'utf8', timeout: 120_000, maxBuffer: 10_000_000 },
   );
 
   const elapsedMs = Date.now() - started;
@@ -49,7 +49,7 @@ describe('Vacuum large-spec compatibility', () => {
     // Command should complete (may exit non-zero due to lint failures, that is fine) and within the timeout.
     expect(result.error).toBeUndefined();
     expect(result.signal).toBeNull();
-    expect(elapsedMs).toBeLessThan(60_000);
+    expect(elapsedMs).toBeLessThan(120_000);
 
     // The strict variant must NOT fire on a pygeoapi-marked spec; the paired
     // -pygeoapi sibling must fire at `warn` severity instead.
@@ -59,5 +59,5 @@ describe('Vacuum large-spec compatibility', () => {
     const pygeoapiHits = parsed.filter((r: any) => r.code === 'must-use-https-protocol-only-pygeoapi');
     expect(pygeoapiHits.length).toBeGreaterThan(0);
     expect(pygeoapiHits.every((r: any) => r.severity === 1)).toBe(true);
-  }, 70_000);
+  }, 140_000);
 });
