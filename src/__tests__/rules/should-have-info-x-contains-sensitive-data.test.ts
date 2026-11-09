@@ -29,7 +29,7 @@ paths: {}
     errors: [
       {
         severity: DiagnosticSeverity.Warning, // or 1
-        path: null, // vacuum >=0.36: `defined` on a wholly absent field reports path: null
+        path: ['info'], // `defined` reports the `given` selector's path for a wholly absent field
         message: "Missing or wrong 'info.x-contains-sensitive-data', should be 'boolean'.",
       },
     ],
