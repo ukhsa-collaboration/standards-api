@@ -9,8 +9,12 @@ interface OpenApiDocument {
   servers?: ServerObject[];
 }
 
-// Matches a `vN` segment anywhere in a path or server URL, e.g. `/v1`, `/v1/`, or a bare `v1`.
+const PATH_VERSION_PREFIX = /^\/v[0-9]+(?:\/|$)/;
 const VERSION_SEGMENT = /(^|\/)v[0-9]+(\/|$)/;
+
+function hasPathVersionPrefix(value: string): boolean {
+  return PATH_VERSION_PREFIX.test(value);
+}
 
 function hasVersionSegment(value: string | undefined): boolean {
   return typeof value === 'string' && VERSION_SEGMENT.test(value);
@@ -19,9 +23,10 @@ function hasVersionSegment(value: string | undefined): boolean {
 /**
  * Custom ruleset function enforcing URI (path-based) versioning.
  *
- * A path is compliant if the version segment appears in the path itself, or
- * consistently across every `servers[].url` (e.g. gateway-prefixed APIs where
- * the version lives ahead of the paths defined in the OpenAPI definition).
+ * A path is compliant if its first segment is the version, or if a version
+ * segment appears consistently across every `servers[].url` (e.g.
+ * gateway-prefixed APIs where the version lives ahead of the paths defined in
+ * the OpenAPI definition).
  *
  * @param targetVal - The root OpenAPI document.
  * @returns One violation per path missing a version segment, unless the
@@ -41,7 +46,7 @@ export const runRule = (
   if (serversVersioned) return [];
 
   return Object.keys(paths)
-    .filter((pathKey) => !hasVersionSegment(pathKey))
+    .filter((pathKey) => !hasPathVersionPrefix(pathKey))
     .map((pathKey) => ({
       message: 'Path must use URI versioning',
       path: ['paths', pathKey],

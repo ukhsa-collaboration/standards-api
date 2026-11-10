@@ -1,19 +1,21 @@
 # **MUST** use uri versioning
 
-Path **MUST** contain a `MAJOR` version segment.
+Path **MUST** start with a `MAJOR` version segment unless the version is already present in every `servers[].url`.
 
-## Invalid Example
+## Invalid Examples
 
 ```yaml
 /user:
 ```
 
-## Valid Example
-
 ```yaml
 /user/v1:
 ```
 
-[UKHSA Guidelines Versioning][1]
+## Valid Example
 
-[1]: ../../api-guidelines/versioning-and-deprecation.md#uri-versioning
+```yaml
+/v1/users:
+```
+
+../../api-guidelines/versioning-and-deprecation.md#uri-versioning

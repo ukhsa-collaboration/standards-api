@@ -8,7 +8,7 @@ describe('has-uri-versioning', () => {
     expect(result).toEqual([]);
   });
 
-  it('passes when every path contains a version segment', () => {
+  it('passes when every path starts with a version segment', () => {
     const document = {
       paths: {
         '/v1/users': {},
@@ -33,7 +33,7 @@ describe('has-uri-versioning', () => {
     expect(result).toEqual([]);
   });
 
-  it('fails for paths without a version segment and no versioned servers', () => {
+  it('fails for paths without a leading version segment and no versioned servers', () => {
     const document = {
       paths: {
         '/users': {},
@@ -44,6 +44,7 @@ describe('has-uri-versioning', () => {
     const result: FunctionResult[] = hasUriVersioning(document);
     expect(result).toEqual([
       { message: 'Path must use URI versioning', path: ['paths', '/users'] },
+      { message: 'Path must use URI versioning', path: ['paths', '/users/v2'] },
     ]);
   });
 
