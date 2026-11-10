@@ -12,12 +12,43 @@ interface OpenApiDocument {
 const PATH_VERSION = /^((?:\/[^/]+)*)\/v[0-9]+(\/.+)?$/;
 const SERVER_VERSION_SUFFIX = /(?:^|\/)v[0-9]+\/?$/;
 
-function getPathPrefixBeforeVersion(value: string): string | undefined {
-  const match = PATH_VERSION.exec(value);
-  if (!match) return undefined;
+interface PathVersion {
+  pathKey: string;
+  prefix?: string;
+  hasResource: boolean;
+}
+
+function parsePathVersion(pathKey: string): PathVersion {
+  const match = PATH_VERSION.exec(pathKey);
+  if (!match) return { pathKey, hasResource: false };
 
   const [, prefix, resource] = match;
-  return resource || prefix === '' ? prefix : undefined;
+  return {
+    pathKey,
+    prefix,
+    hasResource: resource !== undefined,
+  };
+}
+
+function getMostCommonResourcePrefix(pathVersions: PathVersion[]): string | undefined {
+  const counts = new Map<string, number>();
+
+  for (const { prefix, hasResource } of pathVersions) {
+    if (prefix === undefined || !hasResource) continue;
+    counts.set(prefix, (counts.get(prefix) ?? 0) + 1);
+  }
+
+  let expectedPrefix: string | undefined;
+  let highestCount = 0;
+
+  for (const [prefix, count] of counts) {
+    if (count > highestCount) {
+      expectedPrefix = prefix;
+      highestCount = count;
+    }
+  }
+
+  return expectedPrefix;
 }
 
 function serverEndsWithVersion(value: string | undefined): boolean {
@@ -49,14 +80,16 @@ export const runRule = (
 
   if (serversVersioned) return [];
 
-  const pathVersions = Object.keys(paths).map((pathKey) => ({
-    pathKey,
-    prefix: getPathPrefixBeforeVersion(pathKey),
-  }));
-  const expectedPrefix = pathVersions.find(({ prefix }) => prefix !== undefined)?.prefix;
+  const pathVersions = Object.keys(paths).map(parsePathVersion);
+  const expectedPrefix = getMostCommonResourcePrefix(pathVersions);
 
   return pathVersions
-    .filter(({ prefix }) => prefix === undefined || prefix !== expectedPrefix)
+    .filter(({ prefix, hasResource }) => {
+      if (prefix === undefined) return true;
+      if (hasResource) return prefix !== expectedPrefix;
+      if (prefix === '') return expectedPrefix !== undefined && expectedPrefix !== '';
+      return prefix !== expectedPrefix;
+    })
     .map(({ pathKey }) => ({
       message: `Path "${pathKey}" must place an exact major version before the resource and use the same base prefix as every other path`,
       path: ['paths', pathKey],

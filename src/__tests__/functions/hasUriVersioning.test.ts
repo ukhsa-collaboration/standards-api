@@ -25,6 +25,7 @@ describe('has-uri-versioning', () => {
   it('passes when all paths use the same prefix before the version', () => {
     const document = {
       paths: {
+        '/api/v1': {},
         '/api/v1/users': {},
         '/api/v1/projects': {},
       },
@@ -73,11 +74,13 @@ describe('has-uri-versioning', () => {
     ]);
   });
 
-  it('fails when paths use different prefixes before the version', () => {
+  it('fails the minority prefix even when it appears first', () => {
     const document = {
       paths: {
-        '/api/v1/x': {},
         '/other/v1/y': {},
+        '/api/v1/x': {},
+        '/api/v1/users': {},
+        '/api/v1/projects': {},
       },
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
@@ -86,6 +89,22 @@ describe('has-uri-versioning', () => {
       {
         message: 'Path "/other/v1/y" must place an exact major version before the resource and use the same base prefix as every other path',
         path: ['paths', '/other/v1/y'],
+      },
+    ]);
+  });
+
+  it('fails a lone resource followed by a version', () => {
+    const document = {
+      paths: {
+        '/users/v2': {},
+      },
+    };
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: FunctionResult[] = hasUriVersioning(document);
+    expect(result).toEqual([
+      {
+        message: 'Path "/users/v2" must place an exact major version before the resource and use the same base prefix as every other path',
+        path: ['paths', '/users/v2'],
       },
     ]);
   });

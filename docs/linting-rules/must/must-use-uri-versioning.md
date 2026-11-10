@@ -26,9 +26,10 @@ Version in the source path:
 /v1/users:
 ```
 
-Consistent base prefix before the version:
+Consistent base prefix before the version, including an optional API root:
 
 ```yaml
+/api/v1:
 /api/v1/users:
 /api/v1/projects:
 ```
