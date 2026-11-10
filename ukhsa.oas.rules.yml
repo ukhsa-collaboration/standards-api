@@ -490,7 +490,7 @@ rules:
     severity: error
     then:
       function: hasUriVersioning
-    description: Source paths must start with a `MAJOR` version segment (e.g. `/v1`), unless every `servers[].url` ends with a version segment.
+    description: Source paths must contain an exact `MAJOR` version before the resource and use a consistent base prefix, unless every `servers[].url` ends with a version segment.
     message: '{{error}}'
     documentationUrl: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/linting-rules/must/must-use-uri-versioning/
 

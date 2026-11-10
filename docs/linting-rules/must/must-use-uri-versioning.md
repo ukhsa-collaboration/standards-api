@@ -1,8 +1,8 @@
 # **MUST** use URI versioning
 
-Paths in the source OpenAPI document **MUST** start with a `MAJOR` version segment unless the version is already present at the end of every `servers[].url`. APIM adds the published `/namespace/product` prefix, so it is not included before the version in source paths.
+Paths in the source OpenAPI document **MUST** contain an exact `MAJOR` version segment before the resource unless the version is already present at the end of every `servers[].url`. Any base prefix before the version, such as `/api`, **MUST** be identical across all paths.
 
-A fixed base such as `/api` belongs in the server URL. For example, use `https://api.example.com/api/v1` with source paths such as `/projects`, rather than `/api/v1/projects`.
+APIM adds the published `/namespace/product` prefix. Source paths may therefore start directly with the version, such as `/v1/users`, or use a consistent application base, such as `/api/v1/users`.
 
 ## Invalid Examples
 
@@ -24,6 +24,13 @@ Version in the source path:
 
 ```yaml
 /v1/users:
+```
+
+Consistent base prefix before the version:
+
+```yaml
+/api/v1/users:
+/api/v1/projects:
 ```
 
 Version in the server URL:

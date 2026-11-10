@@ -22,6 +22,18 @@ describe('has-uri-versioning', () => {
     expect(result).toEqual([]);
   });
 
+  it('passes when all paths use the same prefix before the version', () => {
+    const document = {
+      paths: {
+        '/api/v1/users': {},
+        '/api/v1/projects': {},
+      },
+    };
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: FunctionResult[] = hasUriVersioning(document);
+    expect(result).toEqual([]);
+  });
+
   it('passes when servers consistently prefix the version', () => {
     const document = {
       servers: [{ url: 'https://api.example.com/product/v1' }],
@@ -41,27 +53,39 @@ describe('has-uri-versioning', () => {
         '/users': {},
         '/users/v2': {},
         '/v1beta/users': {},
-        '/api/v1/users': {},
       },
     };
     // @ts-expect-error: we don't care in this context that we are not passing options and context.
     const result: FunctionResult[] = hasUriVersioning(document);
     expect(result).toEqual([
       {
-        message: 'Path "/users" must start with a major version segment such as "/v1"',
+        message: 'Path "/users" must place an exact major version before the resource and use the same base prefix as every other path',
         path: ['paths', '/users'],
       },
       {
-        message: 'Path "/users/v2" must start with a major version segment such as "/v1"',
+        message: 'Path "/users/v2" must place an exact major version before the resource and use the same base prefix as every other path',
         path: ['paths', '/users/v2'],
       },
       {
-        message: 'Path "/v1beta/users" must start with a major version segment such as "/v1"',
+        message: 'Path "/v1beta/users" must place an exact major version before the resource and use the same base prefix as every other path',
         path: ['paths', '/v1beta/users'],
       },
+    ]);
+  });
+
+  it('fails when paths use different prefixes before the version', () => {
+    const document = {
+      paths: {
+        '/api/v1/x': {},
+        '/other/v1/y': {},
+      },
+    };
+    // @ts-expect-error: we don't care in this context that we are not passing options and context.
+    const result: FunctionResult[] = hasUriVersioning(document);
+    expect(result).toEqual([
       {
-        message: 'Path "/api/v1/users" must start with a major version segment such as "/v1"',
-        path: ['paths', '/api/v1/users'],
+        message: 'Path "/other/v1/y" must place an exact major version before the resource and use the same base prefix as every other path',
+        path: ['paths', '/other/v1/y'],
       },
     ]);
   });
@@ -77,7 +101,7 @@ describe('has-uri-versioning', () => {
     const result: FunctionResult[] = hasUriVersioning(document);
     expect(result).toEqual([
       {
-        message: 'Path "/users" must start with a major version segment such as "/v1"',
+        message: 'Path "/users" must place an exact major version before the resource and use the same base prefix as every other path',
         path: ['paths', '/users'],
       },
     ]);
@@ -94,7 +118,7 @@ describe('has-uri-versioning', () => {
     const result: FunctionResult[] = hasUriVersioning(document);
     expect(result).toEqual([
       {
-        message: 'Path "/users" must start with a major version segment such as "/v1"',
+        message: 'Path "/users" must place an exact major version before the resource and use the same base prefix as every other path',
         path: ['paths', '/users'],
       },
     ]);
