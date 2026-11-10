@@ -207,6 +207,8 @@ If you use that stricter example in bash, enable extended globbing first with `s
 
 The official Vacuum action supports a single OpenAPI path or a native Vacuum glob, including brace and recursive patterns:
 
+<!-- {% raw %} -->
+
 ```yaml
 name: Lint OpenAPI specs with Vacuum
 
@@ -251,6 +253,8 @@ jobs:
           print_logs: true
           step_summary: true
 ```
+
+<!-- {% endraw %} -->
 
 The action passes the pattern directly to Vacuum, so shell glob expansion is not required. Each matched specification must meet `minimum_score`, and lint errors fail the action when `fail_on_error` is `true`.
 
