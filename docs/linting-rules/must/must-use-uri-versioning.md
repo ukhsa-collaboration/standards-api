@@ -1,4 +1,4 @@
-# **MUST** use uri versioning
+# **MUST** use URI versioning
 
 Path **MUST** start with a `MAJOR` version segment unless the version is already present in every `servers[].url`.
 
@@ -18,4 +18,4 @@ Path **MUST** start with a `MAJOR` version segment unless the version is already
 /v1/users:
 ```
 
-../../api-guidelines/versioning-and-deprecation.md#uri-versioning
+<a href="../../api-guidelines/versioning-and-deprecation.md#uri-versioning">UKHSA Guidelines Versioning</a>
