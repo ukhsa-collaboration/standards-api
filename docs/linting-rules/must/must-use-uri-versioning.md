@@ -44,4 +44,6 @@ paths:
 
 The published path may then be `/namespace/product/v1/users` after APIM adds its prefix.
 
-<a href="../../api-guidelines/versioning-and-deprecation.md#uri-versioning">UKHSA Guidelines Versioning</a>
+[UKHSA Guidelines Versioning][versioning-guideline]
+
+[versioning-guideline]: ../../api-guidelines/versioning-and-deprecation.md#uri-versioning
