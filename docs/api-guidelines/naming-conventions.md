@@ -6,7 +6,7 @@ order: 4
 
 ## URI Structure
 
-APIs **MUST** follow the defined hierarchical structure:
+APIs **MUST** follow the defined hierarchical structure. APIM adds the `/namespace/product` prefix when publishing an API, so paths in the source OpenAPI document start with the version, for example `/v1/users/12345`.
 
 ```text
 https://azgw.api.ukhsa.gov.uk/namespace/product/v1/users/12345?sort=startDate

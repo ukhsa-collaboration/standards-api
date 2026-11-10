@@ -10,14 +10,14 @@ interface OpenApiDocument {
 }
 
 const PATH_VERSION_PREFIX = /^\/v[0-9]+(?:\/|$)/;
-const VERSION_SEGMENT = /(^|\/)v[0-9]+(\/|$)/;
+const SERVER_VERSION_SUFFIX = /(?:^|\/)v[0-9]+\/?$/;
 
 function hasPathVersionPrefix(value: string): boolean {
   return PATH_VERSION_PREFIX.test(value);
 }
 
-function hasVersionSegment(value: string | undefined): boolean {
-  return typeof value === 'string' && VERSION_SEGMENT.test(value);
+function serverEndsWithVersion(value: string | undefined): boolean {
+  return typeof value === 'string' && SERVER_VERSION_SUFFIX.test(value);
 }
 
 /**
@@ -41,14 +41,14 @@ export const runRule = (
   if (!paths || typeof paths !== 'object') return [];
 
   const servers = Array.isArray(targetVal.servers) ? targetVal.servers : [];
-  const serversVersioned = servers.length > 0 && servers.every((server) => hasVersionSegment(server?.url));
+  const serversVersioned = servers.length > 0 && servers.every((server) => serverEndsWithVersion(server?.url));
 
   if (serversVersioned) return [];
 
   return Object.keys(paths)
     .filter((pathKey) => !hasPathVersionPrefix(pathKey))
     .map((pathKey) => ({
-      message: 'Path must use URI versioning',
+      message: `Path "${pathKey}" must start with a major version segment such as "/v1"`,
       path: ['paths', pathKey],
     }));
 };

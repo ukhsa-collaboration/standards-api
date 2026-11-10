@@ -10,7 +10,7 @@ order: 7
 
 API versions **MUST** start with v1.
 
-The version number **MUST** be placed consistently at the base of the api path.
+The version number **MUST** be placed consistently at the base of the API path. APIM adds the published `/namespace/product` prefix, so paths in the source OpenAPI document start with the version, for example `/v1/users`.
 
 Version numbers **MUST NOT** be passed as parameters.
 
