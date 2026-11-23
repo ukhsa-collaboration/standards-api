@@ -4,41 +4,42 @@ Thank you for your interest in contributing to the UKHSA API Guidelines! This re
 
 ## Table of Contents
 
-- [Contributing to UKHSA API Guidelines][1]
-  - [Table of Contents][2]
-  - [Code of Conduct][3]
-  - [Getting Started][4]
-    - [Setting Up Your Development Environment][5]
-      - [1. Fork the repository][6]
-      - [2. Clone the repository][7]
-      - [3. Install dependencies][8]
-      - [4. Compile TypeScript][9]
-    - [Understanding the Repository Structure][10]
-  - [Contributing Process][11]
-    - [Finding Issues to Work On][12]
-    - [Signed Commits][13]
-      - [1. Generate a GPG key (if you don't have one already)][14]
-      - [2. Configure Git to use your GPG key][15]
-      - [3. Add your GPG key to GitHub][16]
-      - [4. Sign your commits][17]
-    - [Opening New Issues][18]
-    - [Making Changes][19]
-      - [Example][20]
-    - [Pull Request Process][21]
-  - [Development Guidelines][22]
-    - [Documentation Standards][23]
-    - [Linting Rules Development][24]
-    - [Testing Guidelines][25]
-  - [Viewing the Guidelines Locally][26]
-  - [Documentation Deployment][27]
-  - [Ruleset Release][28]
-    - [1. Update the Version Number][29]
-    - [2. Document the Changes][30]
-    - [3. Create a Release][31]
+- [Contributing to UKHSA API Guidelines](#contributing-to-ukhsa-api-guidelines)
+  - [Table of Contents](#table-of-contents)
+  - [Code of Conduct](#code-of-conduct)
+  - [Getting Started](#getting-started)
+    - [Setting Up Your Development Environment](#setting-up-your-development-environment)
+      - [1. Fork the repository](#1-fork-the-repository)
+      - [2. Clone the repository](#2-clone-the-repository)
+      - [3. Install dependencies](#3-install-dependencies)
+      - [4. Compile TypeScript](#4-compile-typescript)
+    - [Understanding the Repository Structure](#understanding-the-repository-structure)
+  - [Contributing Process](#contributing-process)
+    - [Finding Issues to Work On](#finding-issues-to-work-on)
+    - [Signed Commits](#signed-commits)
+      - [1. Generate a GPG key (if you don't have one already)](#1-generate-a-gpg-key-if-you-dont-have-one-already)
+      - [2. Configure Git to use your GPG key](#2-configure-git-to-use-your-gpg-key)
+      - [3. Add your GPG key to GitHub](#3-add-your-gpg-key-to-github)
+      - [4. Sign your commits](#4-sign-your-commits)
+    - [Opening New Issues](#opening-new-issues)
+    - [Making Changes](#making-changes)
+      - [Example](#example)
+      - [Remediating the legacy `spectral` scope](#remediating-the-legacy-spectral-scope)
+    - [Pull Request Process](#pull-request-process)
+  - [Development Guidelines](#development-guidelines)
+    - [Documentation Standards](#documentation-standards)
+    - [Linting Rules Development](#linting-rules-development)
+    - [Testing Guidelines](#testing-guidelines)
+  - [Viewing the Guidelines Locally](#viewing-the-guidelines-locally)
+  - [Documentation Deployment](#documentation-deployment)
+  - [Ruleset Release](#ruleset-release)
+    - [1. Update the Version Number](#1-update-the-version-number)
+    - [2. Document the Changes](#2-document-the-changes)
+    - [3. Create a Release](#3-create-a-release)
 
 ## Code of Conduct
 
-Please read the [Code of Conduct][32] before contributing.
+Please read the [Code of Conduct][33] before contributing.
 
 ## Getting Started
 
@@ -46,7 +47,7 @@ Please read the [Code of Conduct][32] before contributing.
 
 #### 1. Fork the repository
 
-If you're an external contributor make sure to [fork this project first][33]
+If you're an external contributor make sure to [fork this project first][34]
 
 #### 2. Clone the repository
 
@@ -70,8 +71,8 @@ Before you begin, ensure you have the following installed:
 
 | Tool | Version | Description |
 | - | - | - |
-| [Node.js][34] / npm | `Latest LTS` | Required for packaging and testing the linting ruleset. |
-| [Vacuum][35] | `Latest` | CLI for running the UKHSA linting ruleset. |
+| [Node.js][35] / npm | `Latest LTS` | Required for packaging and testing the linting ruleset. |
+| [Vacuum][36] | `Latest` | CLI for running the UKHSA linting ruleset. |
 
 You can install npm and Vacuum CLI using your system's package manager or download them from their respective websites.
 
@@ -119,7 +120,7 @@ This generates `.js` files in `./dist` and produces Vacuum wrapper functions in 
 
 ### Finding Issues to Work On
 
-- Check the [Issues][36] section for open tasks
+- Check the [Issues][37] section for open tasks
 - Look for issues tagged with `good first issue` if you're new to the project
 
 ### Signed Commits
@@ -162,13 +163,13 @@ git commit -m "Your commit message"
 git commit -S -m "Your commit message"
 ```
 
-For more information, see GitHub's documentation on [signing commits][37].
+For more information, see GitHub's documentation on [signing commits][38].
 
 ### Opening New Issues
 
 Before opening a new issue:
 
-1. **[Search existing issues][38]** to avoid duplicates
+1. **[Search existing issues][39]** to avoid duplicates
 1. **Use issue templates** if available
 1. **Be clear and specific** about:
    - What needs to be changed/added
@@ -189,13 +190,13 @@ Before opening a new issue:
    git checkout -b fix/issue-you-are-fixing
    ```
 
-1. **Make your changes** following the [development guidelines][22] below.
+1. **Make your changes** following the [development guidelines][23] below.
 
-1. **Test your changes** (see [Testing Guidelines][25])
+1. **Test your changes** (see [Testing Guidelines][26])
 
 1. **Commit your changes** with clear commit messages and sign them (see [Signed Commits][13]):
 
-We follow the [Conventional Commits][39] specification for commit messages. This provides a standardised format that makes the commit history more readable and enables automated tools for versioning and changelog generation.
+We follow the [Conventional Commits][40] specification for commit messages. This provides a standardised format that makes the commit history more readable and enables automated tools for versioning and changelog generation.
 
 The commit message should be structured as follows:
 
@@ -205,7 +206,7 @@ Subject:
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │       │
-  │       └─⫸ Commit Scope: "ruleset" for changes to linting rules or should be omitted otherwise
+  │       └─⫸ Commit Scope: "linting-rules" for changes to linting rules or should be omitted otherwise
   │
   └─⫸ Commit Type: build|docs|feat|fix|perf|refactor|revert|test
 
@@ -228,7 +229,7 @@ Footer:
 | `test` | Adding or correcting tests | None |
 
 > [!NOTE]
-> A commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with [`MAJOR`][40] in Semantic Versioning). A BREAKING CHANGE can be part of commits of any *type*.
+> A commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with [`MAJOR`][41] in Semantic Versioning). A BREAKING CHANGE can be part of commits of any *type*.
 
 #### Example
 
@@ -244,13 +245,47 @@ git commit -m "fix(scope): correct validation for API versioning
 Resolves issue #123"
 ```
 
+#### Remediating the legacy `spectral` scope
+
+The `spectral` scope was retired when the ruleset moved from Spectral to Vacuum. It is no longer an allowed scope, and `linting-rules` is the canonical replacement.
+
+Merged history is **not** rewritten — commits already on `main` keep the old scope.
+
+Branches opened before the change are a different matter. The commit linting workflow validates every commit in a pull request, not just the latest one, so a branch carrying a `spectral` scoped commit will fail the check. If that affects your branch:
+
+1. Rebase interactively onto the latest `main`:
+
+   ```bash
+   git fetch
+   git rebase -i origin/main
+   ```
+
+1. Mark each commit whose scope is `spectral` as `reword`, then change the scope to `linting-rules`, or omit the scope entirely if the commit does not change the linting rules:
+
+   ```text
+   # before
+   feat(spectral): enforce x-audience in the info block
+
+   # after
+   feat(linting-rules): enforce x-audience in the info block
+   ```
+
+1. Force push the rebased branch:
+
+   ```bash
+   git push --force-with-lease origin your-branch-name
+   ```
+
+> [!NOTE]
+> Rebasing replays your work as new commits, which must be signed. If you have > `commit.gpgsign` set to `true` as described in [Signed Commits][signed-commits], > `git rebase` honours it automatically; otherwise pass `-S` to `git rebase`.
+
 ### Pull Request Process
 
 1. **Update your branch/fork** with the latest from upstream:
 
    If you are an external contributor, you will need to add the upstream repository as a remote, see [fork the repository][6] for more details.
 
-   Make sure to keep your fork up to date with the main repository by [syncing your fork][41] with the upstream repository.
+   Make sure to keep your fork up to date with the main repository by [syncing your fork][42] with the upstream repository.
 
    If you are a member of the `ukhsa-collaboration` GitHub organisation, you can update your branch with the latest from `main` with the following commands:
 
@@ -260,11 +295,11 @@ Resolves issue #123"
    ```
 
    > [!NOTE]
-   > This repository maintains a [linear commit history][42].
+   > This repository maintains a [linear commit history][43].
    >
-   > Always use [`rebase`][43] instead of `merge` when keeping your branch up to date with the `main` branch.
+   > Always use [`rebase`][44] instead of `merge` when keeping your branch up to date with the `main` branch.
 
-1. **[link PR to issue][44]** if you are solving one.
+1. **[link PR to issue][45]** if you are solving one.
 
 1. **Push your changes** to your branch/fork:
 
@@ -288,9 +323,9 @@ Resolves issue #123"
 
 1. **Create a Pull Request** from your branch/fork to the main repository
 
-   if you are a member of the `ukhsa-collaboration` GitHub organisation, you can create a [pull request][45] directly from your branch.
+   if you are a member of the `ukhsa-collaboration` GitHub organisation, you can create a [pull request][46] directly from your branch.
 
-   If you are an external contributor, you can create a [pull request from your fork][46] to the main repository.
+   If you are an external contributor, you can create a [pull request from your fork][47] to the main repository.
 
 1. **Fill in the PR template** with all relevant information
 
@@ -303,7 +338,7 @@ Resolves issue #123"
 
 1. **Prepare for merge**: Before your PR is merged, make sure your branch is up to date with the latest changes from the `main` branch.
 
-   You should be able to do this from the [GitHub UI][47] or from the command line.
+   You should be able to do this from the [GitHub UI][48] or from the command line.
 
    If you are an external contributor, you can use the following commands to keep your branch up to date with the `main` branch:
 
@@ -344,7 +379,7 @@ Resolves issue #123"
    ```
 
    > [!NOTE]
-   > This repository maintains a [linear commit history][42].
+   > This repository maintains a [linear commit history][43].
    >
    > Always use [`rebase`][43] instead of `merge` when keeping your branch up to date with the `main` branch (see previous step).
 
@@ -352,21 +387,21 @@ Resolves issue #123"
 
    The merge process is handled by our two-phase GitHub Actions workflow:
 
-   - **[Phase 1][48]:** Checks your permissions and PR status when you add the `fast-forward` label.
-   - **[Phase 2][49]:** If you have sufficient permissions and the PR is mergeable, the workflow will perform a true `fast-forward` merge and post the result as a comment on the PR.
+   - **[Phase 1][49]:** Checks your permissions and PR status when you add the `fast-forward` label.
+   - **[Phase 2][50]:** If you have sufficient permissions and the PR is mergeable, the workflow will perform a true `fast-forward` merge and post the result as a comment on the PR.
 
-   If you do not have permission, the workflow will notify you and request you contact a member of the [API Standards Team][50].
+   If you do not have permission, the workflow will notify you and request you contact a member of the [API Standards Team][51].
 
-   Information on why we use a non-standard GitHub merge process can be found in the [`fast-forward-pr-merge-init.md`][51] documentation.
+   Information on why we use a non-standard GitHub merge process can be found in the [`fast-forward-pr-merge-init.md`][52] documentation.
 
-1. Congratulations! 🎉🎉 You've successfully contributed to the UKHSA API Guidelines, any documentation changes will be automatically deployed to the [UKHSA Organisation standards][52] site.
+2. Congratulations! 🎉🎉 You've successfully contributed to the UKHSA API Guidelines, any documentation changes will be automatically deployed to the [UKHSA Organisation standards][53] site.
 
 ## Development Guidelines
 
 ### Documentation Standards
 
 - Write in clear, concise language suitable for technical audiences.
-- Use [RFC2119][53] keywords (**MUST**, **SHOULD**, **MAY**, etc.) correctly to indicate requirement levels.
+- Use [RFC2119][54] keywords (**MUST**, **SHOULD**, **MAY**, etc.) correctly to indicate requirement levels.
 - Include practical examples where appropriate.
 - Follow Markdown best practices for formatting.
 - Place documentation in the appropriate section of the `/docs/` directory.
@@ -376,11 +411,11 @@ Resolves issue #123"
 
 Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in the ruleset format that Vacuum consumes.
 
-- For rule syntax and guidance, see [Custom Rulesets][54].
+- For rule syntax and guidance, see [Custom Rulesets][55].
 
 - UKHSA specific rules are defined in the `ukhsa.oas.rules.yml` file.
 
-- Rules should be clearly categorised as **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **MAY**, **MAY NOT** and matched against the appropriate [severity level][55].
+- Rules should be clearly categorised as **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **MAY**, **MAY NOT** and matched against the appropriate [severity level][56].
 
   | Rule Category | Severity Level |
   | - | :-: |
@@ -397,9 +432,9 @@ Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in
 
 - Include references to the relevant sections of the API guidelines.
 
-- [Test the rules][25] that you have created or modified.
+- [Test the rules][26] that you have created or modified.
 
-- For information on how to use these rules with your API project, check the [How to use the rules][56] documentation section.
+- For information on how to use these rules with your API project, check the [How to use the rules][57] documentation section.
 
 ### Testing Guidelines
 
@@ -452,7 +487,7 @@ Vacuum is the supported CLI for running the UKHSA ruleset. Rules are authored in
   npm run test
   ```
 
-- For documentation, serve the site locally (see [Viewing the Guidelines Locally][26])
+- For documentation, serve the site locally (see [Viewing the Guidelines Locally][27])
 
 ## Viewing the Guidelines Locally
 
@@ -463,13 +498,13 @@ npm run start
 ```
 
 This uses docker to host your docs under the hood.
-After running this script you can view your docs by going to [http://localhost:8080/api-design-guidelines/][57].
+After running this script you can view your docs by going to [http://localhost:8080/api-design-guidelines/][58].
 
 While this script is running it will notice when files change and update them so you can see how they look live.
 
 ## Documentation Deployment
 
-The documentation is continuously deployed from the `main` branch by GitHub Actions, using the workflow defined in `/.github/workflows/publish-guidelines.yml` which will trigger a deployment of the main [standards-org][58] repository
+The documentation is continuously deployed from the `main` branch by GitHub Actions, using the workflow defined in `/.github/workflows/publish-guidelines.yml` which will trigger a deployment of the main [standards-org][59] repository
 
 When documentation changes are merged into the `main` branch, the documentation site is automatically updated and re-published on GitHub Pages.
 
@@ -479,7 +514,7 @@ When updating rules, follow these steps to ensure proper release and distributio
 
 ### 1. Update the Version Number
 
-- Update the version number in `package.json` following [Semantic Versioning][59] principles:
+- Update the version number in `package.json` following [Semantic Versioning][60] principles:
   - `MAJOR` version for incompatible changes
   - `MINOR` version for added functionality in a backwards compatible manner
   - `PATCH` version for backwards compatible bug fixes
@@ -496,7 +531,7 @@ When updating rules, follow these steps to ensure proper release and distributio
 
 - Trigger the `/.github/workflows/publish-rules.yml` workflow to create a release using GitHub Actions.
 - Add detailed release notes.
-- [Tag the release][60] with the version number.
+- [Tag the release][61] with the version number.
 
 > [!NOTE]
 > Only maintainers with the appropriate permissions can publish new releases of the ruleset npm package.
@@ -523,43 +558,44 @@ Thank you for contributing to improving API design and development practices acr
 [18]: #opening-new-issues
 [19]: #making-changes
 [20]: #example
-[21]: #pull-request-process
-[22]: #development-guidelines
-[23]: #documentation-standards
-[24]: #linting-rules-development
-[25]: #testing-guidelines
-[26]: #viewing-the-guidelines-locally
-[27]: #documentation-deployment
-[28]: #ruleset-release
-[29]: #1-update-the-version-number
-[30]: #2-document-the-changes
-[31]: #3-create-a-release
-[32]: ./CODE_OF_CONDUCT.md
-[33]: https://help.github.com/articles/fork-a-repo/
-[34]: https://nodejs.org/en/download/
-[35]: https://quobix.com/vacuum/installing/
-[36]: https://github.com/ukhsa-collaboration/standards-api/issues
-[37]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
-[38]: https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments
-[39]: https://www.conventionalcommits.org/
-[40]: http://semver.org/#summary
-[41]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork
-[42]: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-linear-history
-[43]: https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase
-[44]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
-[45]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
-[46]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork
-[47]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/keeping-your-pull-request-in-sync-with-the-base-branch
-[48]: ./.github/workflows/fast-forward-pr-merge-init.md
-[49]: ./.github/workflows/fast-forward-pr-merge-privileged.md
-[50]: https://github.com/orgs/ukhsa-collaboration/teams/api-standards-team
-[51]: ./.github/workflows/fast-forward-pr-merge-init.md#why-is-this-workflow-needed
-[52]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
-[53]: https://datatracker.ietf.org/doc/html/rfc2119
-[54]: https://quobix.com/vacuum/rulesets/custom-rulesets/
-[55]: https://quobix.com/vacuum/rulesets/custom-rulesets/#severity
-[56]: docs/linting-rules/index.md#how-to-use-the-rules
-[57]: http://localhost:8080/api-design-guidelines/
-[58]: https://github.com/ukhsa-collaboration/standards-org
-[59]: https://semver.org/
-[60]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release
+[21]: #signed-commits
+[22]: #pull-request-process
+[23]: #development-guidelines
+[24]: #documentation-standards
+[25]: #linting-rules-development
+[26]: #testing-guidelines
+[27]: #viewing-the-guidelines-locally
+[28]: #documentation-deployment
+[29]: #ruleset-release
+[30]: #1-update-the-version-number
+[31]: #2-document-the-changes
+[32]: #3-create-a-release
+[33]: ./CODE_OF_CONDUCT.md
+[34]: https://help.github.com/articles/fork-a-repo/
+[35]: https://nodejs.org/en/download/
+[36]: https://quobix.com/vacuum/installing/
+[37]: https://github.com/ukhsa-collaboration/standards-api/issues
+[38]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
+[39]: https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments
+[40]: https://www.conventionalcommits.org/
+[41]: http://semver.org/#summary
+[42]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork
+[43]: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-linear-history
+[44]: https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase
+[45]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
+[46]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
+[47]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork
+[48]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/keeping-your-pull-request-in-sync-with-the-base-branch
+[49]: ./.github/workflows/fast-forward-pr-merge-init.md
+[50]: ./.github/workflows/fast-forward-pr-merge-privileged.md
+[51]: https://github.com/orgs/ukhsa-collaboration/teams/api-standards-team
+[52]: ./.github/workflows/fast-forward-pr-merge-init.md#why-is-this-workflow-needed
+[53]: https://ukhsa-collaboration.github.io/standards-org/api-design-guidelines/
+[54]: https://datatracker.ietf.org/doc/html/rfc2119
+[55]: https://quobix.com/vacuum/rulesets/custom-rulesets/
+[56]: https://quobix.com/vacuum/rulesets/custom-rulesets/#severity
+[57]: docs/linting-rules/index.md#how-to-use-the-rules
+[58]: http://localhost:8080/api-design-guidelines/
+[59]: https://github.com/ukhsa-collaboration/standards-org
+[60]: https://semver.org/
+[61]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release
