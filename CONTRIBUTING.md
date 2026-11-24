@@ -277,7 +277,7 @@ Branches opened before the change are a different matter. The commit linting wor
    ```
 
 > [!NOTE]
-> Rebasing replays your work as new commits, which must be signed. If you have > `commit.gpgsign` set to `true` as described in [Signed Commits][signed-commits], > `git rebase` honours it automatically; otherwise pass `-S` to `git rebase`.
+> Rebasing replays your work as new commits, which must be signed. If you have > `commit.gpgsign` set to `true` as described in [Signed Commits][13], > `git rebase` honours it automatically; otherwise pass `-S` to `git rebase`.
 
 ### Pull Request Process
 
