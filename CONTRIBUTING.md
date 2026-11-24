@@ -4,38 +4,38 @@ Thank you for your interest in contributing to the UKHSA API Guidelines! This re
 
 ## Table of Contents
 
-- [Contributing to UKHSA API Guidelines](#contributing-to-ukhsa-api-guidelines)
-  - [Table of Contents](#table-of-contents)
-  - [Code of Conduct](#code-of-conduct)
-  - [Getting Started](#getting-started)
-    - [Setting Up Your Development Environment](#setting-up-your-development-environment)
-      - [1. Fork the repository](#1-fork-the-repository)
-      - [2. Clone the repository](#2-clone-the-repository)
-      - [3. Install dependencies](#3-install-dependencies)
-      - [4. Compile TypeScript](#4-compile-typescript)
-    - [Understanding the Repository Structure](#understanding-the-repository-structure)
-  - [Contributing Process](#contributing-process)
-    - [Finding Issues to Work On](#finding-issues-to-work-on)
-    - [Signed Commits](#signed-commits)
-      - [1. Generate a GPG key (if you don't have one already)](#1-generate-a-gpg-key-if-you-dont-have-one-already)
-      - [2. Configure Git to use your GPG key](#2-configure-git-to-use-your-gpg-key)
-      - [3. Add your GPG key to GitHub](#3-add-your-gpg-key-to-github)
-      - [4. Sign your commits](#4-sign-your-commits)
-    - [Opening New Issues](#opening-new-issues)
-    - [Making Changes](#making-changes)
-      - [Example](#example)
-      - [Remediating the legacy `spectral` scope](#remediating-the-legacy-spectral-scope)
-    - [Pull Request Process](#pull-request-process)
-  - [Development Guidelines](#development-guidelines)
-    - [Documentation Standards](#documentation-standards)
-    - [Linting Rules Development](#linting-rules-development)
-    - [Testing Guidelines](#testing-guidelines)
-  - [Viewing the Guidelines Locally](#viewing-the-guidelines-locally)
-  - [Documentation Deployment](#documentation-deployment)
-  - [Ruleset Release](#ruleset-release)
-    - [1. Update the Version Number](#1-update-the-version-number)
-    - [2. Document the Changes](#2-document-the-changes)
-    - [3. Create a Release](#3-create-a-release)
+- [Contributing to UKHSA API Guidelines][1]
+  - [Table of Contents][2]
+  - [Code of Conduct][3]
+  - [Getting Started][4]
+    - [Setting Up Your Development Environment][5]
+      - [1. Fork the repository][6]
+      - [2. Clone the repository][7]
+      - [3. Install dependencies][8]
+      - [4. Compile TypeScript][9]
+    - [Understanding the Repository Structure][10]
+  - [Contributing Process][11]
+    - [Finding Issues to Work On][12]
+    - [Signed Commits][13]
+      - [1. Generate a GPG key (if you don't have one already)][14]
+      - [2. Configure Git to use your GPG key][15]
+      - [3. Add your GPG key to GitHub][16]
+      - [4. Sign your commits][17]
+    - [Opening New Issues][18]
+    - [Making Changes][19]
+      - [Example][20]
+      - [Remediating the legacy `spectral` scope][21]
+    - [Pull Request Process][22]
+  - [Development Guidelines][23]
+    - [Documentation Standards][24]
+    - [Linting Rules Development][25]
+    - [Testing Guidelines][26]
+  - [Viewing the Guidelines Locally][27]
+  - [Documentation Deployment][28]
+  - [Ruleset Release][29]
+    - [1. Update the Version Number][30]
+    - [2. Document the Changes][31]
+    - [3. Create a Release][32]
 
 ## Code of Conduct
 
@@ -394,7 +394,7 @@ Branches opened before the change are a different matter. The commit linting wor
 
    Information on why we use a non-standard GitHub merge process can be found in the [`fast-forward-pr-merge-init.md`][52] documentation.
 
-2. Congratulations! 🎉🎉 You've successfully contributed to the UKHSA API Guidelines, any documentation changes will be automatically deployed to the [UKHSA Organisation standards][53] site.
+1. Congratulations! 🎉🎉 You've successfully contributed to the UKHSA API Guidelines, any documentation changes will be automatically deployed to the [UKHSA Organisation standards][53] site.
 
 ## Development Guidelines
 
@@ -558,7 +558,7 @@ Thank you for contributing to improving API design and development practices acr
 [18]: #opening-new-issues
 [19]: #making-changes
 [20]: #example
-[21]: #signed-commits
+[21]: #remediating-the-legacy-spectral-scope
 [22]: #pull-request-process
 [23]: #development-guidelines
 [24]: #documentation-standards
